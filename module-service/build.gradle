@@ -24,6 +24,8 @@ dependencies {
     runtimeOnly 'com.mysql:mysql-connector-j'
     implementation project(':')
     runtimeOnly 'com.h2database:h2'  // H2 데이터베이스 의존성 추가
+    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.1')
 }
 
 test {
