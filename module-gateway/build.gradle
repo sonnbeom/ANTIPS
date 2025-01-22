@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+}
+tasks.named('bootJar'){ // bootJar 세팅을 켜기
+    enabled = true
+}
+
+tasks.named('jar'){ // jar 설정은 끄기
+    enabled = false
+}
+group = 'backend'
+version = 'unspecified'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation project(':')
+}
+
+test {
+    useJUnitPlatform()
+}
