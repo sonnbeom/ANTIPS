@@ -1,24 +1,28 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.3.7'
+	id 'org.springframework.boot' version '3.0.7'
 	id 'io.spring.dependency-management' version '1.1.7'
+}
+repositories {
+	mavenCentral()
 }
 bootJar.enabled = false // 빌드시 현재 모듈(multi-module)의 .jar를 생성하지 않습니다.
 jar.enabled = true
 //group = 'backend'
 //version = '0.0.1-SNAPSHOT'
 subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
-//	group 'com.example'
 	group = 'backend'
 	version '0.0.1-SNAPSHOT'
-	sourceCompatibility = '17'
+
 
 	apply plugin: 'java'
 	apply plugin: 'java-library'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 
+
 	configurations {
+//		annotationProcessor // 안 되면 이거 지우기
 		compileOnly {
 			extendsFrom annotationProcessor
 		}
@@ -29,8 +33,8 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 	}
 
 	dependencies {
-		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
+//		implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//		implementation 'org.springframework.boot:spring-boot-starter-web'
 		compileOnly 'org.projectlombok:lombok'
 		developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
@@ -44,34 +48,15 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 		useJUnitPlatform()
 	}
 }
-//java {
-//	toolchain {
-//		languageVersion = JavaLanguageVersion.of(17)
-//	}
-//}
-
-//configurations {
-//	compileOnly {
-//		extendsFrom annotationProcessor
-//	}
-//}
-
-repositories {
-	mavenCentral()
-}
 
 dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
 }
-
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
