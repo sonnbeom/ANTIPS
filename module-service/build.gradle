@@ -1,0 +1,31 @@
+plugins {
+    id 'java'
+}
+
+group = 'backend'
+version = 'unspecified'
+
+tasks.named('bootJar'){ // bootJar 세팅을 켜기
+    enabled = true
+}
+
+tasks.named('jar'){ // jar 설정은 끄기
+    enabled = false
+}
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.h2database:h2'
+    //	developmentOnly 'org.springframework.boot:spring-boot-docker-compose'
+    runtimeOnly 'com.mysql:mysql-connector-j'
+    implementation project(':')
+    runtimeOnly 'com.h2database:h2'  // H2 데이터베이스 의존성 추가
+}
+
+test {
+    useJUnitPlatform()
+}

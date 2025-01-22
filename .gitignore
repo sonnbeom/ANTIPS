@@ -223,5 +223,13 @@ gradle-app.setting
 ### Gradle Patch ###
 # Java heap dump
 *.hprof
+# Application properties
+**/application.properties
+**/application-*.properties
+**/application.yml
+**/application-*.yml
 
+# 예제 파일은 제외하고 싶다면
+!**/application-example.properties
+!**/application-example.yml
 /src/main/generated/
