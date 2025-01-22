@@ -2,4 +2,5 @@ rootProject.name = 'antips'
 include 'module-auth'
 include 'module-service'
 include 'module-gateway'
+include 'module-eureka'
 
