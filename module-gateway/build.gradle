@@ -19,10 +19,6 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation project(':')
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
-    // Spring Cloud BOM 추가
-    implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.1')  // Spring Cloud BOM 버전
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-server'
 }
 
 test {
