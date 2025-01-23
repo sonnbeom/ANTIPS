@@ -1,0 +1,34 @@
+# This is a workflow that syncs everything on this repository to another repository
+
+name: Sync this repository to another repository
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  push-to-gitlab:
+    runs-on: windows-latest  # Windows 환경으로 변경
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Fetch all history for all tags and branches
+
+      - name: Set remote repository
+        env:
+          gitlab_url: ${{ secrets.TARGET_URL }}
+          gitlab_username: ${{ secrets.TARGET_USERNAME }}
+          gitlab_token: ${{ secrets.TARGET_TOKEN }}
+        run: |
+          # PowerShell에서 사용하도록 수정
+          git remote add gitlab https://$env:gitlab_username:$env:gitlab_token@$env:gitlab_url
+          
+      - name: Force push everything
+        run: |
+          # PowerShell에서 Git 명령어 실행
+          git push -f --all gitlab
+          git push -f --tags gitlab
