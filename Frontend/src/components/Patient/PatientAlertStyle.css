@@ -1,0 +1,89 @@
+/* 전체 섹션 스타일 */
+.patient-alert-section {
+  border-radius: 10px; /* 둥근 모서리 */
+  padding: 15px;
+  background-color: #FFFFFF;
+  width: 1280px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  border-left: 5px solid #EF4444; /* 왼쪽 빨간색 테두리 */
+}
+
+  /* 컨테이너 스타일 */
+.patient-icon-text-container {
+    display: flex; /* 아이콘과 텍스트를 가로로 정렬 */
+    align-items: center; /* 아이템의 높이를 중앙 정렬 */
+    gap: 10px; /* 아이콘과 텍스트 사이 간격 */
+  }
+  
+  /* 텍스트 스타일 (h2처럼 보이게) */
+  .patient-icon-text-container span {
+    font-size: 24px; /* h2와 같은 폰트 크기 */
+    font-weight: bold; /* h2와 같은 굵기 */
+    color: #333; /* 텍스트 색상 (필요에 따라 변경 가능) */
+  }
+  
+  
+  /* 헤더 스타일 */
+  .patient-alert-header {
+    display: flex;
+    justify-content: space-between; /* 좌우 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding-bottom: 16px;
+  }
+  
+  .patient-alert-header h3 {
+    font-size: 18px;
+  }
+  
+  .patient-active-alert-count {
+    display: inline-block; /* 텍스트를 포함한 요소를 블록처럼 처리 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    padding: 6px 12px; /* 내부 여백 */
+    border-radius: 15px; /* 타원형 모양을 위해 높이의 절반 이상 설정 */
+    font-size: 14px; /* 텍스트 크기 */
+    height: auto; /* 고정 높이 제거 */
+    width: auto; /* 고정 너비 제거 */
+    background-color: #FEE2E2; /* 연한 빨간색 배경 */
+    color: #DC2626; /* 빨간색 텍스트 */
+  }
+  
+/* 알림 리스트 스타일 */
+.patient-alert-list {
+    list-style-type: none; /* 기본 리스트 스타일 제거 */
+    padding: 0; /* 리스트의 기본 패딩 제거 */
+    margin: 0; /* 리스트의 기본 마진 제거 */
+    display: flex; /* Flexbox로 설정 */
+    flex-direction: column; /* 세로 방향 정렬 */
+    gap: 12px; /* 항목 간격 설정 */
+  }
+  
+  /* 알림 항목 스타일 */
+  .patient-alert-item {
+    display: flex;
+    justify-content: space-between; /* 텍스트와 시간 간격 조정 */
+    align-items: center; /* 세로 중앙 정렬 */
+    padding: 10px;
+    border-radius: 5px; /* 둥근 모서리 */
+  }
+  
+  /* 카테고리에 따른 배경색 */
+  .patient-alert-item.urgent {
+    background-color: #FEF2F2; /* 연한 빨간색 (응급) */
+    color : #DC2626;
+  }
+  
+  .patient-alert-item.warning {
+    background-color: #FFFBEB; /* 연한 노란색 (경고) */
+    color : #D97706;
+  }
+  
+  .patient-alert-item.info {
+    background-color: #EFF6FF; /* 연한 파란색 (정보) */
+    color : #2563EB;
+  }
+  
+  /* 시간 텍스트 스타일 */
+  .patient-time {
+    font-size: 12px;
+  }
+  

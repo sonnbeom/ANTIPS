@@ -1,0 +1,160 @@
+/* 전체 컨테이너 */
+.patient-registration-container {
+    max-width: 900px;
+    margin: 15px auto 0 auto;
+    padding: 20px;
+    background-color: #F9FAFB; /* 연한 배경색 */
+    border-radius: 10px; /* 둥근 모서리 */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  }
+  
+  /* 페이지 제목 */
+  .patient-registration-page-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #1F2937;
+    margin-bottom: 20px;
+  }
+  
+  /* 섹션 제목 */
+  .patient-registration-section-title {
+    font-size: 16px;
+    padding-left: 10px;
+    color: #374151;
+    margin-bottom: 10px;
+  }
+  
+  /* 섹션 */
+  .patient-registration-section {
+    margin-bottom: 20px;
+  }
+  
+  /* 폼 행 */
+  .patient-registration-form-row {
+    display: flex;
+    gap: 20px; /* 왼쪽 이미지와 오른쪽 입력칸 간격 */
+    margin-bottom: 20px;
+    align-items: stretch; /* 양쪽이 동일한 높이가 되도록 조정 */
+  }
+  
+  /* 왼쪽 이미지 업로드 */
+  .photo-upload-group {
+    flex: 0.5; /* 20% 너비로 고정 (더 작은 크기) */
+    text-align: center; /* 가운데 정렬 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+  }
+  .patient-registration-photo-span{
+    width: 128px;
+    padding: 2px 20px;
+    color: #4B5563;
+    font-size: 14px;
+    background-color: #E5E7EB;
+  }
+  
+  .patient-registration-photo-placeholder {
+    width: 150px;
+    height: 150px; /* 더 작은 크기 */
+
+    border: 2px solid #ddd; /* 테두리 */
+    margin-bottom: 10px;
+  }
+  
+  .patient-registration-photo-label span {
+    font-size: 14px;
+    color: #666;
+  }
+  
+  /* 오른쪽 입력칸 */
+  .patient-registration-form-right {
+    flex: 1; /* 나머지 80% 공간을 차지 */
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  
+  /* 입력 칸이 두 개씩 한 줄에 배치되도록 조정 */
+/* 입력 칸이 두 개씩 한 줄에 배치되도록 조정 */
+.patient-registration-form-group {
+    flex: 1 1; /* 오른쪽 입력 칸이 더 큰 비율을 차지 */
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* 라벨과 입력칸 간격 */
+  }
+  
+  /* 아래의 세 입력 필드 */
+  .patient-registration-form-group.full-width {
+    flex: 1 1 100%; /* 100% 너비로 설정 */
+  }
+
+  .patient-registration-form-group label{
+    font-size: 14px;
+    color: #4B5563;
+  }
+  hr {
+    border: 0;
+    height: 1px;
+    background: #E2E8F0;
+    margin: 24px 0;
+    background-image: linear-gradient(to right, rgba(226, 232, 240, 0), rgba(226, 232, 240, 0.75), rgba(226, 232, 240, 0));
+}
+
+  
+  /* 텍스트 입력 필드 */
+  .patient-registration-form-group input,
+  .patient-registration-form-group select,
+  textarea {
+    width: 100%; /* 전체 너비 사용 */
+    padding: 12px 15px; /* 넉넉한 여백 */
+    font-size: 16px; /* 더 큰 글씨 크기 */
+    border: 1px solid #ced4da; /* 테두리 */
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: #ffffff; /* 흰색 배경 */
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  /* 입력 필드 포커스 효과 */
+  .patient-registration-form-group input:focus,
+  .patient-registration-form-group textarea:focus {
+    border-color: #1d4ed8; /* 파란색 테두리 */
+    box-shadow: 0 0 5px rgba(29, 78, 216, 0.5); /* 파란빛 그림자 효과 */
+    outline: none;
+  }
+  
+  /* 버튼 스타일 */
+  .patient-registration-button-section {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+  
+  .patient-registration-save-button,
+  .patient-registration-cancel-button {
+    padding: 12px 24px;
+    font-size: 16px; /* 더 큰 글씨 */
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .patient-registration-save-button {
+    background-color: #1d4ed8; /* 파란색 */
+    color: white;
+  }
+  
+  .patient-registration-save-button:hover {
+    background-color: #1746b2; /* 더 진한 파란색 */
+  }
+  
+  .patient-registration-cancel-button {
+    background-color: #e5e7eb; /* 연한 회색 */
+    color: black;
+  }
+  
+  .patient-registration-cancel-button:hover {
+    background-color: #d1d5db; /* 더 진한 회색 */
+  }
+  

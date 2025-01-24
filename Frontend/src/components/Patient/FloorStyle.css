@@ -1,0 +1,56 @@
+/* 기본 버튼 스타일 */
+.patient-floor-button {
+  display: flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-radius: 12px; /* 둥근 모서리 */
+  height: 64px;
+  width: 174px;
+  border: none;
+  background-color: #f8fafa; /* 기본 배경색 */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+/* 활성화된 버튼 스타일 */
+.patient-floor-button.active {
+  background-color: #a7f3d0; /* 활성화된 더 진한 민트 색상 */
+}
+
+/* 버튼 호버 효과 */
+.patient-floor-button:hover {
+  transform: scale(1.02); /* 살짝 확대 효과 */
+}
+
+/* 아이콘 스타일 */
+.patient-floor-icon {
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  margin-right: 12px;
+}
+
+/* 텍스트 스타일 */
+.patient-floor-text {
+  font-size: 16px;
+}
+
+/* 숫자 스타일 (비활성화 상태) */
+.patient-floor-count {
+  display: inline-flex;
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: center; /* 가로 중앙 정렬 */
+  padding: 6px 12px; /* 내부 여백으로 타원형 조정 */
+  border-radius: 20px; /* 타원형으로 만들기 위해 높이의 절반 이상 설정 */
+  background-color: #e5e7eb; /* 연한 회색 배경 (비활성화 상태) */
+  color: #6b7280; /* 연한 텍스트 색상 (비활성화 상태) */
+  font-size: 14px; /* 텍스트 크기 조정 */
+}
+
+/* 숫자 스타일 (활성화 상태) */
+.patient-floor-button.active .patient-floor-count {
+  background-color: #047857; /* 진한 초록색 배경 (활성화 상태) */
+  color: #ffffff; /* 흰색 텍스트 (활성화 상태) */
+}

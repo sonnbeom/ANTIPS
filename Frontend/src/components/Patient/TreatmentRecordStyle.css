@@ -1,0 +1,64 @@
+/* TreatmentRecord.css */
+.treatment-record {
+    display: flex;
+    gap: 16px;
+    padding: 16px;
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .record-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+  }
+  
+  .record-icon.urgent {
+    background-color: #fee2e2;
+    color: #dc2626;
+  }
+  
+  .record-icon.normal {
+    background-color: #dbeafe;
+    color: #2563eb;
+  }
+  
+  .record-content {
+    flex: 1;
+  }
+  
+  .record-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+  
+  .record-header h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+  
+  .timestamp {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  
+  .description {
+    margin: 0 0 8px 0;
+    color: #374151;
+    font-size: 14px;
+  }
+  
+  .doctor-info {
+    color: #6b7280;
+    font-size: 14px;
+  }
+  

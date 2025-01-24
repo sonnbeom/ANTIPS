@@ -1,0 +1,33 @@
+/* 정렬 버튼 기본 스타일 */
+.sort-button {
+    width: 100px;
+    height: 40px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    border: none;
+    background-color: #f8fafa; /* 기본 배경색 */
+    color: #333; /* 기본 텍스트 색상 */
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    margin-bottom: 32px;
+  }
+  
+  /* 활성화된 버튼 스타일 */
+  .sort-button.active {
+    background-color: #0D9488; /* 활성화된 민트색 배경 */
+    color: #FFFFFF; /* 파란 텍스트 색상 */
+  }
+  
+  /* 호버 효과 */
+  .sort-button:hover {
+    background-color: #e6f7f3; /* 살짝 밝은 민트색 */
+  }
+  
+  /* 정렬 버튼 섹션 레이아웃 */
+  .patient-sort-section {
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+    margin-top: 20px;
+  }
+  
