@@ -1,0 +1,101 @@
+/* 헤더 컨테이너 */
+.header-container {
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    top: 0;
+    left: 0;
+    width: 100%; /* 화면 전체 너비 */
+    height: 70px; /* 헤더 높이 */
+    background-color: #ffffff; /* 헤더 배경색 */
+    z-index: 1000; /* 다른 요소 위에 표시되도록 설정 */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+  }
+  /* 왼쪽 로고 및 서비스명 */
+  .header-left {
+    display: flex;
+    align-items: center;
+    padding-left: 100px;
+    padding-right: 30px;
+  }
+  
+  .header-logo {
+    width: 30px;
+    height: 30px;
+    padding-right: 10px; /* 로고와 텍스트 간격 */
+  }
+  
+  .header-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4a4a4a;
+  }
+  
+  /* 네비게이션 버튼 */
+  .header-nav {
+
+    display: flex;
+    gap: 10px; /* 버튼 간격 */
+  }
+  
+  .header-nav-button {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background-color: transparent;
+    border: none;
+    font-size: 14px;
+    color: #4a4a4a;
+    cursor: pointer;
+  }
+  
+  .header-nav-button:hover {
+    color: #007bff; /* 호버 시 색상 변경 */
+  }
+  
+  .header-nav-icon {
+    padding-right: 8px; /* 아이콘과 텍스트 간격 */
+  }
+  
+  /* 사용자 정보 및 로그아웃 */
+  .header-right {
+
+    display: flex;
+    align-items: center;
+  }
+  
+  .header-user-info {
+    display: flex;
+    align-items: center;
+  }
+
+  .header-user-image {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /* 원형 이미지 */
+  }
+    
+  .header-user-name {
+    margin-left: 10px; /* 이미지와 이름 간격 */
+    font-size: 14px;
+    border-right: 1px solid #E5E7EB; /* 오른쪽에만 얇은 선 추가 */
+    padding-right: 10px; /* 선과 텍스트 사이 간격 추가 */
+  }
+  
+  .header-logout-button {
+    display: flex;
+    align-items: center;
+    margin-left: 20px; /* 알림 아이콘과 간격 */
+    margin-right: 100px;
+    padding: 8px;
+    background-color: transparent;
+    border: none;
+    color: #4a4a4a;
+    font-size: 14px;
+  }
+  
+  .header-logout-button:hover {
+      color:#dc3545;
+}
+  
+  

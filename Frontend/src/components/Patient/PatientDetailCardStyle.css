@@ -1,0 +1,238 @@
+.patient-detailcard-container {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+}
+
+.patient-detailcard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.patient-detailcard-edit-button {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.patient-detailcard-info-card {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 16px;
+}
+
+.patient-detailcard-profile {
+    border-radius: 8px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    width: 30%;
+    gap: 8px;
+}
+
+.patient-detailcard-profile-image {
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #F9FAFB;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    color: #6b7280;
+    margin-bottom: 16px;
+}
+
+.patient-detailcard-info {
+    display: flex;
+    flex-direction: column;
+    background-color: #F9FAFB;
+    border-radius: 12px;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+}
+
+.patient-detailcard-info h3 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111827;
+}
+
+.patient-detailcard-id {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.patient-detailcardinfo-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+    width: 70%; /* 프로필 섹션과의 비율 조정 */
+}
+
+.patient-detailcard-info-item {
+    background-color: #F9FAFB;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 50px; /* 최소 높이 설정 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease;
+}
+
+/* 우선순위 아이템 스타일 */
+.priority-item {
+    grid-column: 1 / -1; /* 전체 너비 사용 */
+    background-color: #fef2f2; /* 긴급도 표시를 위한 배경색 */
+    border-left: 4px solid #dc2626; /* 왼쪽 테두리로 중요도 표시 */
+}
+
+.patient-detailcard-info-item label {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 500;
+}
+
+.patient-detailcard-info-item p {
+    font-size: 16px;
+    color: #1f2937;
+    margin: 0;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* 긴급도 레벨 스타일 개선 */
+.level-4 {
+    color: #dc2626;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.level-3 {
+    color: #ea580c;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.level-2 {
+    color: #ca8a04;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.level-1 {
+    color: #16a34a;
+    font-weight: 700;
+    font-size: 18px;
+    padding: 4px 8px;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+/* 특이사항이나 긴 텍스트를 위한 스타일 */
+.patient-detailcard-info-item p.long-text {
+    overflow: auto;
+    max-height: 80px;
+    padding-right: 8px;
+}
+
+
+/* 모바일 버전 스타일 */
+@media screen and (max-width: 768px) {
+    .patient-detailcard-container {
+        padding: 16px;
+        margin: 0;
+        border-radius: 0;
+    }
+
+    .patient-detailcard-header {
+        margin-bottom: 16px;
+    }
+
+    .patient-detailcard-info-card {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .patient-detailcard-profile {
+        width: 90%;
+    }
+
+    .patient-detailcard-profile-image {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 12px;
+    }
+
+    .patient-detailcard-info {
+        width: 50%;
+        padding: 16px;
+    }
+
+    .patient-detailcard-info h3 {
+        font-size: 18px;
+    }
+
+    .patient-detailcardinfo-grid {
+        width: 100%;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .patient-detailcard-info-item {
+        padding: 12px;
+        min-height: auto;
+    }
+
+    /* 긴급도 레벨 모바일 스타일 */
+    .level-4,
+    .level-3,
+    .level-2,
+    .level-1 {
+        width: 100%;
+
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    /* 우선순위 아이템 모바일 스타일 */
+    .priority-item {
+        border-left-width: 6px;
+    }
+
+    .patient-detailcard-edit-button {
+        padding: 8px 16px;
+        font-size: 14px;
+        width: auto;
+    }
+
+    /* 스크롤 가능한 텍스트 영역 모바일 최적화 */
+    .patient-detailcard-info-item p.long-text {
+        max-height: 60px;
+    }
+}
