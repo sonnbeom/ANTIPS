@@ -25,7 +25,8 @@ jobs:
           gitlab_token: ${{ secrets.TARGET_TOKEN }}
         run: |
           # PowerShell에서 사용하도록 수정
-          git remote add gitlab https://$env:gitlab_username:$env:gitlab_token@$env:gitlab_url
+          git remote add gitlab https://${{ secrets.TARGET_USERNAME }}:${{ secrets.TARGET_TOKEN }}@${{ secrets.TARGET_URL }}
+
           
       - name: Force push everything
         run: |
