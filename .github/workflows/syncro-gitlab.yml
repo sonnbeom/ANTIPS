@@ -24,8 +24,9 @@ jobs:
           gitlab_username: ${{ secrets.TARGET_USERNAME }}
           gitlab_token: ${{ secrets.TARGET_TOKEN }}
         run: |
-          # PowerShell에서 사용하도록 수정
-          git remote add gitlab https://${{ secrets.TARGET_USERNAME }}:${{ secrets.TARGET_TOKEN }}@${{ secrets.TARGET_URL }}
+          # URL에서 'https://' 접두사 제거
+          $cleanUrl = "${{ secrets.TARGET_URL }}".Replace("https://", "")
+          git remote add gitlab "https://${gitlab_username}:${gitlab_token}@${cleanUrl}"
 
           
       - name: Force push everything
