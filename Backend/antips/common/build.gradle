@@ -1,13 +1,7 @@
 plugins {
     id 'java'
 }
-tasks.named('bootJar'){ // bootJar 세팅을 켜기
-    enabled = true
-}
 
-tasks.named('jar'){ // jar 설정은 끄기
-    enabled = false
-}
 group = 'backend'
 version = 'unspecified'
 
@@ -15,10 +9,13 @@ repositories {
     mavenCentral()
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation project(':')
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
@@ -28,6 +25,3 @@ dependencies {
 
 }
 
-test {
-    useJUnitPlatform()
-}

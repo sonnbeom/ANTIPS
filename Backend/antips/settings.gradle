@@ -3,4 +3,6 @@ include 'module-auth'
 include 'module-service'
 include 'module-gateway'
 include 'module-eureka'
+include 'module-common'
+
 
