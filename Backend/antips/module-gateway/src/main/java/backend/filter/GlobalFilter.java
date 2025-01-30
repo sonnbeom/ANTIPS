@@ -2,10 +2,11 @@ package backend.filter;
 
 import backend.exception.CustomMonoClientException;
 import backend.exception.CustomMonoServerException;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
-import org.springframework.cloud.gateway.filter.GlobalFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.annotation.Order;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ServerWebExchange;
@@ -18,12 +19,14 @@ import static org.springframework.http.HttpStatus.*;
 @Component
 @Order(0)
 @RequiredArgsConstructor
-public class GateWayFilter implements GlobalFilter{
+@Log4j2
+public class GlobalFilter implements org.springframework.cloud.gateway.filter.GlobalFilter {
     private final WebClient.Builder webClientBuilder;
-
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+        log.info("gateway filter 작동");
+        System.out.println("gateway 작동");
         String path = exchange.getRequest().getPath().toString();
         if (path.startsWith(AUTH_REQUIRED_PATH)){
             String token = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
