@@ -26,9 +26,9 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("gateway filter 작동");
-        System.out.println("gateway 작동");
         String path = exchange.getRequest().getPath().toString();
         if (path.startsWith(AUTH_REQUIRED_PATH)){
+            log.info("if문 들어오냐 설마");
             String token = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
             return webClientBuilder.build()
                     .get() // 인증 서버에 get 요청을 보낸다.
