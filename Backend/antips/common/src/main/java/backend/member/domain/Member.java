@@ -1,4 +1,4 @@
-package backend.member.domain;
+package backend.user.domain;
 
 import jakarta.persistence.*;
 

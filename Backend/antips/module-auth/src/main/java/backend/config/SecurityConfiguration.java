@@ -61,7 +61,7 @@ public class SecurityConfiguration {
                 .formLogin((auth -> auth.disable()));
         httpSecurity.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/css/**", "/images/**", "/js/**", "/h2-console/**").permitAll()
-                .requestMatchers(POST, "/api/v1/login").permitAll()
+                .requestMatchers("/api/v1/auth/login").permitAll()
                 .requestMatchers("/swagger", "/swagger-ui.html", "/swagger-ui/**", "/api-docs", "/api-docs/**", "/v3/api-docs/**").permitAll()
                 .anyRequest().authenticated());
 

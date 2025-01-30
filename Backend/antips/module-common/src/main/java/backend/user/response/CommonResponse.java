@@ -1,4 +1,4 @@
-package backend.member.response;
+package backend.user.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

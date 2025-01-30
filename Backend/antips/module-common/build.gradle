@@ -26,6 +26,7 @@ dependencies {
     implementation project(':')
     implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.1')
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'javax.xml.bind:jaxb-api:2.3.1'
 
 }
 

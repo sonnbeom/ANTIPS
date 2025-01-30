@@ -20,7 +20,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Optional<String> accessToken = getToken(request, HttpHeaders.AUTHORIZATION);
+//        Optional<String> accessToken = getToken(request, HttpHeaders.AUTHORIZATION);
 
 /*        if (!accessToken.isEmpty() && jwtService.isTokenValid(accessToken.get())){
             UsernamePasswordAuthenticationToken authentication = jwtService.validateToken(accessToken.get());
