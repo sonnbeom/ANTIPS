@@ -1,0 +1,92 @@
+/* 전체 페이지 스타일 */
+.robot-page-container {
+    margin: 0 auto; /* 가운데 정렬 */
+    padding: 15px 90px;
+    background-color: #f8fafc; /* 연한 배경색 */
+    font-family: Arial, sans-serif;
+  }
+  
+  /* 알림 섹션 */
+  .robot-alert-section {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 20px; /* 아래 여백 */
+  }
+
+  /* 라이브 로봇 피드 섹션 */
+  .robot-live-section {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px; /* 아래 여백 */
+  }
+  
+  .live-robot-feed {
+    width: 100%;
+    background-color: #ffffff;
+    padding: 10px 20px 20px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .robot-activity-log{
+    background-color: #ffffff;
+  }
+  
+  .robot-feed-image {
+    width: 100%;
+    border-radius: 10px; /* 이미지 둥근 모서리 */
+  }
+  
+  /* 현재 위치 및 로봇 활동 로그 섹션 */
+  .robot-info-section {
+    display: flex;
+    gap: 24px; /* 섹션 간 간격 */
+  }
+  
+  .lobot-current-location,
+  .robot-activity-log {
+    background-color: #ffffff;
+    padding: 10px 20px 20px 20px;
+    border-radius: 10px;
+    width: 100%;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .floor-plan-image {
+    width:100%;}
+  
+
+    /* 모바일 반응형 스타일 */
+@media (max-width: 768px) {
+  /* 전체 페이지 컨테이너 */
+  .robot-page-container {
+    padding: 15px 20px; /* 좌우 여백 축소 */
+  }
+
+  /* 현재 위치 및 로봇 활동 로그 섹션 */
+  .robot-info-section {
+    display: flex;
+    flex-direction: column; /* 세로로 정렬 */
+    gap: 20px; /* 간격 조정 */
+  }
+
+  /* 라이브 피드 & 알림 섹션 */
+  .live-robot-feed,
+  .robot-alert-section,
+  .lobot-current-location,
+  .robot-activity-log {
+    max-width: 100% !important; /* 전체 너비 강제 적용 */
+  }
+
+  /* 이미지 최적화 */
+  .robot-feed-image,
+  .floor-plan-image {
+    width: 100%;
+  }
+
+  .lobot-current-location,
+  .robot-activity-log {
+    width: auto;
+  }
+}

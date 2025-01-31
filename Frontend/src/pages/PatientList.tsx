@@ -4,6 +4,7 @@ import PatientCard from "../components/Patient/PatientCard.tsx"; // 환자 카�
 import PatientAlertSection from "../components/Patient/PatientAlert.tsx";
 import FloorButton from "../components/Patient/Floorbtn.tsx";
 import SortButton from "../components/Patient/SortBtn.tsx";
+import { useNavigate } from 'react-router-dom';
 
 const PatientList: React.FC = () => {
   const [activeFloor, setActiveFloor] = useState<string | null>(null);
@@ -11,7 +12,7 @@ const PatientList: React.FC = () => {
   const [visibleCards, setVisibleCards] = useState<number>(6); // 처음 렌더링할 카드 수
   const observerRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  
+  const navigate = useNavigate();
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth <= 768);
@@ -21,7 +22,9 @@ const PatientList: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-
+  const handleCreate = () => {
+    navigate('/patientrgistration');
+  };
   const handleFloorClick = (floor: string) => {
     setActiveFloor(prev => (prev === floor ? null : floor));
   };
@@ -33,12 +36,12 @@ const PatientList: React.FC = () => {
 
   // 전체 환자 데이터
   const patientData = [
-    { name: "김서연", patientId: "#12345", location: "1층 - 101호", status: "입원중", alertType: "응급", alertMessage: "알레르기 반응", lastTreatmentDate: "2일 전" },
-    { name: "이민준", patientId: "#12346", location: "1층 - 103호", status: "대기중", alertType: "특별 메모", alertMessage: "추적 관찰 필요", lastTreatmentDate: "5일 전" },
-    { name: "박지우", patientId: "#12347", location: "2층 - 201호", status: "입원중", alertType: "응급", alertMessage: "심박수 이상", lastTreatmentDate: "1일 전" },
-    { name: "최민수", patientId: "#12348", location: "2층 - 202호", status: "대기중", alertType: "특별 메모", alertMessage: "약물 부작용 관찰 필요", lastTreatmentDate: "3일 전" },
-    { name: "이정민", patientId: "#12349", location: "3층 - 301호", status: "입원중", alertType: "", alertMessage: "", lastTreatmentDate: "4일 전" },
-    { name: "한지민", patientId: "#12350", location: "3층 - 302호", status: "대기중", alertType: "", alertMessage: "", lastTreatmentDate: "6일 전" },
+    { id:1, name: "김서연", patientId: "#12345", location: "1층 - 101호", status: "입원중", alertType: "응급", alertMessage: "알레르기 반응", lastTreatmentDate: "2일 전" },
+    { id:2, name: "이민준", patientId: "#12346", location: "1층 - 103호", status: "대기중", alertType: "특별 메모", alertMessage: "추적 관찰 필요", lastTreatmentDate: "5일 전" },
+    { id:3, name: "박지우", patientId: "#12347", location: "2층 - 201호", status: "입원중", alertType: "응급", alertMessage: "심박수 이상", lastTreatmentDate: "1일 전" },
+    { id:4, name: "최민수", patientId: "#12348", location: "2층 - 202호", status: "대기중", alertType: "특별 메모", alertMessage: "약물 부작용 관찰 필요", lastTreatmentDate: "3일 전" },
+    { id:5, name: "이정민", patientId: "#12349", location: "3층 - 301호", status: "입원중", alertType: "", alertMessage: "", lastTreatmentDate: "4일 전" },
+    { id:6, name: "한지민", patientId: "#12350", location: "3층 - 302호", status: "대기중", alertType: "", alertMessage: "", lastTreatmentDate: "6일 전" },
     // 더 많은 데이터 추가 가능
   ];
 
@@ -92,7 +95,7 @@ const PatientList: React.FC = () => {
       />
     ))}
   </div>
-  {!isMobile && <button className="add-patient-button">+ 환자 추가</button>}
+  {!isMobile && <button className="add-patient-button" onClick={handleCreate}>+ 환자 추가</button>}
 </div>
 
       {/* 환자 카드 리스트 */}
