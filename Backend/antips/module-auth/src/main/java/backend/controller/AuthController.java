@@ -19,7 +19,7 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/private/validate")
+    @GetMapping("/validate")
     public String validateToken(){
         AuthResponse authResponse = new AuthResponse();
         log.info("유효성 검증 컨트롤러 호출");;
