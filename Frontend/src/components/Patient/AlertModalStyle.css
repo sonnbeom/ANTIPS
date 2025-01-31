@@ -1,0 +1,181 @@
+/* 전체 모달 오버레이 */
+.alert-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+  }
+  
+  /* 모달 컨테이너 */
+  .alert-modal-content {
+    background-color: #fff;
+    width: 70%;
+    max-width: 800px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* 모달 헤더 */
+  .alert-modal-header {
+    padding: 20px;
+    background-color: #f44336;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .alert-modal-header h2 {
+    margin: 0;
+  }
+  
+  .alert-modal-time {
+    font-size: 14px;
+  }
+  
+  /* 모달 본문 */
+  .alert-modal-body {
+    display: flex;
+    padding: 20px;
+    gap: 20px;
+  }
+  
+  /* 왼쪽 패널 */
+  .alert-modal-left {
+    flex: 1;
+  }
+  
+  .patient-info-group {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .patient-photo {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
+    border: 3px solid #f44336;
+  }
+  
+  .patient-info-group h3 {
+    margin: 5px 0;
+  }
+  
+  .patient-info-group p {
+    margin: 2px 0;
+  }
+  
+  .previous-actions {
+    margin-top: 20px;
+  }
+  
+  .previous-actions h4 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    color: #333;
+    text-align: center;
+  }
+  
+  .urgent-care-box {
+    background-color: #f9f9f9;
+    border-left: 4px solid #f44336;
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  
+  .urgent-care-box strong {
+    color: #555;
+    font-size: 14px;
+  }
+  
+  .urgent-care-box p {
+    margin: 5px 0;
+    color: #333;
+    font-size: 14px;
+  }
+  
+  /* 오른쪽 패널 */
+  .alert-modal-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .action-input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .action-input-group label {
+    font-size: 20px;
+    padding : 10px;
+    color: #666;
+  }
+  
+  .action-input-group textarea {
+    resize: none;
+    height: 300px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-size: 14px;
+    font-family: inherit;
+    outline: none;
+  }
+  
+  .action-input-group textarea:focus {
+    border-color: #f44336;
+    box-shadow: 0 0 4px rgba(244, 67, 54, 0.4);
+  }
+  
+  /* 모달 하단 버튼 */
+  .alert-modal-footer {
+    padding: 15px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background-color: #f9f9f9;
+    border-top: 1px solid #eee;
+  }
+  
+  .alert-modal-cancel,
+  .alert-modal-save {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+  
+  .alert-modal-cancel {
+    background-color: #ccc;
+    color: #fff;
+  }
+  
+  .alert-modal-cancel:hover {
+    background-color: #bbb;
+  }
+  
+  .alert-modal-save {
+    background-color: #f44336;
+    color: white;
+  }
+  
+  .alert-modal-save:hover {
+    background-color: #e53935;
+  }

@@ -4,8 +4,9 @@ import profile from '../assets/profile.png';
 import camera from '../assets/camera.svg'
 import hospital from '../assets/hospital2.svg'
 import chart from '../assets/cahrt.svg'
-import bar from '../assets/bar.svg'
+// import bar from '../assets/bar.svg'
 import tem from '../assets/tem.svg'
+import { useNavigate } from 'react-router-dom';
 
 const PatientRegistration: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -20,14 +21,17 @@ const PatientRegistration: React.FC = () => {
     specialNotes: "",
   });
   
+
   // 이미지 프리뷰를 위한 state의 초기값을 profile로 설정
   const [imagePreview, setImagePreview] = useState<string>(profile);
-
+  const navigate = useNavigate();
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
-
+  const handleCancel = () => {
+    navigate('/patientlist');
+  };
   // 이미지 업로드 핸들러 수정
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -91,10 +95,10 @@ const PatientRegistration: React.FC = () => {
 
     {/* 바코드, 체온 */}
     <div className="patient-registration-form-row">
-      <div className="patient-registration-form-group">
+      {/* <div className="patient-registration-form-group">
         <label htmlFor="barcode"><img src={bar} alt="bar" />  바코드 번호</label>
-        <input id="patient-registration-barcode" type="text" name="barcode" value={formData.barcode} onChange={handleChange} />
-      </div>
+        <input id="patient-registration-barcode" type="text" name="barcode" value={formData.barcode} onChange={handleChange} /> */}
+      {/* </div> */}
       <div className="patient-registration-form-group">
         <label htmlFor="diagnosis"><img src={tem} alt="tem" />  체온</label>
         <input id="patient-registration-diagnosis" type="text" name="diagnosis" value={formData.diagnosis} onChange={handleChange} />
@@ -104,7 +108,7 @@ const PatientRegistration: React.FC = () => {
 </div>
 
 
-          <hr/>
+          <hr className="pr-hr"/>
           <div className="patient-registration-form-row">
             <div className="patient-registration-form-group">
               <label htmlFor="floor">층</label>
@@ -125,7 +129,7 @@ const PatientRegistration: React.FC = () => {
             </div>
           </div>
         </div>
-        <hr/>
+        <hr className="pr-hr"/>
         {/* 과거 병력 */}
         <div className="patient-registration-section">
           <h2 className="patient-registration-section-title">과거 병력</h2>
@@ -150,9 +154,13 @@ const PatientRegistration: React.FC = () => {
 
         {/* 버튼 섹션 */}
         <div className="patient-registration-button-section">
-          <button type="button" className="patient-registration-cancel-button">
-            취소
-          </button>
+        <button 
+        type="button" 
+        className="patient-registration-cancel-button"
+        onClick={handleCancel}
+      >
+        취소
+      </button>
           <button type="submit" className="patient-registration-save-button">
             저장하기
           </button>

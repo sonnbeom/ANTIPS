@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import './LoginStyle.css'; // 스타일 파일
 import hospital from '../assets/hospital.jpg'
+import { useNavigate } from "react-router-dom";
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
+  const navigate = useNavigate();
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     console.log('Username:', username);
     console.log('Password:', password);
+    localStorage.setItem('token', 'a1');
+    navigate('/robot')
   };
-
   return (
     <div className="login-container">
       <div className="login-box">

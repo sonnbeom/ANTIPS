@@ -1,7 +1,9 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import "./PatientCardStyle.css";
 
 interface PatientCardProps {
+  id: number;
   name: string;
   patientId: string;
   location: string;
@@ -12,6 +14,7 @@ interface PatientCardProps {
 }
 
 const PatientCard: React.FC<PatientCardProps> = ({
+  id,
   name,
   patientId,
   location,
@@ -20,30 +23,36 @@ const PatientCard: React.FC<PatientCardProps> = ({
   alertMessage,
   lastTreatmentDate,
 }) => {
+  const navigate = useNavigate();
+
+  const handleNavigateToDetail = () => {
+    navigate(`/patient/${id}`);
+  };
+
   return (
     <div className={`patient-card ${status === "입원중" ? "inpatient" : "waiting"}`}>
       {/* 환자 정보 */}
       <div className="patient-info">
         <div className="patitent-info-left">
-        <img
-          src={`https://randomuser.me/api/portraits/men/75.jpg`}
-          alt={name}
-          className="patient-avatar"
-        />
-        <div>
-          <h4>{name}</h4>
-          <p>환자번호: {patientId}</p>
-          <p>위치: {location}</p>
-        </div>
+          <img
+            src={`https://randomuser.me/api/portraits/men/75.jpg`}
+            alt={name}
+            className="patient-avatar"
+          />
+          <div>
+            <h4>{name}</h4>
+            <p>환자번호: {patientId}</p>
+            <p>위치: {location}</p>
+          </div>
         </div>
         <div className="patitent-info-right">
-        <span
-          className={`patient-status-badge ${
-            status === "입원중" ? "inpatient" : "waiting"
-          }`}
-        >
-          {status}
-        </span>
+          <span
+            className={`patient-status-badge ${
+              status === "입원중" ? "inpatient" : "waiting"
+            }`}
+          >
+            {status}
+          </span>
         </div>
       </div>
 
@@ -64,7 +73,12 @@ const PatientCard: React.FC<PatientCardProps> = ({
         <p className="patient-last-treatment">
           <span className="patient-last-treatment-icon">⏰</span> 마지막 진료: {lastTreatmentDate}
         </p>
-        <button className="patient-navigate-button">상세보기 →</button>
+        <button 
+          className="patient-navigate-button"
+          onClick={handleNavigateToDetail}
+        >
+          상세보기 →
+        </button>
       </div>
     </div>
   );
