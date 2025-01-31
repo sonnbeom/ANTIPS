@@ -27,7 +27,7 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         log.info("gateway filter 작동");
         String path = exchange.getRequest().getPath().toString();
-        if (path.startsWith(AUTH_REQUIRED_PATH)){
+        if (AUTH_REQUIRED_PATHS.stream().anyMatch(path::startsWith)){
             log.info("if문 들어오냐 설마");
             String authHeader  = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
             // Authorization 헤더가 존재하고 "Bearer "로 시작하는지 확인
