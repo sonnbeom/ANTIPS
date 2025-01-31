@@ -20,15 +20,10 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/private/validate")
-    public ResponseEntity<CommonResponse<AuthResponse>> validateToken(){
+    public String validateToken(){
         AuthResponse authResponse = new AuthResponse();
-        log.info("유효성 검증 컨트롤러 호출");
-        CommonResponse<AuthResponse> response = CommonResponse.<AuthResponse>builder()
-                .status(200)
-                .message(SUCCESS_MESSAGE)
-                .data(authResponse)
-                .build();
-        return ResponseEntity.ok(response);
+        log.info("유효성 검증 컨트롤러 호출");;
+        return SUCCESS_MESSAGE;
     }
     @PostMapping("/login")
     public ResponseEntity<CommonResponse<AuthResponse>> login(@RequestBody LoginRequestDto loginRequestDto){
@@ -40,5 +35,9 @@ public class AuthController {
                 .data(authResponse)
                 .build();
         return ResponseEntity.ok(response);
+    }
+    @GetMapping("/private")
+    public int welcome(){
+        return 200;
     }
 }

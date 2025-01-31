@@ -19,9 +19,9 @@ public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
 
     @Override
-    public CustomUserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User member = userRepository.findByEmployeeNumber(email)
-                .orElseThrow(() -> new AuthUserNotFoundException("해당 사번에 해당하는 인원을 찾을 수 없습니다: %s "+ email, HttpStatus.NOT_FOUND));
+    public CustomUserDetails loadUserByUsername(String employeeNumber) throws UsernameNotFoundException {
+        User member = userRepository.findByEmployeeNumber(employeeNumber)
+                .orElseThrow(() -> new AuthUserNotFoundException("해당 사번에 해당하는 인원을 찾을 수 없습니다: %s "+ employeeNumber, HttpStatus.NOT_FOUND));
         return new CustomUserDetails(member);
 
     }
