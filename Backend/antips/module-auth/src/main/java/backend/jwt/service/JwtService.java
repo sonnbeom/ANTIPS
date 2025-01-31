@@ -25,20 +25,22 @@ public class JwtService {
     private String key;
 
     private final CustomUserDetailService customUserDetailService;
-    private long expireTimeMs = 100000;
-    private long refreshExpireTimeMs = 100000;
+//    private long expireTimeMs = 100000;
+//    private long refreshExpireTimeMs = 100000;
+    private long expireTimeMs = 86_400_000; // 24시간 (1일)
+    private long refreshExpireTimeMs = 86_400_000; // 24시간 (1일)
 
-    public AuthResponse provideToken(String email, User.Role role){
-        String accessToken = createToken(email, role);
-        String refreshToken = createRefreshToken(email);
+    public AuthResponse provideToken(String employeeNumber, User.Role role){
+        String accessToken = createToken(employeeNumber, role);
+        String refreshToken = createRefreshToken(employeeNumber);
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .build();
     }
-    private String createRefreshToken(String email){
+    private String createRefreshToken(String employeeNumber){
         Claims claims = Jwts.claims();
-        claims.put("EMAIL", email);
+        claims.put("EMPLOYEE_NUMBER", employeeNumber);
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -47,9 +49,9 @@ public class JwtService {
                 .compact();
 
     }
-    public String createToken(String email, User.Role role){
+    public String createToken(String employeeNumber, User.Role role){
         Claims claims = Jwts.claims();
-        claims.put("EMAIL", email);
+        claims.put("EMPLOYEE_NUMBER", employeeNumber);
         claims.put("ROLE_TYPE", role.name());
         return Jwts.builder()
                 .setClaims(claims)
@@ -76,8 +78,8 @@ public class JwtService {
 
     public UsernamePasswordAuthenticationToken validateToken(String token) {
         Claims claims = extractClaims(token);
-        String email = claims.get("EMAIL").toString();
-        CustomUserDetails userDetails = customUserDetailService.loadUserByUsername(email);
+        String employeeNumber = claims.get("EMPLOYEE_NUMBER").toString();
+        CustomUserDetails userDetails = customUserDetailService.loadUserByUsername(employeeNumber);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
 
         return authentication;

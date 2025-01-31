@@ -2,6 +2,7 @@ package backend.config;
 
 import backend.jwt.filter.JwtTokenFilter;
 
+import backend.jwt.service.JwtService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +25,8 @@ import static org.springframework.http.HttpMethod.POST;
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfiguration {
-    @Autowired
-//    private final JwtService jwtService;
+
+    private final JwtService jwtService;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -51,8 +52,8 @@ public class SecurityConfiguration {
         httpSecurity
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        httpSecurity
-//                .addFilterBefore(new JwtTokenFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
+        httpSecurity
+                .addFilterBefore(new JwtTokenFilter(jwtService), UsernamePasswordAuthenticationFilter.class);
         httpSecurity
                 .csrf(csrf -> csrf.disable());
         httpSecurity

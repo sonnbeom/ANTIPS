@@ -29,11 +29,20 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
         String path = exchange.getRequest().getPath().toString();
         if (path.startsWith(AUTH_REQUIRED_PATH)){
             log.info("if문 들어오냐 설마");
-            String token = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
+            String authHeader  = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
+            // Authorization 헤더가 존재하고 "Bearer "로 시작하는지 확인
+            if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+                exchange.getResponse().setStatusCode(UNAUTHORIZED);
+                return exchange.getResponse().setComplete();
+            }
+
+            // "Bearer " 이후의 JWT 토큰만 추출
+            String token = authHeader.substring(7);
+            log.info(token);
             return webClientBuilder.build()
                     .get() // 인증 서버에 get 요청을 보낸다.
                     .uri(AUTH_SERVER_URI)
-                    .header(AUTHORIZATION, token) // 헤더에 토큰 포함
+                    .header(AUTHORIZATION, "Bearer "+token) // 헤더에 토큰 포함
                     .retrieve()
                     .onStatus(
                             status -> status.is4xxClientError(),
@@ -46,10 +55,14 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
                     .bodyToMono(String.class)//인증 서버의 응답은 비동기로 Mono<String> 형태로 반환 토큰은 String 이므로
                     // bodyToMono => 응답본문을 지정한 타입으로 변환
                     .flatMap(response -> {
-                        if (response.equals("VALID")){
+                        log.info("response", response);
+                        if (response.equals("SUCCESS")){
+                            log.info("요청통과");
                             return chain.filter(exchange);
                         }
+                        log.info("filter 작동했지만 시큐리티 인증은 실패");
                         exchange.getResponse().setStatusCode(UNAUTHORIZED);
+
                         return exchange.getResponse().setComplete();
                     });
         }
