@@ -1,4 +1,4 @@
-package backend.user.domain;
+package backend.domain;
 
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;

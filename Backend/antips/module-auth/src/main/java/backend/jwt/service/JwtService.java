@@ -3,14 +3,13 @@ package backend.jwt.service;
 import backend.dto.response.AuthResponse;
 import backend.exception.InvalidJwtException;
 import backend.jwt.dto.CustomUserDetails;
-import backend.user.domain.User;
+import backend.domain.User;
 import io.jsonwebtoken.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.management.relation.Role;
@@ -18,7 +17,6 @@ import java.util.Date;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class JwtService {
 
     @Value("${secretKey}")
@@ -30,7 +28,11 @@ public class JwtService {
     private long expireTimeMs = 86_400_000; // 24시간 (1일)
     private long refreshExpireTimeMs = 86_400_000; // 24시간 (1일)
 
-    public AuthResponse provideToken(String employeeNumber, User.Role role){
+    public JwtService(CustomUserDetailService customUserDetailService) {
+        this.customUserDetailService = customUserDetailService;
+    }
+
+    public AuthResponse provideToken(String employeeNumber, Role role){
         String accessToken = createToken(employeeNumber, role);
         String refreshToken = createRefreshToken(employeeNumber);
         return AuthResponse.builder()
@@ -49,10 +51,10 @@ public class JwtService {
                 .compact();
 
     }
-    public String createToken(String employeeNumber, User.Role role){
+    public String createToken(String employeeNumber, Role role){
         Claims claims = Jwts.claims();
         claims.put("EMPLOYEE_NUMBER", employeeNumber);
-        claims.put("ROLE_TYPE", role.name());
+//        claims.put("ROLE_TYPE", role.name());
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))

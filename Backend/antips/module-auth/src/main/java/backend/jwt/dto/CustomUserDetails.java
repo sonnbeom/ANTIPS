@@ -1,6 +1,6 @@
 package backend.jwt.dto;
 
-import backend.user.domain.User;
+import backend.domain.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

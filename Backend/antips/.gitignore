@@ -233,3 +233,35 @@ gradle-app.setting
 !**/application-example.properties
 !**/application-example.yml
 /src/main/generated/
+
+ Docker-related files
+*.log
+*.pid
+docker-compose.override.yml
+Dockerfile*
+.docker/
+.dockerignore
+*.docker
+*.tar
+*.img
+docker-compose.yml
+# Ignore Docker images and volumes
+**/*.tar
+**/*.img
+**/build/
+
+# Docker build and volume cache files
+**/.docker/
+**/.docker_cache/
+
+.idea
+.git
+.gitignore
+.dockerignore
+Dockerfile
+*.md
+*.sh
+*.yml
+scripts
+.env
+compose.yaml
