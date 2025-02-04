@@ -1,50 +1,87 @@
 import React from "react";
-import "./HeaderStyle.css"; // CSS 파일
-import { FaRobot, FaUserMd, FaSignOutAlt } from "react-icons/fa"; // 아이콘 사용
-import logo from "../../assets/robot.png"
-import user from "../../assets/user.png"
+import "./HeaderStyle.css";
+import { FaRobot, FaUserMd, FaSignOutAlt } from "react-icons/fa";
+import logo from "../../assets/anti.png";
 import { useNavigate } from "react-router-dom";
 
-const Header: React.FC = () => {
-  const userName = "Dr. Sarah Kim"; // 사용자 이름
-  const userImage = user
+interface HeaderProps {
+  setIsAuthenticated: (isAuth: boolean) => void;
+}
+
+const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
+  const userName = "Dr. Sarah Kim";
   const navigate = useNavigate();
-  const handlePageRobot =()=>{
-    navigate('/robot')
+
+  const handlePageRobot = () => {
+    navigate('/robot');
   };
-  const handlePagePatient =()=>{
-    navigate('/patientlist')
+
+  const handlePagePatient = () => {
+    navigate('/patientlist');
   };
-  const handPagelogin =()=>{
+
+  // const handleLogout = async () => {
+  //   try {
+  //     // 로컬 스토리지에서 토큰 가져오기
+  //     const token = localStorage.getItem('token');
+      
+  //     if (!token) {
+  //       console.error('No token found');
+  //       return;
+  //     }
+
+  //     // 로그아웃 API 호출
+  //     const response = await fetch('/api/v1/auth/logout', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json'
+  //       },
+  //       credentials: 'include' // 쿠키를 포함하여 요청
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Logout failed');
+  //     }
+
+  //     // 로그아웃 성공 시 로컬 스토리지 클리어
+  //     localStorage.clear();
+  //     setIsAuthenticated(false);
+  //     navigate('/');
+      
+  //   } catch (error) {
+  //     console.error('Logout error:', error);
+  //     // 에러 처리 (예: 토스트 메시지 표시)
+  //   }
+  // };
+
+  const handleLogout = () => {
     localStorage.clear();
+    setIsAuthenticated(false); // 로그아웃 상태 즉시 반영
     navigate('/');
-    
-  }
+  };
+
   return (
     <div className="header-container">
-      {/* 로고 및 서비스명 */}
       <div className="header-left">
         <img src={logo} alt="Logo" className="header-logo" />
-        <span className="header-title">MediBot Control</span>
+        <span className="header-title">Anti-protective suit</span>
       </div>
 
-      {/* 네비게이션 버튼 */}
       <div className="header-nav">
         <button onClick={handlePageRobot} className="header-nav-button">
           <FaRobot className="header-nav-icon" /> Robot Portal
         </button>
-        <button onClick = {handlePagePatient} className="header-nav-button">
+        <button onClick={handlePagePatient} className="header-nav-button">
           <FaUserMd className="header-nav-icon" /> Patient Portal
         </button>
       </div>
 
-      {/* 사용자 정보 및 로그아웃 */}
       <div className="header-right">
         <div className="header-user-info">
-        <img src={userImage} alt="User" className="header-user-image" />
           <span className="header-user-name">{userName}</span>
         </div>
-        <button onClick={handPagelogin} className="header-logout-button">
+        <button onClick={handleLogout} className="header-logout-button">
           <FaSignOutAlt /> Logout
         </button>
       </div>

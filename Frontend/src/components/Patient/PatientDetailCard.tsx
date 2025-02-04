@@ -1,8 +1,8 @@
-// components/Patient/PatientDetailCard.tsx
 import React from 'react';
 import './PatientDetailCardStyle.css';
 import { FaUserCircle } from 'react-icons/fa';
-import PatientInfoItem from './PatientInfoItem.tsx'
+import PatientInfoItem from './PatientInfoItem';
+import { useNavigate } from 'react-router-dom';
 
 interface PatientDetailProps {
   patientId: number;
@@ -27,11 +27,20 @@ const PatientDetailCard: React.FC<PatientDetailProps> = ({
   floor,
   roomNumber
 }) => {
+  const navigate = useNavigate();
+
+  const handleEditClick = () => {
+    navigate(`/patient/edit/${patientId}`);
+  };
+
   return (
     <div className="patient-detailcard-container">
       <div className="patient-detailcard-header">
         <h2>환자 정보</h2>
-        <button className="patient-detailcard-edit-button">
+        <button 
+          className="patient-detailcard-edit-button"
+          onClick={handleEditClick}
+        >
           환자 정보 수정
         </button>
       </div>

@@ -1,9 +1,9 @@
 import React from "react";
 import "./RobotStyle.css";
-import LiveRobotFeed from "../components/Robot/LiveRobotFeed.tsx";
-import CurrentLocation from "../components/Robot/CurrentLocation.tsx";
-import RobotActivityLog from "../components/Robot/RobotActivityLog.tsx";
-import PatientAlertSection from "../components/Patient/PatientAlert.tsx";
+import LiveRobotFeed from "../components/Robot/LiveRobotFeed";
+import CurrentLocation from "../components/Robot/CurrentLocation";
+import RobotActivityLog from "../components/Robot/RobotActivityLog";
+import PatientAlertSection from "../components/Patient/PatientAlert";
 
 const Robot: React.FC = () => {
   return (

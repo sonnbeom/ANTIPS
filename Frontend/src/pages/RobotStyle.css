@@ -16,7 +16,8 @@
 
   /* 라이브 로봇 피드 섹션 */
   .robot-live-section {
-    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
     justify-content: center;
     margin-bottom: 20px; /* 아래 여백 */
@@ -40,6 +41,8 @@
   
   /* 현재 위치 및 로봇 활동 로그 섹션 */
   .robot-info-section {
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
     gap: 24px; /* 섹션 간 간격 */
   }
