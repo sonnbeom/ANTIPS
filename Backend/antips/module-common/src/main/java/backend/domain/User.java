@@ -8,7 +8,6 @@ public class User extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id", nullable = false)
     private Long id;
-
     private String name;
     private String employeeNumber;
     private String password;
