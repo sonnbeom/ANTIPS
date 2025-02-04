@@ -22,13 +22,22 @@ public class PatientController {
     public String welcome1() {
         return "인증 필요한 서비스 호출";
     }
-    @GetMapping("/patient")
+    @GetMapping("/free")
     public String welcone(){
         return "인증 필요 없는 서비스 호출";
     }
-    @PostMapping("patient")
+    @PostMapping("/patient")
     public CommonResponse<ResponsePatientDto> createPatient(@RequestBody RequestPatientDto requestPatientDto){
         ResponsePatientDto responsePatientDto = patientService.create(requestPatientDto);
+        return CommonResponse.<ResponsePatientDto>builder()
+                .message(SUCCESS)
+                .status(200)
+                .data(responsePatientDto)
+                .build();
+    }
+    @GetMapping("/patient")
+    public CommonResponse<ResponsePatientDto> getPatient(@RequestParam Long patientId){
+        ResponsePatientDto responsePatientDto = patientService.get(patientId);
         return CommonResponse.<ResponsePatientDto>builder()
                 .message(SUCCESS)
                 .status(200)
