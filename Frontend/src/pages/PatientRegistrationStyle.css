@@ -141,12 +141,12 @@
   }
   
   .patient-registration-save-button {
-    background-color: #1d4ed8; /* 파란색 */
+    background-color: #10b981; /* 파란색 */
     color: white;
   }
   
   .patient-registration-save-button:hover {
-    background-color: #1746b2; /* 더 진한 파란색 */
+    background-color: #059669; /* 더 진한 파란색 */
   }
   
   .patient-registration-cancel-button {

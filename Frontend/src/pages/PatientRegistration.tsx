@@ -4,23 +4,33 @@ import profile from '../assets/profile.png';
 import camera from '../assets/camera.svg'
 import hospital from '../assets/hospital2.svg'
 import chart from '../assets/cahrt.svg'
-// import bar from '../assets/bar.svg'
 import tem from '../assets/tem.svg'
 import { useNavigate } from 'react-router-dom';
 
 const PatientRegistration: React.FC = () => {
-  const [formData, setFormData] = useState({
+  interface FormData {
+    name: string;
+    birthdate: string;
+    barcode: string;
+    diagnosis: string; // temperature
+    floor: string;
+    room: string;
+    urgency: string;
+    medicalHistory: string;
+    specialNotes: string;
+  }
+  
+  const [formData, setFormData] = useState<FormData>({
     name: "",
     birthdate: "",
     barcode: "",
-    diagnosis: "",
+    diagnosis: "36.5", // 기본 체온
     floor: "",
     room: "",
-    urgency: "",
+    urgency: "1", // 기본 긴급도
     medicalHistory: "",
     specialNotes: "",
   });
-  
 
   // 이미지 프리뷰를 위한 state의 초기값을 profile로 설정
   const [imagePreview, setImagePreview] = useState<string>(profile);
@@ -43,15 +53,57 @@ const PatientRegistration: React.FC = () => {
       setImagePreview(profile);
     }
   };
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form Submitted:", formData);
-  };
   // 이미지 에러 처리 추가
   const handleImageError = () => {
     setImagePreview(profile);
   };
 
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+  
+    try {
+      // 로컬 스토리지에서 토큰 가져오기
+      const token = localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+      // API 요청 데이터 형식에 맞게 변환
+      const requestData = {
+        name: formData.name,
+        birthdate: formData.birthdate, // 날짜 형식 주의
+        specifics: formData.specialNotes,
+        urgencyLevel: parseInt(formData.urgency) || 1, // 숫자로 변환
+        caseHistory: formData.medicalHistory,
+        barcode: formData.barcode,
+        temperature: parseFloat(formData.diagnosis) || 36.5, // 체온을 숫자로 변환
+        status: "TODO",
+        floor: parseInt(formData.floor) || 1,
+        roomNumber: parseInt(formData.room) || 101,
+      };
+  
+      const response = await fetch('/api/v1/secure/patient', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(requestData)
+      });
+  
+      if (!response.ok) {
+        throw new Error('Failed to register patient');
+      }
+      const data = await response.json();
+      console.log('Patient registered successfully:', data);
+      // 성공 시 환자 목록 페이지로 이동
+      navigate('/patientlist');
+    } catch (error) {
+      console.error('Error registering patient:', error);
+      // 에러 처리 (예: 에러 메시지 표시)
+    }
+  };
+  
   return (
     <div className="patient-registration-container">
       <h1 className="patient-registration-page-title"><img src={hospital} alt="" /> 새로운 환자 등록</h1>
@@ -95,10 +147,6 @@ const PatientRegistration: React.FC = () => {
 
     {/* 바코드, 체온 */}
     <div className="patient-registration-form-row">
-      {/* <div className="patient-registration-form-group">
-        <label htmlFor="barcode"><img src={bar} alt="bar" />  바코드 번호</label>
-        <input id="patient-registration-barcode" type="text" name="barcode" value={formData.barcode} onChange={handleChange} /> */}
-      {/* </div> */}
       <div className="patient-registration-form-group">
         <label htmlFor="diagnosis"><img src={tem} alt="tem" />  체온</label>
         <input id="patient-registration-diagnosis" type="text" name="diagnosis" value={formData.diagnosis} onChange={handleChange} />
@@ -106,8 +154,6 @@ const PatientRegistration: React.FC = () => {
     </div>
   </div>
 </div>
-
-
           <hr className="pr-hr"/>
           <div className="patient-registration-form-row">
             <div className="patient-registration-form-group">
@@ -120,11 +166,16 @@ const PatientRegistration: React.FC = () => {
             </div>
             <div className="patient-registration-form-group">
               <label htmlFor="urgency">긴급도</label>
-              <select id="patient-registration-urgency" name="urgency" value={formData.urgency} onChange={handleChange}>
-                <option value="">선택하세요</option>
-                <option value="low">낮음</option>
-                <option value="medium">보통</option>
-                <option value="high">높음</option>
+              <select 
+                id="patient-registration-urgency" 
+                name="urgency" 
+                value={formData.urgency} 
+                onChange={handleChange}
+              >
+                <option value="1">낮음</option>
+                <option value="2">보통</option>
+                <option value="3">높음</option>
+                <option value="4">매우 높음</option>
               </select>
             </div>
           </div>
@@ -140,7 +191,6 @@ const PatientRegistration: React.FC = () => {
             onChange={handleChange}
           ></textarea>
         </div>
-
         {/* 특이사항 */}
         <div className="patient-registration-section">
           <h2 className="patient-registration-section-title">특이사항</h2>
@@ -151,7 +201,6 @@ const PatientRegistration: React.FC = () => {
             onChange={handleChange}
           ></textarea>
         </div>
-
         {/* 버튼 섹션 */}
         <div className="patient-registration-button-section">
         <button 

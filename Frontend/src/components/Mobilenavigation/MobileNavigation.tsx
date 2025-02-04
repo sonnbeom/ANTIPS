@@ -1,4 +1,3 @@
-// components/BottomNavigation/BottomNavigation.tsx
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import './MobileNavigationStyle.css';
@@ -6,12 +5,12 @@ import { FaRobot, FaHome, FaUser, FaSignOutAlt } from 'react-icons/fa';
 
 interface MobileNavigationProps {
   nurseName?: string;
-  onLogout?: () => void;
+  setIsAuthenticated: (isAuth: boolean) => void;
 }
 
 const MobileNavigation: React.FC<MobileNavigationProps> = ({ 
   nurseName = "김간호", 
-  onLogout = () => {} 
+  setIsAuthenticated
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -19,6 +18,47 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
   const isActive = (path: string) => {
     return location.pathname === path;
   };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    setIsAuthenticated(false); // 로그아웃 상태 즉시 반영
+    navigate('/');
+  };
+
+    // const handleLogout = async () => {
+  //   try {
+  //     // 로컬 스토리지에서 토큰 가져오기
+  //     const token = localStorage.getItem('token');
+      
+  //     if (!token) {
+  //       console.error('No token found');
+  //       return;
+  //     }
+
+  //     // 로그아웃 API 호출
+  //     const response = await fetch('/api/v1/auth/logout', {
+  //       method: 'POST',
+  //       headers: {
+  //         'Authorization': `Bearer ${token}`,
+  //         'Content-Type': 'application/json'
+  //       },
+  //       credentials: 'include' // 쿠키를 포함하여 요청
+  //     });
+
+  //     if (!response.ok) {
+  //       throw new Error('Logout failed');
+  //     }
+
+  //     // 로그아웃 성공 시 로컬 스토리지 클리어
+  //     localStorage.clear();
+  //     setIsAuthenticated(false);
+  //     navigate('/');
+      
+  //   } catch (error) {
+  //     console.error('Logout error:', error);
+  //     // 에러 처리 (예: 토스트 메시지 표시)
+  //   }
+  // };
 
   return (
     <nav className="bottom-navigation">
@@ -30,7 +70,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
         <span>로봇</span>
       </button>
       <button 
-        className={`nav-item ${isActive('/') ? 'active' : ''}`}
+        className={`nav-item ${isActive('/patientlist') ? 'active' : ''}`}
         onClick={() => navigate('/patientlist')}
       >
         <FaHome />
@@ -44,7 +84,7 @@ const MobileNavigation: React.FC<MobileNavigationProps> = ({
       </button>
       <button 
         className="nav-item"
-        onClick={onLogout}
+        onClick={handleLogout}
       >
         <FaSignOutAlt />
         <span>로그아웃</span>

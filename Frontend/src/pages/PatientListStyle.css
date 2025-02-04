@@ -17,6 +17,8 @@
   
   /* 필터 버튼 섹션 */
   .patient-floor-filter-section {
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
     gap: 10px; /* 버튼 간격 */
     margin-top: 20px;
@@ -24,6 +26,8 @@
   
   
   .patient-sort-section {
+    max-width: 1280px;
+    margin: 0 auto;
     display: flex;
     justify-content: space-between; /* 양쪽 끝으로 정렬 */
     align-items: center; /* 세로 중앙 정렬 */
@@ -55,6 +59,8 @@
   }
   
   .patient-card-list {
+    max-width: 1280px;
+    margin: 0 auto;
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 한 줄에 두 개의 카드 */
     gap: 20px; /* 카드 간격 */

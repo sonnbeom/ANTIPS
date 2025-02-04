@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./PatientListStyle.css";
-import PatientCard from "../components/Patient/PatientCard.tsx"; // 환자 카드 컴포넌트
-import PatientAlertSection from "../components/Patient/PatientAlert.tsx";
-import FloorButton from "../components/Patient/Floorbtn.tsx";
-import SortButton from "../components/Patient/SortBtn.tsx";
+import PatientCard from "../components/Patient/PatientCard"; // 환자 카드 컴포넌트
+import PatientAlertSection from "../components/Patient/PatientAlert";
+import FloorButton from "../components/Patient/Floorbtn";
+import SortButton from "../components/Patient/SortBtn";
 import { useNavigate } from 'react-router-dom';
 
 const PatientList: React.FC = () => {
@@ -23,7 +23,7 @@ const PatientList: React.FC = () => {
   }, []);
 
   const handleCreate = () => {
-    navigate('/patientrgistration');
+    navigate('/patientregistration');
   };
   const handleFloorClick = (floor: string) => {
     setActiveFloor(prev => (prev === floor ? null : floor));
@@ -77,7 +77,6 @@ const PatientList: React.FC = () => {
           <FloorButton
             key={floor}
             floor={floor}
-            count={patientData.filter((p) => p.location.startsWith(floor)).length}
             isActive={activeFloor === floor}
             onClick={() => handleFloorClick(floor)}
           />
@@ -111,3 +110,158 @@ const PatientList: React.FC = () => {
 };
 
 export default PatientList;
+
+// import React, { useState, useEffect, useCallback } from "react";
+// import "./PatientListStyle.css";
+// import PatientCard from "../components/Patient/PatientCard";
+// import PatientAlertSection from "../components/Patient/PatientAlert";
+// import FloorButton from "../components/Patient/Floorbtn";
+// import SortButton from "../components/Patient/SortBtn";
+// import { useNavigate } from 'react-router-dom';
+
+// interface PatientData {
+//   patientId: number;
+//   name: string;
+//   birthDate: string;
+//   age: number;
+//   specifics: string;
+//   urgencyLevel: number;
+//   temperature: number;
+//   floor: number;
+//   roomNumber: number;
+// }
+
+// interface ApiResponse {
+//   status: number;
+//   message: string;
+//   data: {
+//     listSize: number;
+//     patientList: PatientData[];
+//   };
+// }
+
+// const PatientList: React.FC = () => {
+//   const [activeFloor, setActiveFloor] = useState<string | null>(null);
+//   const [activeSort, setActiveSort] = useState<string | null>(null);
+//   const [patients, setPatients] = useState<PatientData[]>([]);
+//   const [loading, setLoading] = useState(false);
+//   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+//   const navigate = useNavigate();
+
+//   const fetchPatients = useCallback(async () => {
+//     try {
+//       setLoading(true);
+//       const token = localStorage.getItem('token');
+//       if (!token) {
+//         throw new Error('No token found');
+//       }
+
+//       const params = new URLSearchParams();
+//       if (activeFloor) {
+//         params.append('floor', activeFloor.replace('층', ''));
+//       }
+//       if (activeSort) {
+//         params.append('sort', activeSort === '위급도순' ? 'urgencyLevel' : 'createdAt');
+//         params.append('order', 'DESC');
+//       }
+
+//       const response = await fetch(`/api/v1/secure/patient?${params.toString()}`, {
+//         headers: {
+//           'Authorization': `Bearer ${token}`,
+//           'Content-Type': 'application/json',
+//         },
+//       });
+
+//       if (!response.ok) {
+//         throw new Error('Failed to fetch patients');
+//       }
+
+//       const result: ApiResponse = await response.json();
+//       if (result.status === 200) {
+//         setPatients(result.data.patientList);
+//       }
+//     } catch (error) {
+//       console.error('Error fetching patients:', error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   }, [activeFloor, activeSort]);
+
+//   useEffect(() => {
+//     fetchPatients();
+//   }, [fetchPatients]);
+
+//   useEffect(() => {
+//     const handleResize = () => setIsMobile(window.innerWidth <= 768);
+//     window.addEventListener('resize', handleResize);
+//     return () => window.removeEventListener('resize', handleResize);
+//   }, []);
+
+//   const handleCreate = () => {
+//     navigate('/patientregistration');
+//   };
+
+//   const handleFloorClick = (floor: string) => {
+//     setActiveFloor(prev => prev === floor ? null : floor);
+//   };
+
+//   const handleSortClick = (sort: string) => {
+//     setActiveSort(sort);
+//   };
+
+//   return (
+//     <div className="patient-list-container">
+//       <div className="patient-alert-sections">
+//         <PatientAlertSection />
+//       </div>
+
+//       <div className="patient-floor-filter-section">
+//         {["1층", "2층", "3층"].map((floor) => (
+//           <FloorButton
+//             key={floor}
+//             floor={floor}
+//             count={patients.filter(p => p.floor === parseInt(floor)).length}
+//             isActive={activeFloor === floor}
+//             onClick={() => handleFloorClick(floor)}
+//           />
+//         ))}
+//       </div>
+
+//       <div className="patient-sort-section">
+//         <div className="sort-buttons">
+//           {["최신순", "위급도순"].map((option) => (
+//             <SortButton
+//               key={option}
+//               label={option}
+//               isActive={activeSort === option}
+//               onClick={() => handleSortClick(option)}
+//             />
+//           ))}
+//         </div>
+//         {!isMobile && <button className="add-patient-button" onClick={handleCreate}>+ 환자 추가</button>}
+//       </div>
+
+//       <div className="patient-card-list">
+//         {loading ? (
+//           <div>Loading...</div>
+//         ) : (
+//           patients.map((patient) => (
+//             <PatientCard
+//               key={patient.patientId}
+//               id={patient.patientId}
+//               name={patient.name}
+//               patientId={`#${patient.patientId}`}
+//               location={`${patient.floor}층 - ${patient.roomNumber}호`}
+//               status={patient.urgencyLevel > 3 ? "입원중" : "대기중"}
+//               alertType={patient.urgencyLevel > 3 ? "응급" : ""}
+//               alertMessage={patient.specifics}
+//               lastTreatmentDate={patient.birthDate}
+//             />
+//           ))
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default PatientList;

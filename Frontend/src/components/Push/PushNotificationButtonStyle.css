@@ -1,0 +1,37 @@
+.push-notification-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    min-width: 150px;
+  }
+  
+  .push-notification-button:hover {
+    background-color: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+  
+  .push-notification-button:active {
+    transform: translateY(0);
+  }
+  
+  .push-notification-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+  
+  .push-notification-button:disabled:hover {
+    background-color: #cccccc;
+    transform: none;
+    box-shadow: none;
+  }
+  

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./RobotActivityLogStyle.css";
 import { FaGamepad } from "react-icons/fa"; // React Icons 사용 (게임패드 아이콘)
-import RobotCommandModal from "./RobotCommandModal.tsx"; // 모달 컴포넌트
+import RobotCommandModal from "./RobotCommandModal"; // 모달 컴포넌트
 
 const RobotActivityLog: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
