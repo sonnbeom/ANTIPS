@@ -3,7 +3,7 @@ package backend.controller;
 import backend.service.AuthService;
 import backend.dto.requesst.LoginRequestDto;
 import backend.dto.response.AuthResponse;
-import backend.user.response.CommonResponse;
+import backend.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

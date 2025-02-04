@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 
 @Configuration
-@EnableJpaRepositories(basePackages = "backend")
+@EnableJpaRepositories(basePackages = "backend")  // 최상위 패키지로 변경
 @EntityScan(basePackages = "backend")
 public class JpaConfig {
 }

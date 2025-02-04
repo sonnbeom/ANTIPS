@@ -1,16 +1,24 @@
 plugins {
+
     id 'java-library'
+    id 'org.springframework.boot' version '3.0.7'
+    id 'io.spring.dependency-management' version '1.1.7'
 }
-tasks.named('bootJar'){ // bootJar 세팅을 켜기
+tasks.named('bootJar') {
     enabled = false
+
+}
+bootJar{
+    mainClass = 'backend.CommonApplication'
 }
 
 tasks.named('jar'){ // jar 설정은 끄기
     enabled = true
 }
 
+
 group = 'backend'
-version = 'unspecified'
+version = '0.0.1-SNAPSHOT'
 
 repositories {
     mavenCentral()
@@ -21,7 +29,7 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-
+    implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.junit.jupiter:junit-jupiter'
     implementation project(':')
     implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.1')
