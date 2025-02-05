@@ -22,7 +22,7 @@ import static backend.common.constant.ConstantResponseMessage.*;
 public class PatientController {
     private final PatientService patientService;
 
-    @GetMapping("/non-public/patient")
+    @GetMapping("/non-public/free")
     public String welcome1(@RequestHeader("X-User-Id") String userId) {
         log.info(userId);
         return "인증 필요한 서비스 호출";
@@ -31,7 +31,7 @@ public class PatientController {
     public String welcone(){
         return "인증 필요 없는 서비스 호출";
     }
-    @PostMapping("/patient")
+    @PostMapping("/non-public/patient")
     public CommonResponse<ResponsePatientDto> createPatient(@RequestBody RequestPatientDto requestPatientDto){
         ResponsePatientDto responsePatientDto = patientService.create(requestPatientDto);
         return CommonResponse.<ResponsePatientDto>builder()
@@ -40,7 +40,7 @@ public class PatientController {
                 .data(responsePatientDto)
                 .build();
     }
-    @GetMapping("/patient")
+    @GetMapping("/non-public/patient")
     public CommonResponse<ResponsePatientDto> getPatient(@RequestParam Long patientId){
         ResponsePatientDto responsePatientDto = patientService.getPatient(patientId);
         return CommonResponse.<ResponsePatientDto>builder()
@@ -49,7 +49,7 @@ public class PatientController {
                 .data(responsePatientDto)
                 .build();
     }
-    @GetMapping("/patients")
+    @GetMapping("/non-public/patients")
     public CommonResponse<ResponsePatientListDto> getPatients(
             @RequestParam String sort,
             @RequestParam String order,
@@ -61,7 +61,7 @@ public class PatientController {
                 .data(responsePatientListDto)
                 .build();
     }
-    @PatchMapping("patient")
+    @PatchMapping("/non-public/patient")
     public CommonResponse<ResponsePatientDto> patchPatient(
             @RequestBody RequestPatientPatchDto requestPatientPatchDto
             ){
