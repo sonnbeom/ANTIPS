@@ -1,4 +1,4 @@
-package backend.patient.dto;
+package backend.patient.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

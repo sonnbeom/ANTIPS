@@ -1,7 +1,8 @@
 package backend.patient.domain;
 
 
-import backend.patient.dto.ResponsePatientDto;
+import backend.common.domain.BaseEntity;
+import backend.patient.dto.response.ResponsePatientDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @AllArgsConstructor
-public class Patient {
+public class Patient extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "patient_id", nullable = false)
@@ -47,5 +48,33 @@ public class Patient {
                 .name(patient.name)
                 .status(patient.status)
                 .build();
+    }
+
+    public void updateCaseHistory(String caseHistory) {
+        this.caseHistory = caseHistory;
+    }
+
+    public void updateStatus(String status) {
+        this.status = status;
+    }
+
+    public void updateFloor(Integer floor) {
+        this.floor = floor;
+    }
+
+    public void updateRoomNumber(Integer roomNumber) {
+        this.roomNumber = roomNumber;
+    }
+
+    public void updateSpecifics(String specifics) {
+        this.specifics = specifics;
+    }
+
+    public void updateTemperature(Float temperature) {
+        this.temperature = temperature;
+    }
+
+    public void updateUrgencyLevel(Integer urgencyLevel) {
+        this.urgencyLevel = urgencyLevel;
     }
 }

@@ -1,4 +1,4 @@
-package backend.response;
+package backend.common.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

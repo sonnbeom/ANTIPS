@@ -10,17 +10,20 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-import static backend.common.ConstantSortKeyword.*;
+import static backend.common.constant.ConstantSortKeyword.*;
 import static backend.patient.domain.QPatient.*;
 
 @Repository
 public class CustomPatientRepository {
     private final JPAQueryFactory queryFactory;
+    private final EntityManager entityManager;
     @Autowired
     public CustomPatientRepository(EntityManager entityManager) {
         this.queryFactory = new JPAQueryFactory(entityManager);
+        this.entityManager = entityManager;
     }
     public List<Patient> getPatientsBySort(String sort, String order, int floor){
+
         JPAQuery<Patient> query = queryFactory.selectFrom(patient)
                 .where(patient.floor.eq(floor));
         switch (sort) {
@@ -48,5 +51,10 @@ public class CustomPatientRepository {
                 throw new IllegalArgumentException("Invalid sort field: " + sort);
         }
         return query.fetch();
+    }
+
+    public void resetPersistenceContext() {
+        entityManager.flush();
+        entityManager.clear();
     }
 }

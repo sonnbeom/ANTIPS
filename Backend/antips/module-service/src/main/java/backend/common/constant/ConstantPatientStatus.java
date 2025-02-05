@@ -1,6 +1,6 @@
-package backend.common;
+package backend.common.constant;
 
-public class PatientStatus {
+public class ConstantPatientStatus {
     public static String TODO = "to_do";
     public static String DONE = "done";
 }
