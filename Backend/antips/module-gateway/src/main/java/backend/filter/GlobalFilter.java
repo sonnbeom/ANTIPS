@@ -2,6 +2,7 @@ package backend.filter;
 
 import backend.exception.CustomMonoClientException;
 import backend.exception.CustomMonoServerException;
+import backend.response.AuthResponse;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
             log.info(token);
             return webClientBuilder.build()
                     .get() // 인증 서버에 get 요청을 보낸다.
-                    .uri(AUTH_SERVER_URI)
+                    .uri(AUTH_LOCAL_SERVER_URI)
                     .header(AUTHORIZATION, "Bearer "+token) // 헤더에 토큰 포함
                     .retrieve()
                     .onStatus(
@@ -52,11 +53,14 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
                             status -> status.is5xxServerError(),
                             clientResponse -> Mono.error(new CustomMonoServerException("클라이언트 요청 에러 발생", INTERNAL_SERVER_ERROR))
                     )
-                    .bodyToMono(String.class)//인증 서버의 응답은 비동기로 Mono<String> 형태로 반환 토큰은 String 이므로
+                    .bodyToMono(AuthResponse.class)//인증 서버의 응답은 비동기로 Mono<String> 형태로 반환 토큰은 String 이므로
                     // bodyToMono => 응답본문을 지정한 타입으로 변환
-                    .flatMap(response -> {
-                        log.info("response", response);
-                        if (response.equals("SUCCESS")){
+                    .flatMap(authResponse -> {
+                        log.info("response", authResponse);
+                        if (authResponse.getMessage().equals("SUCCESS")){
+                            ServerWebExchange mutatedExchange = exchange.mutate()
+                                    .request(r -> r.headers(headers -> headers.add("X-User-Id", authResponse.getUserId())))
+                                    .build();
                             log.info("요청통과");
                             return chain.filter(exchange);
                         }

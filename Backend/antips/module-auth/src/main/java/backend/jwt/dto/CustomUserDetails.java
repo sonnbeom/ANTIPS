@@ -28,6 +28,9 @@ public record CustomUserDetails(User user) implements UserDetails {
     public String getUsername() {
         return "";
     }
+    public Long getUSerId(){
+         return this.user.getIdForUserDetail();
+    }
 
     @Override
     public boolean isAccountNonExpired() {

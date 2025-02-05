@@ -37,7 +37,7 @@ public class SecurityConfiguration {
                             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                                 CorsConfiguration configuration = new CorsConfiguration();
                                 // 허용할 도메인
-                                configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                                configuration.setAllowedOrigins(Collections.singletonList("*"));
                                 // 허용할 메소드
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 // 쿠키나 인증 정보를 포함한 요청을 허용할지 여부 설정

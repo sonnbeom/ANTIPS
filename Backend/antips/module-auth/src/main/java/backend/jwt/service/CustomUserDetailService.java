@@ -1,5 +1,7 @@
 package backend.jwt.service;
 
+import backend.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -7,15 +9,11 @@ import org.springframework.stereotype.Service;
 import backend.exception.AuthUserNotFoundException;
 import backend.jwt.dto.CustomUserDetails;
 import backend.domain.User;
-import backend.repository.UserRepository;
 
+@RequiredArgsConstructor
 @Service
 public class CustomUserDetailService implements UserDetailsService {
     private final UserRepository userRepository;
-
-    public CustomUserDetailService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public CustomUserDetails loadUserByUsername(String employeeNumber) throws UsernameNotFoundException {
