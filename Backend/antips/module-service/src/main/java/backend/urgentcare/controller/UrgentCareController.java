@@ -19,7 +19,7 @@ public class UrgentCareController {
 
     private final UrgentCareService urgentCareService;
 
-    @PostMapping("/urgent-care")
+    @PostMapping("/non-public/urgent-care")
     public CommonResponse<ResponseUrgentCareDto> createUrgentCare(
             @RequestBody RequestUrgentCareDto requestUrgentCareDto){
         ResponseUrgentCareDto responseUrgentCareDto = urgentCareService.create(requestUrgentCareDto);
@@ -29,7 +29,7 @@ public class UrgentCareController {
                 .data(responseUrgentCareDto)
                 .build();
     }
-    @GetMapping("/urgent-care/emergency")
+    @GetMapping("/non-public/urgent-care/emergency")
     public CommonResponse<ResponseUrgentCareWithPatientDto> getUrgentCareWithPatient(
             @RequestParam Long patientId){
         ResponseUrgentCareWithPatientDto responseUrgentCareWithPatientDto = urgentCareService.getUrgentCareWithParent(patientId);
