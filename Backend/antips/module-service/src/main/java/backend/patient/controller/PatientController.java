@@ -22,8 +22,9 @@ import static backend.common.constant.ConstantResponseMessage.*;
 public class PatientController {
     private final PatientService patientService;
 
-    @GetMapping("/auth/patient")
-    public String welcome1() {
+    @GetMapping("/non-public/patient")
+    public String welcome1(@RequestHeader("X-User-Id") String userId) {
+        log.info(userId);
         return "인증 필요한 서비스 호출";
     }
     @GetMapping("/free")
