@@ -3,11 +3,14 @@ package backend.patient.controller;
 import backend.common.ConstantResponseMessage;
 import backend.patient.dto.RequestPatientDto;
 import backend.patient.dto.ResponsePatientDto;
+import backend.patient.dto.ResponsePatientListDto;
 import backend.patient.service.PatientService;
 import backend.response.CommonResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static backend.common.ConstantResponseMessage.*;
 
@@ -37,11 +40,23 @@ public class PatientController {
     }
     @GetMapping("/patient")
     public CommonResponse<ResponsePatientDto> getPatient(@RequestParam Long patientId){
-        ResponsePatientDto responsePatientDto = patientService.get(patientId);
+        ResponsePatientDto responsePatientDto = patientService.getPatient(patientId);
         return CommonResponse.<ResponsePatientDto>builder()
                 .message(SUCCESS)
                 .status(200)
                 .data(responsePatientDto)
+                .build();
+    }
+    @GetMapping("/patients")
+    public CommonResponse<ResponsePatientListDto> getPatients(
+            @RequestParam String sort,
+            @RequestParam String order,
+            @RequestParam int floor){
+        ResponsePatientListDto responsePatientListDto = patientService.getPatients(sort, order, floor);
+        return CommonResponse.<ResponsePatientListDto>builder()
+                .message(SUCCESS)
+                .status(200)
+                .data(responsePatientListDto)
                 .build();
     }
 }

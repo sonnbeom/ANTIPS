@@ -19,4 +19,5 @@ public class ResponsePatientDto {
     private String caseHistory;
     private float temperature;
     private int urgencyLevel;
+    private String status;
 }

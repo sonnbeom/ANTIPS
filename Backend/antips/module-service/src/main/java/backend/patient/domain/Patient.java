@@ -32,18 +32,20 @@ public class Patient {
     private float temperature;
     @Column(name = "urgency_level", nullable = false)
     private int urgencyLevel;
+    private String status;
 
-    public ResponsePatientDto entityToDto(Patient savedPatient) {
+    public ResponsePatientDto entityToDto(Patient patient) {
         return ResponsePatientDto.builder()
-                .id(id)
-                .caseHistory(caseHistory)
-                .admissionDate(admissionDate)
-                .floor(floor)
-                .roomNumber(roomNumber)
-                .urgencyLevel(urgencyLevel)
-                .specifics(specifics)
-                .temperature(temperature)
-                .name(name)
+                .id(patient.id)
+                .caseHistory(patient.caseHistory)
+                .admissionDate(patient.admissionDate)
+                .floor(patient.floor)
+                .roomNumber(patient.roomNumber)
+                .urgencyLevel(patient.urgencyLevel)
+                .specifics(patient.specifics)
+                .temperature(patient.temperature)
+                .name(patient.name)
+                .status(patient.status)
                 .build();
     }
 }
