@@ -28,7 +28,7 @@ public class PatientMapper {
                 .build();
     }
 
-    public ResponsePatientListDto dtoToEntity(List<Patient> patients) {
+    public ResponsePatientListDto entityToDto(List<Patient> patients) {
         List<ResponsePatientDto> list = new ArrayList<>();
         for (Patient patient : patients){
             ResponsePatientDto responsePatientDto = patient.entityToDto(patient);
@@ -40,7 +40,7 @@ public class PatientMapper {
                 .build();
     }
 
-    public ResponsePatientListDto dtoToEntity() {
+    public ResponsePatientListDto entityToDto() {
         return ResponsePatientListDto.builder()
                 .patientList(new ArrayList<>())
                 .listSize(0)

@@ -43,10 +43,10 @@ public class PatientService {
     public ResponsePatientListDto getPatients(String sort, String order, int floor) {
         List<Patient> patients = customPatientRepository.getPatientsBySort(sort, order, floor);
         if (patients.isEmpty()){
-            return patientMapper.dtoToEntity();
+            return patientMapper.entityToDto();
         }
         else {
-            return patientMapper.dtoToEntity(patients);
+            return patientMapper.entityToDto(patients);
 
         }
     }
