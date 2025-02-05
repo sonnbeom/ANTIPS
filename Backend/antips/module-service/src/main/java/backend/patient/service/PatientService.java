@@ -5,7 +5,7 @@ import backend.patient.dto.request.RequestPatientDto;
 import backend.patient.dto.request.RequestPatientPatchDto;
 import backend.patient.dto.response.ResponsePatientDto;
 import backend.patient.dto.response.ResponsePatientListDto;
-import backend.patient.dtomapper.PatientMapper;
+import backend.patient.mapper.PatientMapper;
 import backend.patient.exception.PatientNotFoundException;
 import backend.patient.repository.CustomPatientRepository;
 import backend.patient.repository.PatientRepository;
@@ -83,7 +83,7 @@ public class PatientService {
         return updatedParent.entityToDto(updatedParent);
     }
 
-    private Patient findPatientById(Long patientId){
+    public Patient findPatientById(Long patientId){
         return patientRepository.findById(patientId).
                 orElseThrow(()-> new PatientNotFoundException(patientId+"에 해당하는 환자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
     }

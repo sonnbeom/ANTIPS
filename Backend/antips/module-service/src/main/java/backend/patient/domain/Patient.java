@@ -3,12 +3,15 @@ package backend.patient.domain;
 
 import backend.common.domain.BaseEntity;
 import backend.patient.dto.response.ResponsePatientDto;
+import backend.urgentcare.domain.UrgentCare;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "patient")
@@ -34,6 +37,11 @@ public class Patient extends BaseEntity {
     @Column(name = "urgency_level", nullable = false)
     private int urgencyLevel;
     private String status;
+    @OneToMany(mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<UrgentCare> urgentCares = new ArrayList<>();
 
     public ResponsePatientDto entityToDto(Patient patient) {
         return ResponsePatientDto.builder()

@@ -1,4 +1,4 @@
-package backend.patient.dtomapper;
+package backend.patient.mapper;
 
 import backend.patient.domain.Patient;
 import backend.patient.dto.request.RequestPatientDto;
