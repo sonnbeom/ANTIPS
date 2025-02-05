@@ -1,15 +1,15 @@
 package backend.patient.dtomapper;
 
 import backend.patient.domain.Patient;
-import backend.patient.dto.RequestPatientDto;
-import backend.patient.dto.ResponsePatientDto;
-import backend.patient.dto.ResponsePatientListDto;
+import backend.patient.dto.request.RequestPatientDto;
+import backend.patient.dto.response.ResponsePatientDto;
+import backend.patient.dto.response.ResponsePatientListDto;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static backend.common.PatientStatus.*;
+import static backend.common.constant.ConstantPatientStatus.*;
 
 @Service
 public class PatientMapper {

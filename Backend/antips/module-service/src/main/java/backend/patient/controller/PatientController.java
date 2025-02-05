@@ -1,18 +1,19 @@
 package backend.patient.controller;
 
-import backend.common.ConstantResponseMessage;
-import backend.patient.dto.RequestPatientDto;
-import backend.patient.dto.ResponsePatientDto;
-import backend.patient.dto.ResponsePatientListDto;
+
+import backend.common.response.CommonResponse;
+import backend.patient.dto.request.RequestPatientDto;
+import backend.patient.dto.request.RequestPatientPatchDto;
+import backend.patient.dto.response.ResponsePatientDto;
+import backend.patient.dto.response.ResponsePatientListDto;
 import backend.patient.service.PatientService;
-import backend.response.CommonResponse;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-import static backend.common.ConstantResponseMessage.*;
+import static backend.common.constant.ConstantResponseMessage.*;
 
 @RequestMapping("/api/v1/service")
 @RestController
@@ -59,4 +60,16 @@ public class PatientController {
                 .data(responsePatientListDto)
                 .build();
     }
-}
+    @PatchMapping("patient")
+    public CommonResponse<ResponsePatientDto> patchPatient(
+            @RequestBody RequestPatientPatchDto requestPatientPatchDto
+            ){
+        ResponsePatientDto responsePatientDto = patientService.patchPatient(requestPatientPatchDto);
+        return CommonResponse.<ResponsePatientDto>builder()
+                .message(SUCCESS)
+                .status(200)
+                .data(responsePatientDto)
+                .build();
+    }
+    }
+

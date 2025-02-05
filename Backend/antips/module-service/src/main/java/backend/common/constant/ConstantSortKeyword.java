@@ -1,4 +1,4 @@
-package backend.common;
+package backend.common.constant;
 
 public class ConstantSortKeyword {
     public static final String CREATED_AT = "created_at";
