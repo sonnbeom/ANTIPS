@@ -31,6 +31,7 @@ public class UrgentCare extends BaseEntity{
         return ResponseUrgentCareDto.builder()
                 .urgentCareId(savedUrgentCare.id)
                 .content(savedUrgentCare.content)
+                .createdAt(savedUrgentCare.getCreatedAt())
                 .build();
     }
 }
