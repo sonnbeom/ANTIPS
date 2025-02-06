@@ -16,6 +16,7 @@ public class PatientMapper {
 
     public Patient dtoToEntity(RequestPatientDto requestPatientDto) {
         return Patient.builder()
+                .age(requestPatientDto.getAge())
                 .floor(requestPatientDto.getFloor())
                 .name(requestPatientDto.getName())
                 .caseHistory(requestPatientDto.getCaseHistory())
@@ -23,7 +24,7 @@ public class PatientMapper {
                 .specifics(requestPatientDto.getSpecifics())
                 .urgencyLevel(requestPatientDto.getUrgencyLevel())
                 .roomNumber(requestPatientDto.getRoomNumber())
-                .admissionDate(requestPatientDto.getAdmissionDate())
+                .qrCode(requestPatientDto.getQrCode())
                 .status(TODO)
                 .build();
     }

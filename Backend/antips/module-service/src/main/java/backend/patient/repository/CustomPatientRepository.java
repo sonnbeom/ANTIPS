@@ -29,9 +29,9 @@ public class CustomPatientRepository {
         switch (sort) {
             case CREATED_AT:
                 if (ASC.equalsIgnoreCase(order)) {
-                    query.orderBy(patient.admissionDate.asc());
+                    query.orderBy(patient.createdAt.asc());
                 } else {
-                    query.orderBy(patient.admissionDate.desc());
+                    query.orderBy(patient.createdAt.desc());
                 }
                 break;
             case URGENT_LEVEL:
