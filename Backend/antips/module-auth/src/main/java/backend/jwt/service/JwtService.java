@@ -23,8 +23,7 @@ public class JwtService {
     private String key;
 
     private final CustomUserDetailService customUserDetailService;
-//    private long expireTimeMs = 100000;
-//    private long refreshExpireTimeMs = 100000;
+
     private long expireTimeMs = 86_400_000; // 24시간 (1일)
     private long refreshExpireTimeMs = 86_400_000; // 24시간 (1일)
 
