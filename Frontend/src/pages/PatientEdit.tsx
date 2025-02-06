@@ -13,9 +13,10 @@ const PatientEdit: React.FC = () => {
 
   interface FormData {
     name: string;
-    birthdate: string;
-    barcode: string;
-    diagnosis: string;
+    admissionDate: string;
+    qr: string;
+    status: string;
+    temperature: string; // temperature
     floor: string;
     room: string;
     urgency: string;
@@ -25,12 +26,13 @@ const PatientEdit: React.FC = () => {
 
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    birthdate: "",
-    barcode: "",
-    diagnosis: "36.5",
+    admissionDate: "",
+    qr: "",
+    status: '',
+    temperature: "36.5", // 기본 체온
     floor: "",
     room: "",
-    urgency: "1",
+    urgency: "1", // 기본 긴급도
     medicalHistory: "",
     specialNotes: "",
   });
@@ -46,7 +48,8 @@ const PatientEdit: React.FC = () => {
           throw new Error('No token found');
         }
 
-        const response = await fetch(`/api/v1/secure/patient/${id}`, {
+        const response = await fetch(`http://43.203.254.199:8080/api/v1/service/non-public/patient?patientId=${id}`, {
+          method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`
           }
@@ -57,23 +60,26 @@ const PatientEdit: React.FC = () => {
         }
 
         const data = await response.json();
-        
+        console.log(data.data)
+        // admissionDate가 존재할 때만 split 처리
+        const formattedAdmissionDate = data.admissionDate ? data.admissionDate.split("T")[0] : "";
+
         setFormData({
-          name: data.name || "",
-          birthdate: data.birthdate || "",
-          barcode: data.barcode || "",
-          diagnosis: data.temperature?.toString() || "36.5",
-          floor: data.floor?.toString() || "",
-          room: data.roomNumber?.toString() || "",
-          urgency: data.urgencyLevel?.toString() || "1",
-          medicalHistory: data.caseHistory || "",
-          specialNotes: data.specifics || "",
+          name: data.data.name || "",
+          admissionDate: formattedAdmissionDate,
+          qr: data.data.qr || "",
+          status: data.data.status || '',
+          temperature: data.data.temperature?.toString() || "36.5",
+          floor: data.data.floor?.toString() || "",
+          room: data.data.roomNumber?.toString() || "",
+          urgency: data.data.urgencyLevel?.toString() || "1",
+          medicalHistory: data.data.caseHistory || "",
+          specialNotes: data.data.specifics || "",
         });
-        
+
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching patient data:', error);
-        navigate('/patientlist');
       }
     };
 
@@ -99,26 +105,28 @@ const PatientEdit: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+  
     try {
       const token = localStorage.getItem('token');
       if (!token) {
         throw new Error('No token found');
       }
-
+  
       const requestData = {
+        id: parseInt(id ?? "0"), // id 값을 request에 포함
         name: formData.name,
-        birthdate: formData.birthdate,
+        admissionDate: `${formData.admissionDate}T00:00:00`, // 날짜 형식 주의
         specifics: formData.specialNotes,
-        urgencyLevel: parseInt(formData.urgency),
+        urgencyLevel: parseInt(formData.urgency) || 1, // 숫자로 변환
         caseHistory: formData.medicalHistory,
-        barcode: formData.barcode,
-        temperature: parseFloat(formData.diagnosis),
-        floor: parseInt(formData.floor),
-        roomNumber: parseInt(formData.room),
+        qr: formData.qr,
+        temperature: parseFloat(formData.temperature) || 36.5, // 체온을 숫자로 변환
+        status: "to_do",
+        floor: parseInt(formData.floor) || 1,
+        roomNumber: parseInt(formData.room) || 101,
       };
-
-      const response = await fetch(`/api/v1/secure/patient/${id}`, {
+  
+      const response = await fetch(`http://43.203.254.199:8080/api/v1/service/non-public/patient`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -126,17 +134,17 @@ const PatientEdit: React.FC = () => {
         },
         body: JSON.stringify(requestData)
       });
-
+  
       if (!response.ok) {
         throw new Error('Failed to update patient');
       }
-
+  
       navigate('/patientlist');
     } catch (error) {
       console.error('Error updating patient:', error);
     }
   };
-
+  
   const handleCancel = () => {
     navigate('/patientlist');
   };
@@ -178,31 +186,36 @@ const PatientEdit: React.FC = () => {
               />
             </div>
 
+            {/* 오른쪽: 이름/생년월일, 바코드/체온 */}
             <div className="patient-registration-form-right">
+              {/* 이름, 생년월일 */}
               <div className="patient-registration-form-row">
                 <div className="patient-registration-form-group">
                   <label htmlFor="name">이름</label>
                   <input id="patient-registration-name" type="text" name="name" value={formData.name} onChange={handleChange} required />
                 </div>
                 <div className="patient-registration-form-group">
-                  <label htmlFor="birthdate">생년월일</label>
-                  <input id="patient-registration-birthdate" type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
+                  <label htmlFor="admissionDate">생년월일</label>
+                  <input id="patient-registration-admissionDate" type="date" name="admissionDate" value={formData.admissionDate} onChange={handleChange} required />
                 </div>
               </div>
 
+              {/* 바코드, 체온 */}
               <div className="patient-registration-form-row">
                 <div className="patient-registration-form-group">
-                  <label htmlFor="diagnosis">
-                    <img src={tem} alt="tem" /> 체온
-                  </label>
-                  <input id="patient-registration-diagnosis" type="text" name="diagnosis" value={formData.diagnosis} onChange={handleChange} />
+                  <label htmlFor="qr">QR코드</label>
+                  <input id="patient-registration-qr" type="text" name="qr" value={formData.qr} onChange={handleChange} required />
+                </div>
+                <div className="patient-registration-form-group">
+                  <label htmlFor="temperature"><img src={tem} alt="tem" /> 체온</label>
+                  <input id="patient-registration-temperature" type="text" name="temperature" value={formData.temperature} onChange={handleChange} />
                 </div>
               </div>
             </div>
           </div>
 
           <hr className="pr-hr"/>
-          
+        
           <div className="patient-registration-form-row">
             <div className="patient-registration-form-group">
               <label htmlFor="floor">층</label>

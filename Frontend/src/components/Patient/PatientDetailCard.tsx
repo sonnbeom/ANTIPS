@@ -5,7 +5,7 @@ import PatientInfoItem from './PatientInfoItem';
 import { useNavigate } from 'react-router-dom';
 
 interface PatientDetailProps {
-  patientId: number;
+  id: number;
   name: string;
   birthDate: string;
   age: number;
@@ -17,7 +17,7 @@ interface PatientDetailProps {
 }
 
 const PatientDetailCard: React.FC<PatientDetailProps> = ({
-  patientId,
+  id,
   name,
   birthDate,
   age,
@@ -30,7 +30,7 @@ const PatientDetailCard: React.FC<PatientDetailProps> = ({
   const navigate = useNavigate();
 
   const handleEditClick = () => {
-    navigate(`/patient/edit/${patientId}`);
+    navigate(`/patient/edit/${id}`);
   };
 
   return (
@@ -52,7 +52,7 @@ const PatientDetailCard: React.FC<PatientDetailProps> = ({
           </div>
           <div className="patient-detailcard-info">
             <h3>{name}</h3>
-            <p className="patient-detailcard-id">PAT-{String(patientId).padStart(3, '0')}</p>
+            <p className="patient-detailcard-id">PAT-{String(id).padStart(3, '0')}</p>
           </div>
         </div>
         <div className="patient-detailcardinfo-grid">

@@ -1,73 +1,62 @@
-function urlBase64ToUint8Array(base64String: string) {
-  try {
-    // 공개키만 추출 (privateKey 부분 제거)
-    const publicKey = base64String.split(',')[0].split('"')[0];
-    console.log('Public key only:', publicKey);
-
-    const padding = '='.repeat((4 - publicKey.length % 4) % 4);
-    const base64 = (publicKey + padding)
-      .replace(/-/g, '+')
-      .replace(/_/g, '/');
-
-    console.log('Processed base64:', base64);
-
-    const rawData = window.atob(base64);
-    const outputArray = new Uint8Array(rawData.length);
-
-    for (let i = 0; i < rawData.length; ++i) {
-      outputArray[i] = rawData.charCodeAt(i);
-    }
-    return outputArray;
-  } catch (error) {
-    console.error('Base64 decoding error:', error);
-    throw error;
-  }
-}
+import { messaging } from '../firebase';
+import { getToken, onMessage } from 'firebase/messaging';
 
 export const pushNotificationService = {
   async requestPermission() {
-    const permission = await Notification.requestPermission();
-    return permission;
+    try {
+      const permission = await Notification.requestPermission();
+      if (permission === 'granted') {
+        const token = await this.getFCMToken();
+        // FCM 메시지 리스너 등록
+        this.setupMessageListener();
+        return permission;
+      }
+      return permission;
+    } catch (error) {
+      console.error('알림 권한 요청 실패:', error);
+      throw new Error('알림 권한 요청에 실패했습니다.');
+    }
   },
 
-  async subscribeToPushNotifications() {
+  async getFCMToken() {
     try {
-      const registration = await navigator.serviceWorker.ready;
-
-      if (!process.env.REACT_APP_VAPID_PUBLIC_KEY) {
-        throw new Error('VAPID public key is not defined');
-      }
-
-      const applicationServerKey = urlBase64ToUint8Array(
-        process.env.REACT_APP_VAPID_PUBLIC_KEY
-      );
-
-      const subscription = await registration.pushManager.subscribe({
-        userVisibleOnly: true,
-        applicationServerKey
+      const currentToken = await getToken(messaging, {
+        vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
       });
       
-      await this.sendSubscriptionToServer(subscription);
-      return subscription;
+      if (currentToken) {
+        console.log('FCM Token:', currentToken);
+        return currentToken;
+      }
+      
+      throw new Error('FCM 토큰을 받을 수 없습니다.');
     } catch (error) {
-      console.error('Push subscription failed:', error);
+      console.error('FCM 토큰 발급 실패:', error);
       throw error;
     }
   },
 
-  async sendSubscriptionToServer(subscription: PushSubscription) {
-    try {
-      const response = await fetch('/api/push/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(subscription)
-      });
-      return response.json();
-    } catch (error) {
-      console.error('Failed to send subscription to server:', error);
-      throw error;
-    }
+  // FCM 메시지 리스너 설정
+  setupMessageListener() {
+    onMessage(messaging, (payload) => {
+      console.log('Foreground message received:', payload);
+      
+      // 브라우저 알림 생성
+      if (payload.notification) {
+        const { title, body } = payload.notification;
+        new Notification(title || '', {
+          body,
+          icon: '/icons/icon-192x192.png'
+        });
+      }
+
+      // Service Worker에 메시지 전달
+      if (navigator.serviceWorker.controller) {
+        navigator.serviceWorker.controller.postMessage({
+          type: 'FCM_MESSAGE',
+          payload
+        });
+      }
+    });
   }
 };

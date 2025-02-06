@@ -9,6 +9,16 @@ import MobileNavigation from './components/Mobilenavigation/MobileNavigation';
 import PatientRegistration from './pages/PatientRegistration';
 import PatientEdit from './pages/PatientEdit';
 import Robot from './pages/Robot';
+import PushNotificationViewer from './components/Push/PushNotificationViewer';
+
+declare global {
+  interface Window {
+    workbox: any;
+  }
+}
+
+// window 객체 타입 지정
+const win = window as Window & typeof globalThis;
 
 const App: React.FC = () => {
   const [headerHeight, setHeaderHeight] = useState(0);
@@ -60,20 +70,24 @@ const App: React.FC = () => {
     <Router>
       {isAuthenticated && !isMobile && <Header setIsAuthenticated={setIsAuthenticated} />}
 
-      <div 
-        className="content-container" 
-        style={{ 
+      <div
+        className="content-container"
+        style={{
           paddingTop: headerHeight,
           paddingBottom: isMobile ? navHeight : 0,
         }}
       >
+        <div>
+          <div>푸시알림</div>
+          <PushNotificationViewer /> {/* notifications를 전달할 필요 없음 */}
+        </div>
         <Routes>
           <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/robot" element={<Robot />} />
           <Route path="/patientlist" element={<PatientList />} />
-          <Route path="/patient/:patientId" element={<PatientDetail />} />
+          <Route path="/patient/:id" element={<PatientDetail />} />
           <Route path="/patientregistration" element={<PatientRegistration />} />
-          <Route path="/patient/edit/:patientId" element={<PatientEdit />} />
+          <Route path="/patient/edit/:id" element={<PatientEdit />} />
         </Routes>
       </div>
       {isAuthenticated && isMobile && <MobileNavigation setIsAuthenticated={setIsAuthenticated} />}

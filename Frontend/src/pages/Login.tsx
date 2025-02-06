@@ -115,7 +115,8 @@
 // export default Login;
 
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './LoginStyle.css';
 import hospital from '../assets/hospital.jpg';
 import PushNotificationButton from "../components/Push/PushNotificationButton"
@@ -128,67 +129,120 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
   const [name, setName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showNotification, setShowNotification] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  // 알림 권한 상태 확인
+  const checkNotificationPermission = async () => {
+    if ('Notification' in window) {
+      const permission = await Notification.permission;
+      if (permission === 'granted') {
+        // 서비스 워커 구독 상태 확인
+        const registration = await navigator.serviceWorker.ready;
+        const subscription = await registration.pushManager.getSubscription();
+        return !!subscription; // 구독이 있으면 true, 없으면 false
+      }
+    }
+    return false;
+  };
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setIsLoading(true);
     
-    // 로그인 처리
-    localStorage.setItem('token', 'a1');
-    setIsAuthenticated(true);
-    setShowNotification(true); // 로그인 성공 후 알림 동의 UI 표시
+    try {
+      // 로그인 처리
+      localStorage.setItem('token', 'a1');
+      setIsAuthenticated(true);
+      
+      // 알림 권한 및 구독 상태 확인
+      const hasNotificationEnabled = await checkNotificationPermission();
+      
+      if (hasNotificationEnabled) {
+        // 이미 알림이 활성화되어 있으면 바로 리다이렉트
+        navigate('/robot');
+      } else {
+        // 알림이 활성화되어 있지 않으면 알림 설정 UI 표시
+        setShowNotification(true);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+      alert('로그인에 실패했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className="login-container">
       <div className="login-box">
         {!showNotification ? (
-          // 로그인 폼
           <div className="login-form-section">
             <div className='login-section-title'>
-              <h2>Anti-protective suit</h2>
+              <h1>Anti-protective suit</h1>
               <p>Welcome back! Please login to your account.</p>
             </div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="login-input-group">
+                <label htmlFor="username" className="visually-hidden">
+                  Username
+                </label>
                 <input
                   type="text"
                   id="username"
+                  name="username"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter username"
                   required
                   className="login-input-username"
+                  autoComplete="username"
+                  aria-required={true}
+                  disabled={isLoading}
                 />
               </div>
               <div className="login-input-group">
+                <label htmlFor="password" className="visually-hidden">
+                  Password
+                </label>
                 <input
                   type="password"
                   id="password"
+                  name="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Enter password"
                   required
                   className="login-input-password"
+                  autoComplete="current-password"
+                  aria-required={true}
+                  disabled={isLoading}
                 />
               </div>
-              <button type="submit" className="login-button">Log In</button>
+              <button 
+                type="submit"
+                className="login-button"
+                disabled={isLoading}
+                aria-busy={isLoading}
+              >
+                {isLoading ? 'Logging in...' : 'Log In'}
+              </button>
             </form>
           </div>
         ) : (
-          // 알림 동의 UI
-          <div className="notification-section">
+          <div className="notification-section" role="alert">
             <h2>알림 설정</h2>
             <p>서비스 이용을 위해 알림을 활성화해 주세요.</p>
             <PushNotificationButton />
           </div>
         )}
 
-        {/* 이미지 섹션 */}
         <div className="login-image-section">
           <img
             src={hospital} 
-            alt="User Icon"
+            alt="Hospital building"
             className="login-user-icon"
+            loading="lazy"
           />
         </div>
       </div>
@@ -197,3 +251,4 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
 };
 
 export default Login;
+
