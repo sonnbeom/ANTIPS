@@ -26,8 +26,6 @@ public class Patient extends BaseEntity {
     private String name;
     @Column(name = "room_number", nullable = false)
     private int roomNumber;
-    @Column(name = "admission_date", nullable = false)
-    private LocalDateTime admissionDate;
     @Column(name = "specifics", nullable = false)
     private String specifics;
     private int floor;
@@ -36,6 +34,9 @@ public class Patient extends BaseEntity {
     private float temperature;
     @Column(name = "urgency_level", nullable = false)
     private int urgencyLevel;
+    private int age;
+    @Column(name = "qr_code", nullable = false)
+    private String qrCode;
     private String status;
     @OneToMany(mappedBy = "patient",
             cascade = CascadeType.ALL,
@@ -47,7 +48,6 @@ public class Patient extends BaseEntity {
         return ResponsePatientDto.builder()
                 .id(patient.id)
                 .caseHistory(patient.caseHistory)
-                .admissionDate(patient.admissionDate)
                 .floor(patient.floor)
                 .roomNumber(patient.roomNumber)
                 .urgencyLevel(patient.urgencyLevel)
@@ -55,6 +55,8 @@ public class Patient extends BaseEntity {
                 .temperature(patient.temperature)
                 .name(patient.name)
                 .status(patient.status)
+                .createdAt(patient.getCreatedAt())
+                .age(patient.age)
                 .build();
     }
 

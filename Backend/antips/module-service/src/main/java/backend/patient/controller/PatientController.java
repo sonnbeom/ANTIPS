@@ -2,6 +2,7 @@ package backend.patient.controller;
 
 
 import backend.common.response.CommonResponse;
+import backend.patient.dto.request.RequestOpenDrugBoxDto;
 import backend.patient.dto.request.RequestPatientDto;
 import backend.patient.dto.request.RequestPatientPatchDto;
 import backend.patient.dto.response.ResponsePatientDto;
@@ -72,5 +73,13 @@ public class PatientController {
                 .data(responsePatientDto)
                 .build();
     }
+    @PostMapping("/public/qr-code")
+    public CommonResponse openDrugBox(@RequestBody RequestOpenDrugBoxDto requestOpenDrugBoxDto){
+        patientService.findQrCode(requestOpenDrugBoxDto);
+        return CommonResponse.builder()
+                .message(SUCCESS)
+                .status(200)
+                .build();
     }
+}
 

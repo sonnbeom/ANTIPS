@@ -1,6 +1,7 @@
 package backend.patient.service;
 
 import backend.patient.domain.Patient;
+import backend.patient.dto.request.RequestOpenDrugBoxDto;
 import backend.patient.dto.request.RequestPatientDto;
 import backend.patient.dto.request.RequestPatientPatchDto;
 import backend.patient.dto.response.ResponsePatientDto;
@@ -95,4 +96,8 @@ public class PatientService {
     }
 
 
+    public void findQrCode(RequestOpenDrugBoxDto requestOpenDrugBoxDto) {
+        patientRepository.findByQrCode(requestOpenDrugBoxDto.getQrCode()).
+                orElseThrow(() -> new PatientNotFoundException(requestOpenDrugBoxDto.getQrCode()+ "에 해당하는 qr 코드를 가진 환자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+    }
 }

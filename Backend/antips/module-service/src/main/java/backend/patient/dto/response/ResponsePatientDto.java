@@ -12,12 +12,13 @@ import java.time.LocalDateTime;
 public class ResponsePatientDto {
     private Long id;
     private String name;
+    private int age;
     private int roomNumber;
-    private LocalDateTime admissionDate;
     private String specifics;
     private int floor;
     private String caseHistory;
     private float temperature;
     private int urgencyLevel;
     private String status;
+    private LocalDateTime createdAt;
 }
