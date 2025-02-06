@@ -42,7 +42,7 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
             log.info(token);
             return webClientBuilder.build()
                     .get() // 인증 서버에 get 요청을 보낸다.
-                    .uri(AUTH_LOCAL_SERVER_URI)
+                    .uri(AUTH_DOCKER_SERVER_URI)
                     .header(AUTHORIZATION, "Bearer "+token) // 헤더에 토큰 포함
                     .retrieve()
                     .onStatus(

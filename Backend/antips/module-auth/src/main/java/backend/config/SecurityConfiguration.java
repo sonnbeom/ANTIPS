@@ -23,10 +23,13 @@ import static org.springframework.http.HttpMethod.POST;
 
 @EnableWebSecurity
 @Configuration
-@RequiredArgsConstructor
 public class SecurityConfiguration {
 
     private final JwtService jwtService;
+
+    public SecurityConfiguration(JwtService jwtService) {
+        this.jwtService = jwtService;
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
