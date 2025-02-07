@@ -12,18 +12,6 @@
 //   const [password, setPassword] = useState<string>('');
 //   const navigate = useNavigate();
 
-
-//   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-//     event.preventDefault();
-//     console.log('Username:', name);
-//     console.log('Password:', password);
-    
-//     // 로그인 처리
-//     localStorage.setItem('token', 'a1');
-//     setIsAuthenticated(true); // 로그인 상태 즉시 반영
-//     navigate('/robot');
-//   };
-
 //   // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 //   //   event.preventDefault();
     
@@ -49,6 +37,7 @@
 //   //     if (data.status === 200) {
 //   //       // accessToken을 localStorage에 저장
 //   //       localStorage.setItem('token', data.data.accessToken);
+      // localStorage.setItem('name',data.data.name);
         
 //   //       // refreshToken은 서버에서 HttpOnly 쿠키로 설정되어야 함
 //   //       // 프론트엔드에서는 별도 처리 불필요
