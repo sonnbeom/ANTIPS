@@ -32,6 +32,9 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation platform('org.springframework.cloud:spring-cloud-dependencies:2022.0.1')
+
+    // Firebase Admin SDK
+    implementation 'com.google.firebase:firebase-admin:7.3.0'
 }
 
 test {
