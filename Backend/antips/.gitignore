@@ -265,3 +265,8 @@ Dockerfile
 scripts
 .env
 compose.yaml
+
+# Firebase 서비스 계정 키
+serviceAccountKey.json
+src/main/resources/serviceAccountKey.json
+
