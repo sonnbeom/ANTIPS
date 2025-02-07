@@ -81,5 +81,16 @@ public class PatientController {
                 .status(200)
                 .build();
     }
+    @DeleteMapping("/non-public/patients")
+    public CommonResponse<String> deletePatient(
+            @RequestParam Long patientId){
+        patientService.delete(patientId);
+        return CommonResponse.<String>builder()
+                .message(SUCCESS)
+                .status(200)
+                .data(DELETE)
+                .build();
+    }
+
 }
 

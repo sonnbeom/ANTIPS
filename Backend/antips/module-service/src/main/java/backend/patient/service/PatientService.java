@@ -100,4 +100,9 @@ public class PatientService {
         patientRepository.findByQrCode(requestOpenDrugBoxDto.getQrCode()).
                 orElseThrow(() -> new PatientNotFoundException(requestOpenDrugBoxDto.getQrCode()+ "에 해당하는 qr 코드를 가진 환자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
     }
+
+    public void delete(Long patientId) {
+        Patient patient = findPatientById(patientId);
+        patientRepository.delete(patient);
+    }
 }
