@@ -1,7 +1,12 @@
 package backend.emergency.service;
 
+import backend.emergency.domain.Fcm;
 import backend.emergency.dto.request.RequestEmergencyDto;
+import backend.emergency.dto.request.RequestFcmDto;
+import backend.emergency.dto.response.ResponseFcmDto;
+import backend.emergency.mapper.FcmMapper;
 import backend.emergency.repository.FcmTokenRepository;
+import backend.patient.domain.Patient;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -20,6 +25,7 @@ import static backend.emergency.constant.EmergencyConstant.*;
 public class EmergencyService {
 
     private final FcmTokenRepository fcmTokenRepository;
+    private final FcmMapper fcmMapper;
 
     public void isEmergency(RequestEmergencyDto requestEmergencyDto) {
         log.info(String.valueOf(requestEmergencyDto.getTemperature()));
@@ -91,4 +97,9 @@ public class EmergencyService {
         return sapWeight == 1.0;
     }
 
+    public ResponseFcmDto saveFcmToken(RequestFcmDto requestFcmDto) {
+        Fcm fcm = fcmMapper.dtoToEntity(requestFcmDto);
+        fcmTokenRepository.save(fcm);
+        return fcm.entityToDto(fcm);
+    }
 }
