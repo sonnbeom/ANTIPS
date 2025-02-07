@@ -106,6 +106,9 @@
 
   /* 환자 카드 리스트 한 열로 변경 */
   .patient-card-list {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
     grid-template-columns: 1fr;
     margin : 0 auto;
     gap: 15px;

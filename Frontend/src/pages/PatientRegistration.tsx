@@ -10,28 +10,26 @@ import { useNavigate } from 'react-router-dom';
 const PatientRegistration: React.FC = () => {
   interface FormData {
     name: string;
-    birthdate: string;
-    barcode: string;
-    diagnosis: string; // temperature
+    admissionDate: string;
+    qr: string;
+    temperature: string; // temperature
     floor: string;
     room: string;
     urgency: string;
     medicalHistory: string;
     specialNotes: string;
   }
-  
   const [formData, setFormData] = useState<FormData>({
     name: "",
-    birthdate: "",
-    barcode: "",
-    diagnosis: "36.5", // 기본 체온
+    admissionDate: "",
+    qr: "",
+    temperature: "36.5", // 기본 체온
     floor: "",
     room: "",
     urgency: "1", // 기본 긴급도
     medicalHistory: "",
     specialNotes: "",
   });
-
   // 이미지 프리뷰를 위한 state의 초기값을 profile로 설정
   const [imagePreview, setImagePreview] = useState<string>(profile);
   const navigate = useNavigate();
@@ -57,10 +55,8 @@ const PatientRegistration: React.FC = () => {
   const handleImageError = () => {
     setImagePreview(profile);
   };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-  
     try {
       // 로컬 스토리지에서 토큰 가져오기
       const token = localStorage.getItem('token');
@@ -71,18 +67,17 @@ const PatientRegistration: React.FC = () => {
       // API 요청 데이터 형식에 맞게 변환
       const requestData = {
         name: formData.name,
-        birthdate: formData.birthdate, // 날짜 형식 주의
+        admissionDate: `${formData.admissionDate}T00:00:00`, // 날짜 형식 주의
         specifics: formData.specialNotes,
         urgencyLevel: parseInt(formData.urgency) || 1, // 숫자로 변환
         caseHistory: formData.medicalHistory,
-        barcode: formData.barcode,
-        temperature: parseFloat(formData.diagnosis) || 36.5, // 체온을 숫자로 변환
+        qr: formData.qr,
+        temperature: parseFloat(formData.temperature) || 36.5, // 체온을 숫자로 변환
         status: "TODO",
         floor: parseInt(formData.floor) || 1,
         roomNumber: parseInt(formData.room) || 101,
       };
-  
-      const response = await fetch('/api/v1/secure/patient', {
+      const response = await fetch('http://43.203.254.199:8080/api/v1/service/non-public/patient', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -140,16 +135,20 @@ const PatientRegistration: React.FC = () => {
         <input id="patient-registration-name" type="text" name="name" value={formData.name} onChange={handleChange} required />
       </div>
       <div className="patient-registration-form-group">
-        <label htmlFor="birthdate">생년월일</label>
-        <input id="patient-registration-birthdate" type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
+        <label htmlFor="admissionDate">생년월일</label>
+        <input id="patient-registration-admissionDate" type="date" name="admissionDate" value={formData.admissionDate} onChange={handleChange} required />
       </div>
     </div>
 
     {/* 바코드, 체온 */}
     <div className="patient-registration-form-row">
+    <div className="patient-registration-form-group">
+        <label htmlFor="name">QR코드</label>
+        <input id="patient-registration-qr" type="text" name="qr" value={formData.qr} onChange={handleChange} required />
+      </div>
       <div className="patient-registration-form-group">
-        <label htmlFor="diagnosis"><img src={tem} alt="tem" />  체온</label>
-        <input id="patient-registration-diagnosis" type="text" name="diagnosis" value={formData.diagnosis} onChange={handleChange} />
+        <label htmlFor="temperature"><img src={tem} alt="tem" />  체온</label>
+        <input id="patient-registration-diagnosis" type="text" name="temperature" value={formData.temperature} onChange={handleChange} />
       </div>
     </div>
   </div>

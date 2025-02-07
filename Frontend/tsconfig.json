@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext", "webworker"],
-    "module": "esnext",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "lib": ["dom", "dom.iterable", "esnext", "webworker", "webworker.importscripts"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
     "jsx": "react-jsx",
     "strict": true,
     "sourceMap": true,
@@ -16,15 +16,27 @@
     "noFallthroughCasesInSwitch": true,
     "isolatedModules": true,
     "noEmit": true,
-    "types": ["node", "jest"]
+    "types": [
+      "node",
+      "@types/jest",
+      "vite/client",
+      "vite-plugin-pwa/client",
+      "@types/serviceworker",
+      "workbox-precaching"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": [
     "src/**/*",
-    "public/service-worker.ts"
-, "public/service-worker.js"  ],
+    "src/vite-env.d.ts"
+  ],
   "exclude": [
     "node_modules",
     "build",
-    "dist"
+    "dist",
+    "src/sw.ts"
   ]
 }

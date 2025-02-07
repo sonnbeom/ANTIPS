@@ -71,7 +71,7 @@ const PatientCard: React.FC<PatientCardProps> = ({
       <hr />
       <div className="patient-last-treatment-section">
         <p className="patient-last-treatment">
-          <span className="patient-last-treatment-icon">⏰</span> 마지막 진료: {lastTreatmentDate}
+          <span className="patient-last-treatment-icon">⏰</span> 입원날짜: {lastTreatmentDate}
         </p>
         <button 
           className="patient-navigate-button"

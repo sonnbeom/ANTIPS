@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { pushNotificationService } from '../../services/pushNotification';
 import './PushNotificationButtonStyle.css';
@@ -6,28 +6,6 @@ import './PushNotificationButtonStyle.css';
 const PushNotificationButton: React.FC = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [isSubscribed, setIsSubscribed] = useState(false);
-
-  const checkSubscriptionStatus = useCallback(async () => {
-    try {
-      const permission = await Notification.permission;
-      if (permission === 'granted') {
-        const registration = await navigator.serviceWorker.ready;
-        const subscription = await registration.pushManager.getSubscription();
-        setIsSubscribed(!!subscription);
-        
-        if (subscription) {
-          navigate('/robot');
-        }
-      }
-    } catch (error) {
-      console.error('구독 상태 확인 실패:', error);
-    }
-  }, [navigate]);
-
-  useEffect(() => {
-    checkSubscriptionStatus();
-  }, [checkSubscriptionStatus]);
 
   const handleEnablePushNotification = async () => {
     try {
@@ -35,9 +13,9 @@ const PushNotificationButton: React.FC = () => {
       const permission = await pushNotificationService.requestPermission();
       
       if (permission === 'granted') {
-        await pushNotificationService.subscribeToPushNotifications();
-        setIsSubscribed(true);
         navigate('/robot');
+      } else {
+        alert('알림을 허용해주세요.');
       }
     } catch (error) {
       console.error('Push notification setup failed:', error);
@@ -46,10 +24,6 @@ const PushNotificationButton: React.FC = () => {
       setIsLoading(false);
     }
   };
-
-  if (isSubscribed) {
-    return null;
-  }
 
   return (
     <button 
@@ -61,5 +35,6 @@ const PushNotificationButton: React.FC = () => {
     </button>
   );
 };
+
 
 export default PushNotificationButton;
