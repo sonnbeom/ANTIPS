@@ -1,7 +1,7 @@
-package backend.emergency.domain;
+package backend.fcm.domain;
 
 import backend.common.domain.BaseEntity;
-import backend.emergency.dto.response.ResponseFcmDto;
+import backend.fcm.dto.response.ResponseFcmDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -105,4 +105,10 @@ public class PatientService {
         Patient patient = findPatientById(patientId);
         patientRepository.delete(patient);
     }
+
+    public Patient findPatientByBedNumber(String bedNumber) {
+        return patientRepository.findByBedNumber(bedNumber).
+                orElseThrow(()-> new PatientNotFoundException("침대번호"+bedNumber+"와 일치하는 환자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND));
+
+    }
 }

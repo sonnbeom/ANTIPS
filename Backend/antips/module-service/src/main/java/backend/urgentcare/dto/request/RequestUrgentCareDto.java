@@ -10,4 +10,5 @@ import lombok.Setter;
 public class RequestUrgentCareDto {
     private Long patientId;
     private String content;
+    private Long emergencyId;
 }

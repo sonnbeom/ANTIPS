@@ -1,7 +1,7 @@
-package backend.emergency.mapper;
+package backend.fcm.mapper;
 
-import backend.emergency.domain.Fcm;
-import backend.emergency.dto.request.RequestFcmDto;
+import backend.fcm.domain.Fcm;
+import backend.fcm.dto.request.RequestFcmDto;
 import org.springframework.stereotype.Service;
 
 @Service

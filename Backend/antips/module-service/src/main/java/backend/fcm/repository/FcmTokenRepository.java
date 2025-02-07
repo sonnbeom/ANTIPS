@@ -1,6 +1,6 @@
-package backend.emergency.repository;
+package backend.fcm.repository;
 
-import backend.emergency.domain.Fcm;
+import backend.fcm.domain.Fcm;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
