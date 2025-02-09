@@ -3,6 +3,7 @@ package backend.emergency.service;
 import backend.emergency.domain.Emergency;
 import backend.emergency.dto.request.RequestEmergencyDto;
 import backend.emergency.dto.response.ResponseEmergencyDtoList;
+import backend.emergency.exception.EmergencyNotFoundException;
 import backend.emergency.mapper.EmergencyMapper;
 import backend.emergency.repository.CustomEmergencyRepository;
 import backend.emergency.repository.EmergencyRepository;
@@ -15,6 +16,7 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -102,4 +104,9 @@ public class EmergencyService {
         return sapWeight == 1.0;
     }
 
+    public void deactivateEmergency(Long emergencyId) {
+        Emergency emergency = emergencyRepository.findById(emergencyId)
+                .orElseThrow(() -> new EmergencyNotFoundException(emergencyId + "로 해당하는 비상상황을 조회할 수 없습니다.", HttpStatus.NOT_FOUND));
+        emergency.deactivate(emergency);
+    }
 }

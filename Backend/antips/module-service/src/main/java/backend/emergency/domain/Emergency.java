@@ -34,4 +34,8 @@ public class Emergency extends BaseEntity {
                 .createdAt(emergency.getCreatedAt())
                 .build();
     }
+
+    public void deactivate(Emergency emergency) {
+        emergency.active = false;
+    }
 }
