@@ -22,4 +22,5 @@ public class RequestPatientDto {
     private float temperature;
     private int urgencyLevel;
     private String qrCode;
+    private String bedNumber;
 }

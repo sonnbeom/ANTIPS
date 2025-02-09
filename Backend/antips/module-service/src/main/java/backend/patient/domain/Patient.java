@@ -65,6 +65,7 @@ public class Patient extends BaseEntity {
                 .status(patient.status)
                 .createdAt(patient.getCreatedAt())
                 .age(patient.age)
+                .bedNumber(patient.bedNumber)
                 .build();
     }
 

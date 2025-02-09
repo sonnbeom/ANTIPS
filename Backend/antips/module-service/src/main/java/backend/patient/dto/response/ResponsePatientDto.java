@@ -20,5 +20,6 @@ public class ResponsePatientDto {
     private float temperature;
     private int urgencyLevel;
     private String status;
+    private String bedNumber;
     private LocalDateTime createdAt;
 }

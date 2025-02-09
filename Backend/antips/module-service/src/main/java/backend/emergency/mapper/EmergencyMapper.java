@@ -15,6 +15,7 @@ public class EmergencyMapper {
     public Emergency dtoToEntity(String title, String message, Patient patient) {
         return Emergency.builder()
                 .title(title)
+                .active(true)
                 .content(message)
                 .patient(patient)
                 .build();

@@ -34,15 +34,17 @@ public class EmergencyService {
     private final HttpSenderService httpSenderService;
     private final PatientService patientService;
 
-    public void isEmergency(RequestEmergencyDto requestEmergencyDto) {
+    public ResponseEmergencyDtoList isEmergency(RequestEmergencyDto requestEmergencyDto) {
         if (isNotValidTemperature(requestEmergencyDto.getTemperature())) {
             alertByTemperature(requestEmergencyDto);
-            ResponseEmergencyDtoList emergencyList = getEmergencyList();
-            httpSenderService.sendEmergencyList(emergencyList);
+            return getEmergencyList();
+//            httpSenderService.sendEmergencyList(emergencyList);
 
         } else if (isNotValidSapWeight(requestEmergencyDto.getSapWeight())) {
             System.out.println("여기 수정해야함~");
+            return getEmergencyList();
         }
+        return null;
     }
     private ResponseEmergencyDtoList getEmergencyList(){
         List<Emergency> emergencyList = customEmergencyRepository.findActiveEmergency();

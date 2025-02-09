@@ -20,7 +20,6 @@ public class Emergency extends BaseEntity {
     private Long id;
     private String title;
     private String content;
-    private String bedNumber;
     private boolean active;
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "patient_id")

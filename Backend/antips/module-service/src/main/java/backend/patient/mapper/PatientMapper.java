@@ -25,6 +25,7 @@ public class PatientMapper {
                 .urgencyLevel(requestPatientDto.getUrgencyLevel())
                 .roomNumber(requestPatientDto.getRoomNumber())
                 .qrCode(requestPatientDto.getQrCode())
+                .bedNumber(requestPatientDto.getBedNumber())
                 .status(TODO)
                 .build();
     }
