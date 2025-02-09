@@ -1,5 +1,6 @@
 package backend.urgentcare.service;
 
+import backend.emergency.service.EmergencyService;
 import backend.patient.domain.Patient;
 import backend.patient.dto.response.ResponsePatientDto;
 import backend.patient.service.PatientService;
@@ -24,11 +25,13 @@ public class UrgentCareService {
     private final UrgentCareRepository urgentCareRepository;
     private final PatientService patientService;
     private final CustomUrgentCareRepository customUrgentCareRepository;
+    private final EmergencyService emergencyService;
 
     public ResponseUrgentCareDto create(RequestUrgentCareDto requestUrgentCareDto) {
         Patient parent = patientService.findPatientById(requestUrgentCareDto.getPatientId());
         UrgentCare urgentCare = urgentCareMapper.dtoToEntity(requestUrgentCareDto, parent);
         UrgentCare savedUrgentCare = urgentCareRepository.save(urgentCare);
+        emergencyService.deactivateEmergency(requestUrgentCareDto.getEmergencyId());
         return savedUrgentCare.entityToDto(savedUrgentCare);
     }
 
