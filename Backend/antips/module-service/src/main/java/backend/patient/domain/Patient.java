@@ -2,6 +2,7 @@ package backend.patient.domain;
 
 
 import backend.common.domain.BaseEntity;
+import backend.emergency.domain.Emergency;
 import backend.patient.dto.response.ResponsePatientDto;
 import backend.urgentcare.domain.UrgentCare;
 import jakarta.persistence.*;
@@ -32,6 +33,8 @@ public class Patient extends BaseEntity {
     @Column(name = "case_history", nullable = false)
     private String caseHistory;
     private float temperature;
+    @Column(name = "bed_number", nullable = false)
+    private String bedNumber;
     @Column(name = "urgency_level", nullable = false)
     private int urgencyLevel;
     private int age;
@@ -43,6 +46,11 @@ public class Patient extends BaseEntity {
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     private List<UrgentCare> urgentCares = new ArrayList<>();
+    @OneToMany(mappedBy = "patient",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private List<Emergency> emergencies = new ArrayList<>();
 
     public ResponsePatientDto entityToDto(Patient patient) {
         return ResponsePatientDto.builder()
@@ -57,6 +65,7 @@ public class Patient extends BaseEntity {
                 .status(patient.status)
                 .createdAt(patient.getCreatedAt())
                 .age(patient.age)
+                .bedNumber(patient.bedNumber)
                 .build();
     }
 

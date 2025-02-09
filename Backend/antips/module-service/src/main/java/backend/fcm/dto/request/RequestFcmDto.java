@@ -1,4 +1,4 @@
-package backend.emergency.dto.request;
+package backend.fcm.dto.request;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

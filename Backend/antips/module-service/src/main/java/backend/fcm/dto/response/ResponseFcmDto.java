@@ -1,4 +1,4 @@
-package backend.emergency.dto.response;
+package backend.fcm.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,16 +1,18 @@
 package backend.emergency.controller;
 
-import backend.common.constant.ConstantResponseMessage;
-import backend.common.response.CommonResponse;
 import backend.emergency.dto.request.RequestEmergencyDto;
-import backend.emergency.dto.request.RequestFcmDto;
-import backend.emergency.dto.response.ResponseFcmDto;
+import backend.emergency.dto.response.ResponseEmergencyDtoList;
 import backend.emergency.service.EmergencyService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import static backend.common.constant.ConstantResponseMessage.*;
+import java.util.concurrent.CopyOnWriteArrayList;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Sinks;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,21 +20,27 @@ import static backend.common.constant.ConstantResponseMessage.*;
 @RequestMapping("/api/v1/service")
 public class EmergencyController {
 
+    private final Sinks.Many<String> sink = Sinks.many().multicast().onBackpressureBuffer();
     private final EmergencyService emergencyService;
+    private final ObjectMapper objectMapper;
 
-    @PostMapping("non-public/fcm-token")
-    public CommonResponse<ResponseFcmDto> saveFcmToken(@RequestBody RequestFcmDto requestFcmDto){
-        ResponseFcmDto responseFcmDto = emergencyService.saveFcmToken(requestFcmDto);
-        return CommonResponse.<ResponseFcmDto>builder()
-                .message(SUCCESS)
-                .status(200)
-                .data(responseFcmDto)
-                .build();
+    @GetMapping(value = "/public/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<String> streamData() {
+        return sink.asFlux();
     }
+
     @PostMapping("/public/emergency")
     public void checkEmergency(@RequestBody RequestEmergencyDto requestEmergencyDto) {
         log.info("컨트롤러 호출");
-        emergencyService.isEmergency(requestEmergencyDto);
+        ResponseEmergencyDtoList emergency = emergencyService.isEmergency(requestEmergencyDto);
+        try {
+            String jsonEmergency = objectMapper.writeValueAsString(emergency);
+            sink.tryEmitNext(jsonEmergency);
+            log.info("구독자 메시지 전달 성공");
+        } catch (JsonProcessingException e) {
+            log.info("구독자 메시지 전달 실패");
+            throw new RuntimeException(e);
+        }
         log.info("컨트롤러 호출 메시지 전송 완료");
     }
 }

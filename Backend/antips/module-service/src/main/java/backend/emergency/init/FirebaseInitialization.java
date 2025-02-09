@@ -7,7 +7,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -17,12 +16,9 @@ public class FirebaseInitialization {
     public void initialize() {
         try {
             InputStream serviceAccount = new ClassPathResource("serviceAccountKey.json").getInputStream();
-//            FileInputStream serviceAccount = new FileInputStream("serviceAccountKey.json");
-
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
-
             FirebaseApp.initializeApp(options);
         } catch (IOException e) {
             e.printStackTrace();

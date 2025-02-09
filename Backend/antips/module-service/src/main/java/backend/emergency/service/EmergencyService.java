@@ -1,12 +1,14 @@
 package backend.emergency.service;
 
-import backend.emergency.domain.Fcm;
+import backend.emergency.domain.Emergency;
 import backend.emergency.dto.request.RequestEmergencyDto;
-import backend.emergency.dto.request.RequestFcmDto;
-import backend.emergency.dto.response.ResponseFcmDto;
-import backend.emergency.mapper.FcmMapper;
-import backend.emergency.repository.FcmTokenRepository;
+import backend.emergency.dto.response.ResponseEmergencyDtoList;
+import backend.emergency.mapper.EmergencyMapper;
+import backend.emergency.repository.CustomEmergencyRepository;
+import backend.emergency.repository.EmergencyRepository;
+import backend.fcm.service.FcmTokenService;
 import backend.patient.domain.Patient;
+import backend.patient.service.PatientService;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.FirebaseMessagingException;
 import com.google.firebase.messaging.Message;
@@ -15,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static backend.emergency.constant.EmergencyConstant.*;
@@ -24,49 +27,41 @@ import static backend.emergency.constant.EmergencyConstant.*;
 @RequiredArgsConstructor
 public class EmergencyService {
 
-    private final FcmTokenRepository fcmTokenRepository;
-    private final FcmMapper fcmMapper;
+    private final FcmTokenService fcmTokenService;
+    private final EmergencyRepository emergencyRepository;
+    private final EmergencyMapper emergencyMapper;
+    private final CustomEmergencyRepository customEmergencyRepository;
+    private final HttpSenderService httpSenderService;
+    private final PatientService patientService;
 
-    public void isEmergency(RequestEmergencyDto requestEmergencyDto) {
-        log.info(String.valueOf(requestEmergencyDto.getTemperature()));
-        log.info(String.valueOf(isNotValidTemperature(requestEmergencyDto.getTemperature())));
+    public ResponseEmergencyDtoList isEmergency(RequestEmergencyDto requestEmergencyDto) {
         if (isNotValidTemperature(requestEmergencyDto.getTemperature())) {
-            log.info("유효하지 않은 온도");
-            processTemperatureAlert(requestEmergencyDto);
+            alertByTemperature(requestEmergencyDto);
+            return getEmergencyList();
+//            httpSenderService.sendEmergencyList(emergencyList);
+
         } else if (isNotValidSapWeight(requestEmergencyDto.getSapWeight())) {
             System.out.println("여기 수정해야함~");
+            return getEmergencyList();
         }
+        return null;
+    }
+    private ResponseEmergencyDtoList getEmergencyList(){
+        List<Emergency> emergencyList = customEmergencyRepository.findActiveEmergency();
+        return emergencyMapper.dtoToEntity(emergencyList);
     }
 
-    // ✅ 온도 경고 프로세스 분리
-    private void processTemperatureAlert(RequestEmergencyDto requestEmergencyDto) {
-        float temperature = requestEmergencyDto.getTemperature();
-
-        if (temperature <= 36.5 || temperature >= 37.5) {
-            log.info("온도 조거문 들어오냐");
-            String fcmToken = getFcmToken(requestEmergencyDto.getToken());  // ✅ FCM 토큰 조회
-            checkTemperature(requestEmergencyDto, fcmToken).ifPresent(this::sendMessage);
-        }
-    }
-
-    // ✅ 온도 조건에 따라 알림 메시지 생성
-    private Optional<Message> checkTemperature(RequestEmergencyDto requestEmergencyDto, String fcmToken) {
+    private void alertByTemperature(RequestEmergencyDto requestEmergencyDto) {
         float temperature = requestEmergencyDto.getTemperature();
 
         if (temperature <= 36.5) {
-            return Optional.of(createTemperatureMessage(fcmToken, requestEmergencyDto.getBedNumber(), LOW_TEMPERATURE_BODY, temperature));
-        } else if (temperature >= 37.5) {
-            return Optional.of(createTemperatureMessage(fcmToken, requestEmergencyDto.getBedNumber(), HIGH_TEMPERATURE_BODY, temperature));
+            createMessage(requestEmergencyDto, TEMPERATURE_TITLE, LOW_TEMPERATURE_BODY);
+            saveEmergency(requestEmergencyDto, TEMPERATURE_TITLE, LOW_TEMPERATURE_BODY+temperature);
         }
-        return Optional.empty();
-    }
-
-
-    private String getFcmToken(String fcmToken) {
-        fcmTokenRepository.findByToken(fcmToken)
-                .orElseThrow(() -> new RuntimeException("FCM 토큰을 찾을 수 없음"));
-
-        return fcmToken;
+        else if (temperature >= 37.5) {
+            createMessage(requestEmergencyDto, TEMPERATURE_TITLE, HIGH_TEMPERATURE_BODY);
+            saveEmergency(requestEmergencyDto, TEMPERATURE_TITLE, HIGH_TEMPERATURE_BODY+temperature);
+        }
     }
 
     private Message createTemperatureMessage(String token, String bedNumber, String fcmContent, float temperature) {
@@ -88,6 +83,16 @@ public class EmergencyService {
             throw new RuntimeException(e);
         }
     }
+    private void saveEmergency(RequestEmergencyDto requestEmergencyDto, String title, String message){
+        Patient patient = patientService.findPatientByBedNumber(requestEmergencyDto.getBedNumber());
+        Emergency emergency = emergencyMapper.dtoToEntity(title, message, patient);
+        emergencyRepository.save(emergency);
+    }
+    private void createMessage(RequestEmergencyDto requestEmergencyDto, String title ,String bodyContent){
+        String responseFcmToken = fcmTokenService.getFcmToken(requestEmergencyDto.getToken());
+        Optional<Message> message = Optional.of(createTemperatureMessage(responseFcmToken, requestEmergencyDto.getBedNumber(), bodyContent, requestEmergencyDto.getTemperature()));
+        message.ifPresent(this::sendMessage);
+    }
 
     private boolean isNotValidTemperature(float temperature) {
         return temperature != -1.0;
@@ -97,9 +102,4 @@ public class EmergencyService {
         return sapWeight == 1.0;
     }
 
-    public ResponseFcmDto saveFcmToken(RequestFcmDto requestFcmDto) {
-        Fcm fcm = fcmMapper.dtoToEntity(requestFcmDto);
-        fcmTokenRepository.save(fcm);
-        return fcm.entityToDto(fcm);
-    }
 }
