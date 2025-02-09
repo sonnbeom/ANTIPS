@@ -9,7 +9,6 @@ import MobileNavigation from './components/Mobilenavigation/MobileNavigation';
 import PatientRegistration from './pages/PatientRegistration';
 import PatientEdit from './pages/PatientEdit';
 import Robot from './pages/Robot';
-import PushNotificationViewer from './components/Push/PushNotificationViewer';
 
 declare global {
   interface Window {
@@ -77,10 +76,6 @@ const App: React.FC = () => {
           paddingBottom: isMobile ? navHeight : 0,
         }}
       >
-        <div>
-          <div>푸시알림</div>
-          <PushNotificationViewer /> {/* notifications를 전달할 필요 없음 */}
-        </div>
         <Routes>
           <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/robot" element={<Robot />} />

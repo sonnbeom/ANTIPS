@@ -12,37 +12,101 @@ export default defineConfig({
       registerType: 'autoUpdate',
       injectManifest: {
         injectionPoint: undefined,
-        rollupFormat: 'iife',  // 클래식 스크립트로 빌드
+        rollupFormat: 'iife',
       },
       devOptions: {
         enabled: true,
         navigateFallback: 'index.html',
         suppressWarnings: true,
-        type: 'classic'  // 클래식 타입으로 변경
+        type: 'classic'
       },
       manifest: {
         name: 'Anti-protective suit',
         short_name: 'Anti-PS',
         theme_color: '#ffffff',
+        start_url: '/',
+        scope: '/',
+        display: 'standalone',
         icons: [
           {
             src: '/logo.png',
             sizes: '192x192',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           },
           {
             src: '/logo.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any maskable'
           }
-        ]
+        ],
+        background_color: '#ffffff',
+        orientation: 'portrait'
       },
+      
       workbox: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
+        runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/api\./i,
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'api-cache',
+              expiration: {
+                maxEntries: 50,
+                maxAgeSeconds: 60 * 60 * 24
+              },
+              networkTimeoutSeconds: 10
+            }
+          },
+          {
+            urlPattern: /\.(png|jpg|jpeg|svg|gif)$/,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'image-cache',
+              expiration: {
+                maxEntries: 100,
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 days
+              }
+            }
+          }
+        ],
+        skipWaiting: true,
+        clientsClaim: true
       }
     })
   ],
   server: {
-    port: 3000
+    host: true,
+    port: 3000,
+    watch: {
+      usePolling: true
+    }
+  },
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+        }
+      }
+    },
+    chunkSizeWarningLimit: 1000
+  },
+  preview: {
+    port: 3000,
+    host: true
+  },
+  resolve: {
+    alias: {
+      'roslib': 'roslib/build/roslib.js'
+    }
+  },
+  optimizeDeps: {
+    include: ['roslib']
   }
 })
