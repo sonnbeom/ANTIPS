@@ -4,36 +4,28 @@ import './TreatmentRecordStyle.css';
 import { FaSyringe, FaFlask } from 'react-icons/fa';
 
 interface TreatmentRecordProps {
-  type: 'urgent' | 'normal';
-  title: string;
-  description: string;
-  doctor: string;
-  timestamp: string;
+key:number;
+content :string;
+createdAt:string;
 }
 
 const TreatmentRecord: React.FC<TreatmentRecordProps> = ({
-  type,
-  title,
-  description,
-  doctor,
-  timestamp
+  key,
+  content,
+  createdAt,
 }) => {
-  const Icon = type === 'urgent' ? FaSyringe : FaFlask;
+  const Icon =FaSyringe;
   
   return (
     <div className="treatment-record">
-      <div className={`record-icon ${type}`}>
+      <div className={`record-icon`}>
         <Icon />
       </div>
       <div className="record-content">
         <div className="record-header">
-          <h3>{title}</h3>
-          <span className="timestamp">{timestamp}</span>
+          <span className="timestamp">{createdAt.split('T')[0]}</span>
         </div>
-        <p className="description">{description}</p>
-        <div className="doctor-info">
-          <span>담당의: {doctor}</span>
-        </div>
+        <p className="description">{content}</p>
       </div>
     </div>
   );

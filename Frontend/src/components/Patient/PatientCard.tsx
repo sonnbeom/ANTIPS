@@ -1,27 +1,42 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import history from "../../assets/history.svg"
+import alert from "../../assets/alert.svg"
+import creat from "../../assets/creat.svg"
 import "./PatientCardStyle.css";
 
 interface PatientCardProps {
   id: number;
   name: string;
-  patientId: string;
-  location: string;
-  status: string;
-  alertType: string;
-  alertMessage: string;
-  lastTreatmentDate: string;
+  age:string;
+  lastTreatmentDate:string;
+  location:string;
+  specifics:string;
+  floor:string;
+  caseHistory:string;
+  temperature:string;
+  urgencyLevel:string;
+  status:string;
+  createdAt:string;
+  alertType:string;
+  alertMessage:string;
 }
 
 const PatientCard: React.FC<PatientCardProps> = ({
   id,
   name,
-  patientId,
+  lastTreatmentDate,
   location,
+  specifics,
+  age,
+  floor,
+  caseHistory,
+  temperature,
+  urgencyLevel,
   status,
+  createdAt,
   alertType,
   alertMessage,
-  lastTreatmentDate,
 }) => {
   const navigate = useNavigate();
 
@@ -34,21 +49,17 @@ const PatientCard: React.FC<PatientCardProps> = ({
       {/* 환자 정보 */}
       <div className="patient-info">
         <div className="patitent-info-left">
-          <img
-            src={`https://randomuser.me/api/portraits/men/75.jpg`}
-            alt={name}
-            className="patient-avatar"
-          />
           <div>
             <h4>{name}</h4>
-            <p>환자번호: {patientId}</p>
+            <p>나이 : {age}</p>
+            <p>환자번호: # {id}</p>
             <p>위치: {location}</p>
           </div>
         </div>
         <div className="patitent-info-right">
           <span
             className={`patient-status-badge ${
-              status === "입원중" ? "inpatient" : "waiting"
+              status === "done" ? "inpatient" : "waiting"
             }`}
           >
             {status}
@@ -58,20 +69,20 @@ const PatientCard: React.FC<PatientCardProps> = ({
 
       {/* 알림 정보 */}
       {alertType && (
-        <div
-          className={`patient-alert ${
-            alertType === "응급" ? "urgent" : alertType === "특별 메모" ? "info" : ""
-          }`}
-        >
-          <span className="patient-alert-icon">⚠️</span>
-          {alertType}: {alertMessage}
+        <div className='patient-alert-urgent'>
+          <img src={alert} alt="" className="patient-alert-icon"/> {alertMessage}
+        </div>
+      )}
+        {caseHistory && (
+        <div className='patient-alert-info'>
+        <img src={history} alt="" className="patient-alert-icon"/> {caseHistory}
         </div>
       )}
       {/* 마지막 진료 정보 */}
       <hr />
       <div className="patient-last-treatment-section">
         <p className="patient-last-treatment">
-          <span className="patient-last-treatment-icon">⏰</span> 입원날짜: {lastTreatmentDate}
+          <img src={creat} alt="" className="patient-last-treatment-icon"/>  입원날짜: {lastTreatmentDate}
         </p>
         <button 
           className="patient-navigate-button"

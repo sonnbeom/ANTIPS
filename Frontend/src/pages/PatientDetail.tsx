@@ -5,6 +5,8 @@ import PatientAlertSection from '../components/Patient/PatientAlert'
 import PatientDetailCard from '../components/Patient/PatientDetailCard';
 import TreatmentRecord from '../components/Patient/TreatmentRecord'
 
+
+const API_URL = import.meta.env.VITE_SERVER_URL;
 interface PatientData {
   id: number;
   name: string;
@@ -15,26 +17,30 @@ interface PatientData {
   temperature: number;
   floor: number;
   roomNumber: number;
+  bedNumber: string;
+  caseHistory : string;
+  createdAt :string;
+  status :string;
 }
 
-interface TreatmentData {
-  type: 'urgent' | 'normal';
-  title: string;
-  description: string;
-  doctor: string;
-  timestamp: string;
+interface UrgentCareData {
+  id: number;
+  content: string;
+  createdAt: string;
 }
 
 interface ApiResponse {
   status: number;
   message: string;
-  data: PatientData;
+  data: {
+    urgentCareList: UrgentCareData[];
+  };
 }
 
 const PatientDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const [patientData, setPatientData] = useState<PatientData | null>(null);
-  const [treatmentRecords, setTreatmentRecords] = useState<TreatmentData[]>([]);
+  const [treatmentRecords, setTreatmentRecords] = useState<UrgentCareData[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,15 +52,14 @@ const PatientDetail: React.FC = () => {
           throw new Error('토큰이 없습니다');
         }
 
-        // 환자 정보와 긴급 조치 기록을 병렬로 가져오기
         const [patientResponse, treatmentResponse] = await Promise.all([
-          fetch(`http://43.203.254.199:8080/api/v1/service/non-public/patient?patientId=${id}`, {
+          fetch(`${API_URL}/non-public/patient?patientId=${id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
             },
           }),
-          fetch(`http://43.203.254.199:8080/api/v1/service/non-public/urgenct-care/emergency?patientId=${id}`, {
+          fetch(`${API_URL}/non-public/urgent-care/emergency?patientId=${id}`, {
             headers: {
               'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json',
@@ -65,15 +70,13 @@ const PatientDetail: React.FC = () => {
         const patientResult: ApiResponse = await patientResponse.json();
         const treatmentResult = await treatmentResponse.json();
 
-        console.log('환자 데이터:', patientResult);
-        console.log('긴급 조치 기록:', treatmentResult);
-
         if (patientResponse.ok && patientResult.status === 200) {
           setPatientData(patientResult.data);
         }
 
         if (treatmentResponse.ok) {
-          setTreatmentRecords(treatmentResult.data || []);
+          const urgentCareList = treatmentResult.data?.urgentCareList || [];
+          setTreatmentRecords(urgentCareList);
         }
 
       } catch (err) {
@@ -107,13 +110,18 @@ const PatientDetail: React.FC = () => {
           <h2>긴급 조치 기록</h2>
         </div>
         <div className="treatment-records-list">
-          {treatmentRecords.map((record, index) => (
-            <TreatmentRecord
-              key={index}
-              {...record}
-            />
-          ))}
-        </div>
+  {treatmentRecords.length > 0 ? (
+    treatmentRecords.map((record) => (
+      <TreatmentRecord
+        key={record.id} // id를 key prop으로 사용
+        content={record.content}
+        createdAt={record.createdAt}
+      />
+    ))
+  ) : (
+    <div className="no-records-message">긴급 조치 기록이 없습니다.</div>
+  )}
+</div>
       </div>
     </div>
   );

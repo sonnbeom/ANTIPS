@@ -16,12 +16,14 @@
 
 .patient-detailcard-edit-button {
     background-color: #10b981;
+    margin-right:  20px;
     color: white;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 6px 12px;
     cursor: pointer;
-    font-size: 14px;
+    padding: 8px 16px;
+    font-weight: 500;
 }
 
 .patient-detailcard-info-card {
@@ -66,7 +68,7 @@
 }
 
 .patient-detailcard-info h3 {
-    margin: 0;
+    margin: 10px 0 0 0;
     font-size: 16px;
     font-weight: 600;
     color: #111827;
@@ -160,6 +162,26 @@
     max-height: 80px;
     padding-right: 8px;
 }
+
+.patient-detailcard-buttons {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .patient-detailcard-delete-button {
+    padding: 8px 16px;
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+  }
+  
+  .patient-detailcard-delete-button:hover {
+    background-color: #c82333;
+  }
+  
 
 
 /* 모바일 버전 스타일 */
