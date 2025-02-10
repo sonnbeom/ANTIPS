@@ -1,6 +1,7 @@
 package backend.patient.domain;
 
 
+import backend.common.constant.ConstantPatientStatus;
 import backend.common.domain.BaseEntity;
 import backend.emergency.domain.Emergency;
 import backend.patient.dto.response.ResponsePatientDto;
@@ -13,6 +14,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static backend.common.constant.ConstantPatientStatus.*;
 
 @Entity
 @Table(name = "patient")
@@ -95,5 +98,9 @@ public class Patient extends BaseEntity {
 
     public void updateUrgencyLevel(Integer urgencyLevel) {
         this.urgencyLevel = urgencyLevel;
+    }
+
+    public void completeDeliverMedicine(Patient patient) {
+        patient.status = DONE;
     }
 }
