@@ -238,7 +238,6 @@ gradle-app.setting
 *.log
 *.pid
 docker-compose.override.yml
-Dockerfile*
 .docker/
 .dockerignore
 *.docker
@@ -258,7 +257,7 @@ docker-compose.yml
 .git
 .gitignore
 .dockerignore
-Dockerfile
+
 *.md
 *.sh
 *.yml
@@ -270,3 +269,4 @@ compose.yaml
 serviceAccountKey.json
 src/main/resources/serviceAccountKey.json
 
+!Dockerfile
