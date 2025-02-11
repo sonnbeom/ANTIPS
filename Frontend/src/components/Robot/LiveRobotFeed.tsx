@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import robot from "../../assets/robotst.png";
 
 const LiveRobotFeed: React.FC = () => {
-  const [imageSrc, setImageSrc] = useState("http://70.12.247.213:8081/");
+  const [imageSrc, setImageSrc] = useState("http://70.12.247.213:8081/video_feed");
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.error('스트림 로딩 오류:', e);
@@ -27,6 +27,8 @@ const LiveRobotFeed: React.FC = () => {
         src={imageSrc}
         alt="카메라 스트림"
         style={{
+          width : '100%',
+          height: '50vh',
           objectFit: 'contain'
         }}
         onError={handleImageError}

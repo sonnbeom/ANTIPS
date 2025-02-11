@@ -1,7 +1,7 @@
 /* 전체 페이지 배경 */
 .patient-list-container {
     padding: 15px 90px;
-    height: 100vh;
+    min-height: 100vh; /* viewport height */
     background-color: #f8fafc; /* 연한 배경색 */
     font-family: Arial, sans-serif;
     margin : 0 auto;

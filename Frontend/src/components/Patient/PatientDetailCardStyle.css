@@ -108,14 +108,15 @@
 .patient-detailcard-info-item label {
     font-size: 14px;
     color: #6b7280;
-    font-weight: 500;
+    font-weight: 700;
 }
 
 .patient-detailcard-info-item p {
     font-size: 16px;
-    color: #1f2937;
+    font-weight: 700;
+    font-size: 18px;
+    border-radius: 6px;
     margin: 0;
-    font-weight: 600;
     line-height: 1.5;
 }
 
@@ -124,7 +125,6 @@
     color: #dc2626;
     font-weight: 700;
     font-size: 18px;
-    padding: 4px 8px;
     border-radius: 6px;
     display: inline-block;
 }
@@ -133,7 +133,6 @@
     color: #ea580c;
     font-weight: 700;
     font-size: 18px;
-    padding: 4px 8px;
     border-radius: 6px;
     display: inline-block;
 }
@@ -142,7 +141,6 @@
     color: #ca8a04;
     font-weight: 700;
     font-size: 18px;
-    padding: 4px 8px;
     border-radius: 6px;
     display: inline-block;
 }
@@ -151,7 +149,6 @@
     color: #16a34a;
     font-weight: 700;
     font-size: 18px;
-    padding: 4px 8px;
     border-radius: 6px;
     display: inline-block;
 }
