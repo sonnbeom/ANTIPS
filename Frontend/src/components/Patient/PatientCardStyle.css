@@ -71,17 +71,20 @@
 }
 
 /* 알림 섹션 */
-.patient-alert {
+
+.patient-alert-urgent {
+  align-items: center;
   margin-top: 10px;
   padding: 10px;
   border-radius: 8px; /* 둥근 테두리 */
-}
-
-.patient-alert.urgent {
   background-color: #ffe3e3; /* 연한 빨간색 (응급) */
 }
 
-.patient-alert.info {
+.patient-alert-info {
+  align-items: center;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px; /* 둥근 테두리 */
   background-color: #e3f2fd; /* 연한 파란색 (특별 메모) */
 }
 
@@ -92,7 +95,9 @@
 }
 
 .patient-last-treatment {
-  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px; /* 이미지와 텍스트 사이 간격 */
 }
 /* hr 스타일 */
 .patient-card hr {
@@ -109,6 +114,10 @@
   outline: none; /* 포커스 시 외곽선 제거 */
 }
 
+.patient-last-treatment-icon {
+  width: auto; /* 이미지 크기에 따라 조절 */
+  height: auto;
+}
 /* 기존 CSS 유지 */
 
 /* 모바일 버전 스타일 */

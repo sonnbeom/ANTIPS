@@ -13,7 +13,7 @@ interface Alert {
 }
 
 const alertsData: Alert[] = [
-  { id: 1, room: "101호", name: "김서연", message: "알레르기 반응", category: "urgent", timeAgo: "10분 전" },
+  { id: 9, room: "101호", name: "김서연", message: "알레르기 반응", category: "urgent", timeAgo: "10분 전" },
   { id: 2, room: "103호", name: "이민준", message: "투약 일정 변경", category: "warning", timeAgo: "30분 전" },
   { id: 3, room: "105호", name: "박지우", message: "추적 관찰 필요", category: "info", timeAgo: "1시간 전" },
 ];

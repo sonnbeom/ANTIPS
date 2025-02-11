@@ -10,18 +10,28 @@ const LiveRobotFeed: React.FC = () => {
   };
 
   return (
-    <section className="live-robot-feed">
+    <section className="live-robot-feed" 
+            style={{
+              justifyContent : 'center'
+            }
+              
+    }>
       <h2>실시간 로봇 영상</h2>
+      <div className="live-robot-img" 
+      style={{
+        display : 'flex',
+        margin :'0 auto',
+        justifyContent :'center'
+      }}>
       <img 
         src={imageSrc}
         alt="카메라 스트림"
         style={{
-          width: '100%',
-          height: 'auto',
           objectFit: 'contain'
         }}
         onError={handleImageError}
       />
+      </div>
     </section>
   );
 };

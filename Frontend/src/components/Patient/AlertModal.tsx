@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import user from '../../assets/free-icon-user-747376.png'
 import "./AlertModalStyle.css";
 
 interface Patient {
@@ -32,7 +33,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
   const [alertData, setAlertData] = useState<AlertData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const currentTime = new Date().toLocaleString();
-
+  const API_URL = import.meta.env.VITE_SERVER_URL;
   useEffect(() => {
     const fetchCaseHistory = async () => {
       if (!isOpen) return;
@@ -41,8 +42,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
         const token = localStorage.getItem('token');
         if (!token) throw new Error('No token found');
     
-        const apiUrl = `http://43.203.254.199:8080/api/v1/service/non-public/urgent-care/emergency?patientId=${patientId}`;
-        console.log("Fetching:", apiUrl);
+        const apiUrl = `${API_URL}/non-public/urgent-care/emergency?patientId=${patientId}`;
     
         const response = await fetch(apiUrl, {
           headers: {
@@ -61,7 +61,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
         }
     
         const result = await response.json();
-        console.log("Fetched Alert Data:", result);
+
     
         setAlertData(result.data); // API 응답 구조에 맞게 저장
       } catch (error) {
@@ -127,7 +127,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
           <div className="alert-modal-left">
             <div className="patient-info-group">
               <img
-                src="https://randomuser.me/api/portraits/men/75.jpg"
+                src={user}
                 alt="환자"
                 className="patient-photo"
               />

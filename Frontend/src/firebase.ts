@@ -17,7 +17,7 @@ const messaging = getMessaging(app);
 export const getFCMToken = async () => {
     try {
         const currentToken = await getToken(messaging, {
-            vapidKey: 'BKh0wkKMFkZD2DRwKDgYsQkp9zv9jYOqIbA_O6-PiHX7wao5jr38OmnExn5sAf1o4y6m5jGVllYjRL1zLJMdb9s'
+            vapidKey: import.meta.env.VITE_FIREBASE_VAPID_KEY
         });
         
         if (currentToken) {

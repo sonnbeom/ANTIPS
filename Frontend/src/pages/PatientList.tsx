@@ -9,14 +9,17 @@ import { useNavigate } from 'react-router-dom';
 interface PatientData {
   id: number;
   name: string;
-  admissionDate: string; // "2025-02-11T00:00:00"
-  caseHistory: string;
-  specifics: string;
-  status: string;
-  urgencyLevel: number;
-  temperature: number;
-  floor: number;
-  roomNumber: number;
+  age:string;
+  roomNumber:string;
+  specifics:string;
+  floor:string;
+  caseHistory:string;
+  temperature:string;
+  urgencyLevel:string;
+  status:string;
+  createdAt:string;
+  alertType:number;
+  alertMessage:string;
 }
 
 interface ApiResponse {
@@ -33,7 +36,7 @@ const PatientList: React.FC = () => {
   const [activeSort, setActiveSort] = useState<string>("최신순");
   const [patients, setPatients] = useState<PatientData[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const API_URL = import.meta.env.VITE_SERVER_URL;
   const navigate = useNavigate();
 
   const fetchPatients = useCallback(async () => {
@@ -59,8 +62,8 @@ const PatientList: React.FC = () => {
       params.append('floor', floorNumber);
       params.append('sort', sortKeyword);
 
-      const apiUrl = `http://43.203.254.199:8080/api/v1/service/non-public/patients?${params.toString()}`;
-      console.log('Request URL:', apiUrl);
+      const apiUrl = `${API_URL}/non-public/patients?${params.toString()}`;
+
 
       const response = await fetch(apiUrl, {
         headers: {
@@ -74,13 +77,12 @@ const PatientList: React.FC = () => {
       }
 
       const result: ApiResponse = await response.json();
-      console.log('API Response:', result);
 
       if (result.status === 200) {
         // admissionDate에서 시간 부분을 제거하여 날짜만 처리
         const updatedPatients = result.data.patientList.map(patient => ({
           ...patient,
-          admissionDate: patient.admissionDate.split('T')[0], // "2025-02-11" 형태로 날짜만 추출
+          createdAt: patient.createdAt.split('T')[0], // "2025-02-11" 형태로 날짜만 추출
         }));
         setPatients(updatedPatients);
       } else {
@@ -138,7 +140,7 @@ const PatientList: React.FC = () => {
             />
           ))}
         </div>
-        {!isMobile && <button className="add-patient-button" onClick={handleCreate}>+ 환자 추가</button>}
+      <button className="add-patient-button" onClick={handleCreate}>+ 환자 추가</button>
       </div>
 
       <div className="patient-card-list">
@@ -151,13 +153,20 @@ const PatientList: React.FC = () => {
             <PatientCard
               key={patient.id}
               id={patient.id}
+              age={patient.age}
               name={patient.name}
-              patientId={`#${patient.id}`}
               location={`${patient.floor}층 - ${patient.roomNumber}호`}
-              status={patient.status} 
-              alertType={patient.urgencyLevel > 3 ? "응급" : ""}
+              status={patient.status}
+              caseHistory={patient.caseHistory}
+              alertType={patient.urgencyLevel? "응급" : ""}
               alertMessage={patient.specifics}
-              lastTreatmentDate={patient.admissionDate} // "2025-02-11" 형태로 admissionDate 표시
+              lastTreatmentDate={patient.createdAt}
+              // 누락된 props 추가
+              specifics={patient.specifics}
+              floor={patient.floor}
+              temperature={patient.temperature || "36.5"} // 기본값 설정
+              urgencyLevel={patient.urgencyLevel}
+              createdAt={patient.createdAt}
             />
           ))
         )}
