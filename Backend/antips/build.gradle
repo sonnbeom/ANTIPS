@@ -32,9 +32,8 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 	}
 
 	dependencies {
-		compileOnly 'org.projectlombok:lombok'
-
-		annotationProcessor 'org.projectlombok:lombok'
+		compileOnly 'org.projectlombok:lombok:1.18.30' // 최신 버전으로 변경
+		annotationProcessor 'org.projectlombok:lombok:1.18.30'
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
 		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -48,10 +47,8 @@ subprojects { // 모든 하위 모듈들에 이 설정을 적용합니다.
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
 //	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	compileOnly 'org.projectlombok:lombok'
-
-
-	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok:1.18.30' // 최신 버전으로 변경
+	annotationProcessor 'org.projectlombok:lombok:1.18.30'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }

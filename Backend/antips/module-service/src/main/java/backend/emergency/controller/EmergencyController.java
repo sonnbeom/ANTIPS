@@ -1,8 +1,10 @@
 package backend.emergency.controller;
 
+import backend.common.response.CommonResponse;
 import backend.emergency.dto.request.RequestEmergencyDto;
 import backend.emergency.dto.response.ResponseEmergencyDtoList;
 import backend.emergency.service.EmergencyService;
+import backend.fcm.dto.response.ResponseFcmDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
+
+import static backend.common.constant.ConstantResponseMessage.SUCCESS;
 
 @RestController
 @RequiredArgsConstructor
@@ -33,12 +37,7 @@ public class EmergencyController {
         return sink.asFlux()
                 .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount()))
                 .doOnCancel(() -> log.info("❌ [SSE 연결 종료] 구독자 수: {}", sink.currentSubscriberCount()));
-
-
     }
-
-
-
 
     @PostMapping("/public/emergency")
     public void checkEmergency(@RequestBody RequestEmergencyDto requestEmergencyDto) {
@@ -60,6 +59,15 @@ public class EmergencyController {
             throw new RuntimeException(e);
         }
         log.info("컨트롤러 호출 메시지 전송 완료");
+    }
+    @GetMapping("non-public/emergency")
+    public CommonResponse<ResponseEmergencyDtoList> getEmergencyList() {
+        ResponseEmergencyDtoList responseEmergencyDtoList = emergencyService.getEmergencyList();
+        return CommonResponse.<ResponseEmergencyDtoList>builder()
+                .message(SUCCESS)
+                .status(200)
+                .data(responseEmergencyDtoList)
+                .build();
     }
 }
 

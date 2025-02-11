@@ -48,7 +48,7 @@ public class EmergencyService {
         }
         return null;
     }
-    private ResponseEmergencyDtoList getEmergencyList(){
+    public ResponseEmergencyDtoList getEmergencyList(){
         List<Emergency> emergencyList = customEmergencyRepository.findActiveEmergency();
         return emergencyMapper.dtoToEntity(emergencyList);
     }
