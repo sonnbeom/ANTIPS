@@ -1,20 +1,20 @@
 // components/Treatment/TreatmentRecord.tsx
 import React from 'react';
 import './TreatmentRecordStyle.css';
-import { FaSyringe, FaFlask } from 'react-icons/fa';
+import { FaSyringe } from 'react-icons/fa';
 
 interface TreatmentRecordProps {
-key:number;
-content :string;
-createdAt:string;
+  id: number;        // key 대신 id 사용
+  content: string;
+  createdAt: string;
 }
 
 const TreatmentRecord: React.FC<TreatmentRecordProps> = ({
-  key,
+  id,
   content,
   createdAt,
 }) => {
-  const Icon =FaSyringe;
+  const Icon = FaSyringe;
   
   return (
     <div className="treatment-record">

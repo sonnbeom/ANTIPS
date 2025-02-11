@@ -1,35 +1,166 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import AlertModal from "./AlertModal";
 import "./PatientAlertStyle.css";
 
-interface Alert {
+interface PatientDto {
   id: number;
-  room: string;
   name: string;
-  message: string;
-  category: "urgent" | "warning" | "info";
-  timeAgo: string;
+  age: number;
+  roomNumber: number;
+  specifics: string;
 }
 
-const alertsData: Alert[] = [
-  { id: 9, room: "101호", name: "김서연", message: "알레르기 반응", category: "urgent", timeAgo: "10분 전" },
-  { id: 2, room: "103호", name: "이민준", message: "투약 일정 변경", category: "warning", timeAgo: "30분 전" },
-  { id: 3, room: "105호", name: "박지우", message: "추적 관찰 필요", category: "info", timeAgo: "1시간 전" },
-];
+interface EmergencyDto {
+  id: number;
+  title: string;
+  content: string;
+  createdAt: string;
+  patientDto: PatientDto;
+}
+
+interface AlertResponse {
+  listSize: number;
+  emergencyDtoList: EmergencyDto[];
+}
 
 const PatientAlertSection: React.FC = () => {
+  const [alerts, setAlerts] = useState<EmergencyDto[]>([]);
+  const [prevAlerts, setPrevAlerts] = useState<EmergencyDto[]>([]);
   const [selectedPatientId, setSelectedPatientId] = useState<number | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
+  const [alertId, setAlertId] = useState<number | null>(null);
+  const API_URL = import.meta.env.VITE_SERVER_URL;
+  
+  const audioRef = React.useRef(new Audio('/notification-sound.mp3'));
 
-  const handleAlertClick = (alert: Alert) => {
-    setSelectedPatientId(alert.id);
+  const fetchInitialAlerts = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No token found');
+      }
+
+      const response = await fetch(`${API_URL}/non-public/emergency`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch alerts');
+      }
+
+      const data = await response.json();
+      if (data.data?.emergencyDtoList) {
+        setAlerts(data.data.emergencyDtoList);
+        setPrevAlerts(data.data.emergencyDtoList); // 초기 로딩 시 prevAlerts도 업데이트
+      }
+    } catch (error) {
+      console.error('초기 알림 데이터 로딩 실패:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchInitialAlerts();
+  }, []);
+
+  const playNotificationSound = () => {
+    audioRef.current.play().catch(error => {
+      console.error('알림음 재생 실패:', error);
+    });
+  };
+
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+    let retryTimeout: NodeJS.Timeout;
+
+    const connectSSE = () => {
+      if (retryCount > 5) {
+        console.error("🔴 SSE 재연결 횟수 초과, 중단");
+        return;
+      }
+
+      console.log("🟢 SSE 연결 시도...");
+      eventSource = new EventSource(`${API_URL}/public/stream`);
+
+      eventSource.onopen = () => {
+        console.log("✅ SSE 연결됨");
+        setIsConnected(true);
+        setRetryCount(0);
+      };
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data: AlertResponse = JSON.parse(event.data);
+          if (data.emergencyDtoList) {
+            setAlerts(data.emergencyDtoList);
+            console.log('새로운 알림 수신:', data);
+          }
+        } catch (error) {
+          console.error("❌ SSE 데이터 파싱 오류:", error);
+        }
+      };
+
+      eventSource.onerror = () => {
+        console.error("⚠ SSE 연결 오류 발생");
+        setIsConnected(false);
+        eventSource?.close();
+        eventSource = null;
+        setRetryCount((prev) => prev + 1);
+        retryTimeout = setTimeout(connectSSE, 5000);
+      };
+    };
+
+    connectSSE();
+
+    return () => {
+      eventSource?.close();
+      clearTimeout(retryTimeout);
+      console.log("📴 SSE 연결 종료");
+    };
+  }, [retryCount]);
+
+  // 새로운 알림이 올 때만 소리 재생
+  useEffect(() => {
+    if (alerts.length > prevAlerts.length) {
+      const newAlertIds = alerts.map(alert => alert.id);
+      const prevAlertIds = prevAlerts.map(alert => alert.id);
+
+      const hasNewAlert = newAlertIds.some(id => !prevAlertIds.includes(id));
+
+      if (hasNewAlert) {
+        playNotificationSound();
+      }
+    }
+
+    setPrevAlerts(alerts);
+  }, [alerts]);
+
+  const handleAlertClick = (alert: EmergencyDto) => {
+    setSelectedPatientId(alert.patientDto.id);
+    setAlertId(alert.id);
     setIsModalOpen(true);
   };
 
-  const handleCloseModal = () => {
+  const handleCloseModal = async () => {
     setIsModalOpen(false);
     setSelectedPatientId(null);
+    setAlertId(null);
+    await fetchInitialAlerts();
+  };
+
+  const formatTimeAgo = (dateString: string) => {
+    const now = new Date();
+    const past = new Date(dateString);
+    const diffInMinutes = Math.floor((now.getTime() - past.getTime()) / (1000 * 60));
+
+    if (diffInMinutes < 60) return `${diffInMinutes}분 전`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}시간 전`;
+    return `${Math.floor(diffInMinutes / 1440)}일 전`;
   };
 
   return (
@@ -39,28 +170,35 @@ const PatientAlertSection: React.FC = () => {
           <FaExclamationTriangle size={24} color="red" />
           <span>응급 및 특별 알림</span>
         </div>
-        <span className="patient-active-alert-count">활성 알림 {alertsData.length}개</span>
+        <span className="patient-active-alert-count">
+          활성 알림 {alerts.length}개
+        </span>
       </div>
       <ul className="patient-alert-list">
-        {alertsData.map((alert) => (
-          <li
-            key={alert.id}
-            className={`patient-alert-item ${alert.category}`}
-            onClick={() => handleAlertClick(alert)}
-          >
-            <span>
-              {alert.room}: {alert.name} - {alert.message}
-            </span>
-            <span className="patient-time">{alert.timeAgo}</span>
-          </li>
-        ))}
+        {alerts.length > 0 ? (
+          alerts.map((alert) => (
+            <li
+              key={alert.id}
+              className="patient-alert-item urgent"
+              onClick={() => handleAlertClick(alert)}
+            >
+              <span>
+                {alert.patientDto.roomNumber}호: {alert.patientDto.name} - {alert.content}
+              </span>
+              <span className="patient-time">{formatTimeAgo(alert.createdAt)}</span>
+            </li>
+          ))
+        ) : (
+          <li className="no-alert">📭 현재 알림이 없습니다.</li>
+        )}
       </ul>
 
-      {selectedPatientId !== null && (
-        <AlertModal 
-          patientId={selectedPatientId} 
-          isOpen={isModalOpen} 
-          onClose={handleCloseModal} 
+      {selectedPatientId !== null && alertId !== null && (
+        <AlertModal
+          alertId={alertId}
+          patientId={selectedPatientId}
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
         />
       )}
     </div>
@@ -68,167 +206,3 @@ const PatientAlertSection: React.FC = () => {
 };
 
 export default PatientAlertSection;
-
-
-
-// import React, { useState, useEffect } from "react";
-// import { FaExclamationTriangle } from "react-icons/fa";
-// import AlertModal from "./AlertModal.tsx";
-// import "./PatientAlertStyle.css";
-
-// interface Alert {
-//   id: number;
-//   room: string;
-//   name: string;
-//   message: string;
-//   category: "urgent" | "warning" | "info";
-//   timeAgo: string;
-// }
-
-// interface AlertData {
-//   patient: {
-//     patientId: number;
-//     name: string;
-//     age: number;
-//     floor: number;
-//     roomNumber: number;
-//     urgencyLevel: number;
-//   };
-//   urgentCareList: {
-//     urgentCareId: number;
-//     urgentCareContent: string;
-//     createdAt: string;
-//   }[];
-// }
-
-// interface SensorData {
-//   sensorId: string;
-//   roomNumber: number;
-//   floor: number;
-//   type: string;
-//   value: number;
-//   timestamp: string;
-// }
-
-// const PatientAlertSection: React.FC = () => {
-//   const [alerts, setAlerts] = useState<Alert[]>([]);
-//   const [selectedAlertData, setSelectedAlertData] = useState<AlertData | null>(null);
-//   const [isModalOpen, setIsModalOpen] = useState(false);
-
-//   useEffect(() => {
-//     // 토큰 가져오기
-//     const token = localStorage.getItem('token');
-//     if (!token) {
-//       console.error('No token found');
-//       return;
-//     }
-
-//     // SSE 연결 설정
-//     const eventSource = new EventSource('/api/v1/secure/pnotice', {
-//       headers: {
-//         'Authorization': `Bearer ${token}`
-//       }
-//     });
-
-//     // 이벤트 리스너 설정
-//     eventSource.onmessage = (event) => {
-//       try {
-//         const sensorData: SensorData = JSON.parse(event.data);
-        
-//         // 센서 데이터를 알림 형식으로 변환
-//         const newAlert: Alert = {
-//           id: Date.now(), // 임시 ID
-//           room: `${sensorData.floor}층 ${sensorData.roomNumber}호`,
-//           name: "환자", // API에서 환자 정보를 포함하지 않으므로 기본값 사용
-//           message: `${sensorData.type}: ${sensorData.value}`,
-//           category: determineAlertCategory(sensorData),
-//           timeAgo: formatTimestamp(sensorData.timestamp)
-//         };
-
-//         // 알림 목록 업데이트
-//         setAlerts(prevAlerts => [newAlert, ...prevAlerts]);
-//       } catch (error) {
-//         console.error('Error parsing SSE data:', error);
-//       }
-//     };
-
-//     // 에러 처리
-//     eventSource.onerror = (error) => {
-//       console.error('SSE Error:', error);
-//       eventSource.close();
-//     };
-
-//     // 컴포넌트 언마운트 시 연결 종료
-//     return () => {
-//       eventSource.close();
-//     };
-//   }, []);
-
-//   // 알림 카테고리 결정 함수
-//   const determineAlertCategory = (sensorData: SensorData): "urgent" | "warning" | "info" => {
-//     if (sensorData.type === "temperature") {
-//       if (sensorData.value >= 38) return "urgent";
-//       if (sensorData.value >= 37.5) return "warning";
-//     }
-//     return "info";
-//   };
-
-//   // 타임스탬프 포맷팅 함수
-//   const formatTimestamp = (timestamp: string): string => {
-//     const date = new Date(timestamp);
-//     const now = new Date();
-//     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
-
-//     if (diffInMinutes < 60) return `${diffInMinutes}분 전`;
-//     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}시간 전`;
-//     return `${Math.floor(diffInMinutes / 1440)}일 전`;
-//   };
-
-//   const handleAlertClick = (alert: Alert) => {
-//     // 알림 클릭 처리 로직
-//     const alertData = patientDataList.find((data) => data.patient.patientId === alert.id);
-//     if (alertData) {
-//       setSelectedAlertData(alertData);
-//       setIsModalOpen(true);
-//     }
-//   };
-
-//   const handleCloseModal = () => {
-//     setIsModalOpen(false);
-//     setSelectedAlertData(null);
-//   };
-
-//   return (
-//     <div className="patient-alert-section">
-//       <div className="patient-alert-header">
-//         <div className="patient-icon-text-container">
-//           <FaExclamationTriangle size={24} color="red" />
-//           <span>응급 및 특별 알림</span>
-//         </div>
-//         <span className="patient-active-alert-count">활성 알림 {alerts.length}개</span>
-//       </div>
-//       <ul className="patient-alert-list">
-//         {alerts.map((alert) => (
-//           <li
-//             key={alert.id}
-//             className={`patient-alert-item ${alert.category}`}
-//             onClick={() => handleAlertClick(alert)}
-//           >
-//             <span>
-//               {alert.room}: {alert.name} - {alert.message}
-//             </span>
-//             <span className="patient-time">{alert.timeAgo}</span>
-//           </li>
-//         ))}
-//       </ul>
-
-//       <AlertModal 
-//         alertData={selectedAlertData} 
-//         isOpen={isModalOpen} 
-//         onClose={handleCloseModal} 
-//       />
-//     </div>
-//   );
-// };
-
-// export default PatientAlertSection;

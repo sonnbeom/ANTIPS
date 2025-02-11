@@ -113,7 +113,8 @@ const PatientDetail: React.FC = () => {
   {treatmentRecords.length > 0 ? (
     treatmentRecords.map((record) => (
       <TreatmentRecord
-        key={record.id} // id를 key prop으로 사용
+   // React의 내부 속성으로 key 사용
+        id={record.id}     // 컴포넌트의 prop으로 id 전달
         content={record.content}
         createdAt={record.createdAt}
       />

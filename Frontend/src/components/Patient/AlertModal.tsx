@@ -3,6 +3,7 @@ import user from '../../assets/free-icon-user-747376.png'
 import "./AlertModalStyle.css";
 
 interface Patient {
+  alertId : number ;
   patientId: number;
   name: string;
   age: number;
@@ -23,12 +24,13 @@ interface AlertData {
 }
 
 interface AlertModalProps {
+  alertId: number;  // emergencyId로 사용될 값
   patientId: number;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) => {
+const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onClose }) => {
   const [detailedAction, setDetailedAction] = useState("");
   const [alertData, setAlertData] = useState<AlertData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,7 +93,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
         throw new Error('No token found');
       }
   
-      const response = await fetch('http://43.203.254.199:8080/api/v1/service/non-public/urgent-care', {
+      const response = await fetch(`${API_URL}/non-public/urgent-care`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -99,7 +101,8 @@ const AlertModal: React.FC<AlertModalProps> = ({ patientId, isOpen, onClose }) =
         },
         body: JSON.stringify({
           patientId: patientId,
-          content: detailedAction // 기존 caseHistoryContent -> content로 변경
+          content: detailedAction,
+          emergencyId: alertId  // alertId 추가
         })
       });
   
