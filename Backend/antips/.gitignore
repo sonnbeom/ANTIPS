@@ -266,7 +266,7 @@ scripts
 compose.yaml
 
 # Firebase 서비스 계정 키
-serviceAccountKey.json
-src/main/resources/serviceAccountKey.json
+#serviceAccountKey.json
+#src/main/resources/serviceAccountKey.json
 
 !Dockerfile
