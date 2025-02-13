@@ -143,7 +143,7 @@ const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onC
   <div className="previous-actions-list">
     {alertData.urgentCareList
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
-      .slice(0, 3) // 최대 3개까지만 표시
+      .slice(0, 2) // 최대 3개까지만 표시
       .map((care) => (
         <div key={care.urgentCareId} className="urgent-care-box">
           <p className="urgent-care-date">{care.createdAt}</p>
@@ -162,15 +162,15 @@ const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onC
                 placeholder="상세한 조치 사항을 입력하세요"
               />
             </div>
-          </div>
-        </div>
-        <div className="alert-modal-footer">
+            <div className="alert-modal-footer">
           <button className="alert-modal-cancel" onClick={onClose}>
             취소
           </button>
           <button className="alert-modal-save" onClick={handleSave}>
             저장
           </button>
+        </div>
+          </div>
         </div>
       </div>
     </div>

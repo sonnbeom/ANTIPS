@@ -162,7 +162,29 @@ const PatientAlertSection: React.FC = () => {
     if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}시간 전`;
     return `${Math.floor(diffInMinutes / 1440)}일 전`;
   };
+  const getRoomColor = (roomNumber : number) => {
+    if (roomNumber < 200) return "#457B9D";
+    if (roomNumber < 300) return "#F77F00";
+    if (roomNumber < 400) return "orange";
+    return "red";
+  };
 
+  const formatAlertContent = (content: string) => {
+    // "비정상적인 고열을 보이고 있습니다.38.0" 형식의 문자열을 분리
+    const message = content.split(/(\d+\.?\d*)/)[0];
+    const temperature = content.match(/\d+\.?\d*/)?.[0];
+  
+    return (
+      <>
+        {message}
+        {temperature && (
+          <span style={{ color: 'red', fontWeight: 'bold' }}>
+            {`  (${temperature}°C)`}
+          </span>
+        )}
+      </>
+    );
+  };
   return (
     <div className="patient-alert-section">
       <div className="patient-alert-header">
@@ -177,22 +199,25 @@ const PatientAlertSection: React.FC = () => {
       <ul className="patient-alert-list">
         {alerts.length > 0 ? (
           alerts.map((alert) => (
-            <li
-              key={alert.id}
-              className="patient-alert-item urgent"
-              onClick={() => handleAlertClick(alert)}
-            >
-              <span>
-                {alert.patientDto.roomNumber}호: {alert.patientDto.name} - {alert.content}
-              </span>
-              <span className="patient-time">{formatTimeAgo(alert.createdAt)}</span>
-            </li>
+      <li
+        key={alert.id}
+        className="patient-alert-item urgent"
+        onClick={() => handleAlertClick(alert)}
+      >
+        <span>
+          <span style={{ color: getRoomColor(alert.patientDto.roomNumber) }}>
+            {alert.patientDto.roomNumber}호
+          </span>
+          : {alert.patientDto.name} - {formatAlertContent(alert.content)}
+        </span>
+        <span className="patient-time">{formatTimeAgo(alert.createdAt)}</span>
+      </li>
           ))
         ) : (
           <li className="no-alert">📭 현재 알림이 없습니다.</li>
         )}
       </ul>
-
+  
       {selectedPatientId !== null && alertId !== null && (
         <AlertModal
           alertId={alertId}

@@ -15,13 +15,13 @@
   
   /* 활성화된 버튼 스타일 */
   .sort-button.active {
-    background-color: #0D9488; /* 활성화된 민트색 배경 */
+    background-color:#4A90E2; /* 활성화된 민트색 배경 */
     color: #FFFFFF; /* 파란 텍스트 색상 */
   }
   
   /* 호버 효과 */
   .sort-button:hover {
-    background-color: #e6f7f3; /* 살짝 밝은 민트색 */
+    background-color:#3B7EC5; /* 살짝 밝은 민트색 */
   }
   
   /* 정렬 버튼 섹션 레이아웃 */
