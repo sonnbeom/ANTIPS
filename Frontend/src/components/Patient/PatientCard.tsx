@@ -8,18 +8,18 @@ import "./PatientCardStyle.css";
 interface PatientCardProps {
   id: number;
   name: string;
-  age:string;
-  lastTreatmentDate:string;
-  location:string;
-  specifics:string;
-  floor:string;
-  caseHistory:string;
-  temperature:string;
-  urgencyLevel:string;
-  status:string;
-  createdAt:string;
-  alertType:string;
-  alertMessage:string;
+  age: string;
+  lastTreatmentDate: string;
+  location: string;
+  specifics: string;
+  floor: string;
+  caseHistory: string;
+  temperature: string;
+  urgencyLevel: string;
+  status: string;
+  createdAt: string;
+  alertType: string;
+  alertMessage: string;
 }
 
 const PatientCard: React.FC<PatientCardProps> = ({
@@ -45,8 +45,7 @@ const PatientCard: React.FC<PatientCardProps> = ({
   };
 
   return (
-    <div className={`patient-card ${status === "입원중" ? "inpatient" : "waiting"}`}>
-      {/* 환자 정보 */}
+    <div className={`patient-card ${status === "to_do" ? "waiting" : "inpatient"}`}>
       <div className="patient-info">
         <div className="patitent-info-left">
           <div>
@@ -59,26 +58,24 @@ const PatientCard: React.FC<PatientCardProps> = ({
         <div className="patitent-info-right">
           <span
             className={`patient-status-badge ${
-              status === "done" ? "inpatient" : "waiting"
+              status === "to_do" ? "waiting" : "inpatient"
             }`}
           >
-            {status}
+            {status === "to_do" ? "Todo" : "Done"}
           </span>
         </div>
       </div>
 
-      {/* 알림 정보 */}
       {alertType && (
         <div className='patient-alert-urgent'>
           <img src={alert} alt="" className="patient-alert-icon"/> {alertMessage}
         </div>
       )}
-        {caseHistory && (
+      {caseHistory && (
         <div className='patient-alert-info'>
-        <img src={history} alt="" className="patient-alert-icon"/> {caseHistory}
+          <img src={history} alt="" className="patient-alert-icon"/> {caseHistory}
         </div>
       )}
-      {/* 마지막 진료 정보 */}
       <hr />
       <div className="patient-last-treatment-section">
         <p className="patient-last-treatment">

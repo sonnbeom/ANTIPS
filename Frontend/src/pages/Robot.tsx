@@ -20,7 +20,7 @@ const Robot: React.FC = () => {
       {/* 현재 위치 및 로봇 활동 로그 */}
       <div className="robot-info-section">
         <CurrentLocation />
-        <RobotActivityLog />
+        {/* <RobotActivityLog /> */}
       </div>
     </div>
   );

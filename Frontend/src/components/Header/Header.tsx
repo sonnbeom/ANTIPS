@@ -9,7 +9,7 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
-  const userName = "Dr. Sarah Kim";
+  const userName = localStorage.getItem('name');
   const navigate = useNavigate();
 
   const handlePageRobot = () => {
@@ -20,46 +20,42 @@ const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
     navigate('/patientlist');
   };
 
-  // const handleLogout = async () => {
-  //   try {
-  //     // 로컬 스토리지에서 토큰 가져오기
-  //     const token = localStorage.getItem('token');
+  const handleLogout = async () => {
+    try {
+      // 로컬 스토리지에서 토큰 가져오기
+      const token = localStorage.getItem('token');
       
-  //     if (!token) {
-  //       console.error('No token found');
-  //       return;
-  //     }
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
 
-  //     // 로그아웃 API 호출
-  //     const response = await fetch('/api/v1/auth/logout', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Authorization': `Bearer ${token}`,
-  //         'Content-Type': 'application/json'
-  //       },
-  //       credentials: 'include' // 쿠키를 포함하여 요청
-  //     });
+      // 로그아웃 API 호출
+      const response = await fetch('/api/v1/auth/logout', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        credentials: 'include' // 쿠키를 포함하여 요청
+      });
 
-  //     if (!response.ok) {
-  //       throw new Error('Logout failed');
-  //     }
+      if (!response.ok) {
+        throw new Error('Logout failed');
+      }
 
-  //     // 로그아웃 성공 시 로컬 스토리지 클리어
-  //     localStorage.clear();
-  //     setIsAuthenticated(false);
-  //     navigate('/');
+      // 로그아웃 성공 시 로컬 스토리지 클리어
+      localStorage.clear();
+      setIsAuthenticated(false);
+      navigate('/');
       
-  //   } catch (error) {
-  //     console.error('Logout error:', error);
-  //     // 에러 처리 (예: 토스트 메시지 표시)
-  //   }
-  // };
-
-  const handleLogout = () => {
-    localStorage.clear();
-    setIsAuthenticated(false); // 로그아웃 상태 즉시 반영
-    navigate('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+      // 에러 처리 (예: 토스트 메시지 표시)
+    }
   };
+
+
 
   return (
     <div className="header-container">

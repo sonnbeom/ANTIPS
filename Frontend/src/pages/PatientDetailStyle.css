@@ -53,6 +53,8 @@
   .treatment-records-list {
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    margin: 0 auto;
     gap: 12px;
   }
   

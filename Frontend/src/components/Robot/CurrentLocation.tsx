@@ -35,7 +35,7 @@ const CurrentLocation: React.FC = () => {
     }
 
     const ros = new window.ROSLIB.Ros({
-      url: 'ws://localhost:9090'
+      url: 'ws://70.12.247.222:9090'
     });
 
     ros.on('connection', () => {

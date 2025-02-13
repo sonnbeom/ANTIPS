@@ -89,13 +89,17 @@ export default defineConfig({
     assetsDir: 'assets',
     sourcemap: false,
     rollupOptions: {
+      external: ['roslib'] ,
       output: {
         manualChunks: {
           vendor: ['react', 'react-dom'],
         }
       }
     },
-    chunkSizeWarningLimit: 1000
+    chunkSizeWarningLimit: 1000,
+    commonjsOptions: {
+      transformMixedEsModules: true // CommonJS 모듈도 변환 허용
+    },
   },
   preview: {
     port: 3000,
@@ -103,7 +107,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      'roslib': 'roslib/build/roslib.js'
+      roslib: 'roslib/build/roslib.js'
     }
   },
   optimizeDeps: {
