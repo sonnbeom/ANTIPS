@@ -29,6 +29,17 @@ interface AlertModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+const formatDateTime = (isoString: string): string => {
+  const date = new Date(isoString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const seconds = String(date.getSeconds()).padStart(2, '0');
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+}
 
 const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onClose }) => {
   const [detailedAction, setDetailedAction] = useState("");
@@ -141,15 +152,16 @@ const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onC
             <div className="previous-actions">
   <h4>이전 조치 사항</h4>
   <div className="previous-actions-list">
-    {alertData.urgentCareList
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()) // 최신순 정렬
-      .slice(0, 2) // 최대 3개까지만 표시
-      .map((care) => (
-        <div key={care.urgentCareId} className="urgent-care-box">
-          <p className="urgent-care-date">{care.createdAt}</p>
-          <p className="urgent-care-content">{care.content}</p>
-        </div>
-      ))}
+  {alertData.urgentCareList
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+  .slice(0, 2)
+  .map((care) => (
+    <div key={care.urgentCareId} className="urgent-care-box">
+      <p className="urgent-care-date">{formatDateTime(care.createdAt)}</p>
+      <p className="urgent-care-content">{care.content}</p>
+    </div>
+  ))}
+
   </div>
 </div>
           </div>

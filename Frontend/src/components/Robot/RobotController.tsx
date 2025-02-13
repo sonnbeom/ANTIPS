@@ -5,7 +5,8 @@ import './RobotControllerStyle.css'
 const RobotController: React.FC = () => {
   const [connected, setConnected] = useState(false);
   const [ros, setRos] = useState<ROSLIB.Ros | null>(null);
-  const [cmdVel, setCmdVel] = useState<ROSLIB.Topic | null>(null);
+  const [cmdKeyTopic, setCmdKeyTopic] = useState<ROSLIB.Topic | null>(null);
+  const [motorStatus, setMotorStatus] = useState<string>("No data");
 
   const connectToROS = () => {
     if (connected) {
@@ -18,12 +19,26 @@ const RobotController: React.FC = () => {
     rosInstance.on("connection", () => {
       console.log("Connected to ROS");
       setConnected(true);
-      const topic = new ROSLIB.Topic({
+      
+      // Command topic setup
+      const cmdTopic = new ROSLIB.Topic({
         ros: rosInstance,
-        name: "/cmd_vel",
-        messageType: "geometry_msgs/Twist"
+        name: "/cmd_key",
+        messageType: "std_msgs/String"
       });
-      setCmdVel(topic);
+      setCmdKeyTopic(cmdTopic);
+
+      // Motor status topic setup
+      const motorStatusTopic = new ROSLIB.Topic({
+        ros: rosInstance,
+        name: "/motor_status",
+        messageType: "std_msgs/String"
+      });
+
+      // Subscribe to motor status
+      motorStatusTopic.subscribe((message: ROSLIB.Message) => {
+        setMotorStatus((message as any).data);
+      });
     });
 
     rosInstance.on("error", (error) => {
@@ -34,6 +49,7 @@ const RobotController: React.FC = () => {
     rosInstance.on("close", () => {
       console.log("ROS Connection Closed");
       setConnected(false);
+      setMotorStatus("No data");
     });
 
     setRos(rosInstance);
@@ -45,33 +61,26 @@ const RobotController: React.FC = () => {
       console.log("Disconnected from ROS");
       setConnected(false);
       setRos(null);
-      setCmdVel(null);
+      setCmdKeyTopic(null);
+      setMotorStatus("No data");
     }
   };
 
-  const sendCommand = useCallback((linearX: number, angularZ: number) => {
-    if (!cmdVel) {
+  const sendCommand = useCallback((key: string) => {
+    if (!cmdKeyTopic) {
       console.warn("Not connected to ROS, command not sent.");
       return;
     }
 
-    const twist = new ROSLIB.Message({
-      linear: { x: linearX, y: 0, z: 0 },
-      angular: { x: 0, y: 0, z: angularZ },
-    });
-    
-    cmdVel.publish(twist);
-    console.log("Command sent:", twist);
-  }, [cmdVel]);
+    const message = new ROSLIB.Message({ data: key });
+    cmdKeyTopic.publish(message);
+    console.log("Command sent:", message);
+  }, [cmdKeyTopic]);
 
   const handleKeyPress = useCallback((event: KeyboardEvent) => {
-    switch (event.key) {
-      case "w": sendCommand(0.5, 0); break;  // 앞으로
-      case "s": sendCommand(-0.5, 0); break; // 뒤로
-      case "a": sendCommand(0, 1.0); break;  // 좌회전
-      case "d": sendCommand(0, -1.0); break; // 우회전
-      case "x": sendCommand(0, 0); console.log("Stop command sent"); break; // 정지
-      default: return;
+    const validKeys = ["w", "a", "s", "d", "x"];
+    if (validKeys.includes(event.key)) {
+      sendCommand(event.key);
     }
     console.log(`Key pressed: ${event.key}`);
   }, [sendCommand]);
@@ -85,16 +94,39 @@ const RobotController: React.FC = () => {
 
   return (
     <section className="robot-controller">
-      <h3 className="controller-title">Robot Controller <span className={connected ? "connected" : "disconnected"}>{connected ? "(Connected)" : "(Disconnected)"}</span></h3>
-      <button className="connect-button" onClick={connectToROS}>{connected ? "🔴 Disconnect from ROS" : "🔗 Connect to ROS"}</button>
+      <h3 className="controller-title">
+        Robot Controller 
+        <span className={connected ? "connected" : "disconnected"}>
+          {connected ? "(Connected)" : "(Disconnected)"}
+        </span>
+      </h3>
+      <button className="connect-button" onClick={connectToROS}>
+        {connected ? "🔴 Disconnect from ROS" : "🔗 Connect to ROS"}
+      </button>
+      
+      <div className="motor-status">
+        <h4>Motor Status:</h4>
+        <p>{motorStatus}</p>
+      </div>
+
       <div className="control-buttons">
-        <button className="control-button up" onClick={() => { sendCommand(0.5, 0); console.log("Button: Forward"); }}>⬆️ Forward</button>
+        <button className="control-button up" onClick={() => sendCommand("w")}>
+          ⬆️ Forward
+        </button>
         <div className="horizontal-controls">
-          <button className="control-button left" onClick={() => { sendCommand(0, 1.0); console.log("Button: Left"); }}>⬅️ Left</button>
-          <button className="control-button right" onClick={() => { sendCommand(0, -1.0); console.log("Button: Right"); }}>➡️ Right</button>
+          <button className="control-button left" onClick={() => sendCommand("a")}>
+            ⬅️ Left
+          </button>
+          <button className="control-button right" onClick={() => sendCommand("d")}>
+            ➡️ Right
+          </button>
         </div>
-        <button className="control-button down" onClick={() => { sendCommand(-0.5, 0); console.log("Button: Backward"); }}>⬇️ Backward</button>
-        <button className="control-button stop" onClick={() => { sendCommand(0, 0); console.log("Button: Stop"); }}>🛑 Stop</button>
+        <button className="control-button down" onClick={() => sendCommand("s")}>
+          ⬇️ Backward
+        </button>
+        <button className="control-button stop" onClick={() => sendCommand("x")}>
+          🛑 Stop
+        </button>
       </div>
     </section>
   );
