@@ -32,10 +32,17 @@ interface UrgentCareData {
 interface ApiResponse {
   status: number;
   message: string;
+  data: PatientData;  // PatientData 타입으로 변경
+}
+
+interface TreatmentApiResponse {
+  status: number;
+  message: string;
   data: {
     urgentCareList: UrgentCareData[];
   };
 }
+
 
 const PatientDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -51,7 +58,7 @@ const PatientDetail: React.FC = () => {
         if (!token) {
           throw new Error('토큰이 없습니다');
         }
-
+    
         const [patientResponse, treatmentResponse] = await Promise.all([
           fetch(`${API_URL}/non-public/patient?patientId=${id}`, {
             headers: {
@@ -66,19 +73,18 @@ const PatientDetail: React.FC = () => {
             },
           })
         ]);
-
+    
         const patientResult: ApiResponse = await patientResponse.json();
-        const treatmentResult = await treatmentResponse.json();
-
+        const treatmentResult: TreatmentApiResponse = await treatmentResponse.json();
+    
         if (patientResponse.ok && patientResult.status === 200) {
-          setPatientData(patientResult.data);
+          setPatientData(patientResult.data);  // PatientData 타입으로 직접 설정
         }
-
+    
         if (treatmentResponse.ok) {
-          const urgentCareList = treatmentResult.data?.urgentCareList || [];
-          setTreatmentRecords(urgentCareList);
+          setTreatmentRecords(treatmentResult.data.urgentCareList);
         }
-
+    
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : '데이터 조회 중 오류가 발생했습니다';
         console.error('Error:', errorMessage);
@@ -87,6 +93,7 @@ const PatientDetail: React.FC = () => {
         setLoading(false);
       }
     };
+    
 
     if (id) {
       fetchData();
@@ -113,8 +120,8 @@ const PatientDetail: React.FC = () => {
   {treatmentRecords.length > 0 ? (
     treatmentRecords.map((record) => (
       <TreatmentRecord
-   // React의 내부 속성으로 key 사용
-        id={record.id}     // 컴포넌트의 prop으로 id 전달
+        key={record.id}
+        id={record.id}
         content={record.content}
         createdAt={record.createdAt}
       />
@@ -123,6 +130,7 @@ const PatientDetail: React.FC = () => {
     <div className="no-records-message">긴급 조치 기록이 없습니다.</div>
   )}
 </div>
+
       </div>
     </div>
   );

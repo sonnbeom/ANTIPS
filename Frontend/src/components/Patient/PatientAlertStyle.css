@@ -97,6 +97,18 @@
   color: #1E40AF; /* 진한 파란색 */
   border-left: 6px solid #2563EB; /* 왼쪽 강조 */
 }
+.no-alert{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px;
+  border-radius: 8px; /* 둥근 모서리 */
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  background-color: #DBEAFE; /* 연한 파란색 */
+  color: #1E40AF; /* 진한 파란색 */
+  border-left: 6px solid #2563EB; /* 왼쪽 강조 */
+}
 
 /* 알림 항목 hover 효과 */
 .patient-alert-item:hover {

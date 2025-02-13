@@ -26,6 +26,16 @@ const PatientEdit: React.FC = () => {
     createdAt:string;
   }
 
+  interface RequestData {
+    id: number;
+    specifics: string;
+    urgencyLevel: number;
+    caseHistory: string;
+    temperature: number;
+    floor: number;
+    roomNumber: number;
+  }
+
   const [formData, setFormData] = useState<FormData>({
     name: "",
     age: '',
@@ -101,7 +111,7 @@ const PatientEdit: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    const requestData = {
+    const requestData: RequestData = {
       id: parseInt(id ?? "0"),
       specifics: formData.specifics,
       urgencyLevel: parseInt(formData.urgencyLevel) || 1,
@@ -111,15 +121,18 @@ const PatientEdit: React.FC = () => {
       roomNumber: parseInt(formData.roomNumber) || 101
     };
   
-    // 원본 데이터와 비교
-    const hasChanges = Object.keys(requestData).some(key => 
-      originalData[key]?.toString() !== requestData[key]?.toString()
-    );
-
-    if (!hasChanges) {
+    // 타입 안전한 비교 함수
+    const hasChanges = (original: any, updated: RequestData): boolean => {
+      return Object.entries(updated).some(([key, value]) => {
+        const typedKey = key as keyof RequestData;
+        return original[typedKey]?.toString() !== value.toString();
+      });
+    };
+  
+    if (!hasChanges(originalData, requestData)) {
       return;
     }
-
+  
     try {
       const token = localStorage.getItem('token');
       const response = await fetch(`${API_URL}/non-public/patient`, {

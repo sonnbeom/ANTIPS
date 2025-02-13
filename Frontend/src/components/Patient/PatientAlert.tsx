@@ -185,6 +185,10 @@ const PatientAlertSection: React.FC = () => {
       </>
     );
   };
+
+  const getAlertClass = (title:string) => {
+    return title.includes("체온 문제") ? "patient-alert-item urgent" : "patient-alert-item warning";
+  };
   return (
     <div className="patient-alert-section">
       <div className="patient-alert-header">
@@ -201,7 +205,7 @@ const PatientAlertSection: React.FC = () => {
           alerts.map((alert) => (
       <li
         key={alert.id}
-        className="patient-alert-item urgent"
+        className={getAlertClass(alert.title)}
         onClick={() => handleAlertClick(alert)}
       >
         <span>
