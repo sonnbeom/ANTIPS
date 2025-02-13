@@ -12,12 +12,12 @@
   z-index: 9999;
   font-family: 'Noto Sans KR', sans-serif;
 }
-.alert-modal-overlay h3,h4,p{
-  margin :0;
+
+.alert-modal-overlay h3, h4, p {
+  margin: 0;
 }
 
-
-/* 모달 컨테이너 (크기 축소) */
+/* 모달 컨테이너 */
 .alert-modal-content {
   background-color: #F5F5F5;
   width: 60%;
@@ -48,8 +48,13 @@
 .alert-modal-time {
   font-size: 12px;
 }
+.alert-modal-right{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-/* 모달 본문 (여백 최적화) */
+/* 모달 본문 */
 .alert-modal-body {
   display: flex;
   padding: 15px;
@@ -62,11 +67,6 @@
   text-align: center;
   margin-bottom: 10px;
 }
-.alert-modal-right {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
 
 .patient-photo {
   width: 80px;
@@ -76,6 +76,7 @@
   border: 2px solid #1565C0;
 }
 
+/* 긴급 조치 사항 박스 */
 .urgent-care-box {
   background-color: #FFFFFF;
   border-left: 4px solid #1565C0;
@@ -85,10 +86,16 @@
   border-radius: 5px;
   font-size: 14px;
 }
-.action-input-group{
+
+.urgent-care-box p {
+  width: 100%;
+}
+
+/* 조치 사항 입력 */
+.action-input-group {
   margin-top: 20px;
 }
-/* 조치 사항 입력 (높이 축소) */
+
 .action-input-group textarea {
   resize: none;
   height: 150px;
@@ -99,7 +106,7 @@
   font-size: 14px;
 }
 
-/* 모달 하단 버튼 (정렬 최적화) */
+/* 모달 하단 버튼 */
 .alert-modal-footer {
   padding: 10px;
   display: flex;
@@ -111,7 +118,7 @@
 
 .alert-modal-cancel {
   background-color: #BDBDBD;
-  color: #fff;
+  color: white;
   padding: 8px 15px;
   border-radius: 6px;
   font-size: 14px;
@@ -129,4 +136,46 @@
 
 .alert-modal-save:hover {
   background-color: #0D47A1;
+}
+
+/* 📌 모바일 환경에서만 적용되는 스타일 */
+@media screen and (max-width: 768px) {
+  .alert-modal-content {
+    width: 90%;
+    max-width: none;
+    max-height: 90vh;
+  }
+
+  .alert-modal-body {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .patient-info-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .action-input-group textarea {
+    height: 120px;
+    width: 100%;
+  }
+
+  .alert-modal-footer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .alert-modal-footer button {
+    flex: 1;
+    max-width: 120px;
+  }
+  .alert-modal-left{
+    display: flex;
+    gap :20px
+  }
 }
