@@ -76,53 +76,39 @@ const PatientAlertSection: React.FC = () => {
 
   useEffect(() => {
     let eventSource: EventSource | null = null;
-    let retryTimeout: NodeJS.Timeout;
-
-    const connectSSE = () => {
-      if (retryCount > 5) {
-        console.error("🔴 SSE 재연결 횟수 초과, 중단");
-        return;
-      }
-
-      console.log("🟢 SSE 연결 시도...");
-      eventSource = new EventSource(`${API_URL}/public/stream`);
-
-      eventSource.onopen = () => {
-        console.log("✅ SSE 연결됨");
-        setIsConnected(true);
-        setRetryCount(0);
-      };
-
-      eventSource.onmessage = (event) => {
-        try {
-          const data: AlertResponse = JSON.parse(event.data);
-          if (data.emergencyDtoList) {
-            setAlerts(data.emergencyDtoList);
-            console.log('새로운 알림 수신:', data);
-          }
-        } catch (error) {
-          console.error("❌ SSE 데이터 파싱 오류:", error);
-        }
-      };
-
-      eventSource.onerror = () => {
-        console.error("⚠ SSE 연결 오류 발생");
-        setIsConnected(false);
-        eventSource?.close();
-        eventSource = null;
-        setRetryCount((prev) => prev + 1);
-        retryTimeout = setTimeout(connectSSE, 5000);
-      };
+  
+    console.log("🟢 SSE 연결 시도...");
+    eventSource = new EventSource(`${API_URL}/public/stream`);
+  
+    eventSource.onopen = () => {
+      console.log("✅ SSE 연결됨");
+      setIsConnected(true);
     };
-
-    connectSSE();
-
+  
+    eventSource.onmessage = (event) => {
+      try {
+        const data: AlertResponse = JSON.parse(event.data);
+        if (data.emergencyDtoList) {
+          setAlerts(data.emergencyDtoList);
+          console.log("새로운 알림 수신:", data);
+        }
+      } catch (error) {
+        console.error("❌ SSE 데이터 파싱 오류:", error);
+      }
+    };
+  
+    eventSource.onerror = () => {
+      console.error("⚠ SSE 연결 오류 발생");
+      setIsConnected(false);
+      eventSource?.close();
+    };
+  
     return () => {
       eventSource?.close();
-      clearTimeout(retryTimeout);
       console.log("📴 SSE 연결 종료");
     };
-  }, [retryCount]);
+  }, []); // 빈 배열을 넣어 최초 1회만 실행
+  
 
   // 새로운 알림이 올 때만 소리 재생
   useEffect(() => {
