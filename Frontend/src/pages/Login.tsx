@@ -59,7 +59,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
   
       console.log('Sending login data:', loginData);
   
-      const response = await fetch('https://43.203.254.199:8080/api/v1/auth/login', {
+      const response = await fetch('https://www.antips.site/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
