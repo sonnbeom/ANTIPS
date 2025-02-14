@@ -82,7 +82,6 @@ const RobotController: React.FC = () => {
     if (validKeys.includes(event.key)) {
       sendCommand(event.key);
     }
-    console.log(`Key pressed: ${event.key}`);
   }, [sendCommand]);
 
   useEffect(() => {
