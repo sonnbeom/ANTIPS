@@ -2,7 +2,7 @@
 .robot-page-container {
     margin: 0 auto; /* 가운데 정렬 */
     padding: 15px 90px;
-    min-height: 100vh;
+    min-height: 100%;
     background-color: #f8fafc; /* 연한 배경색 */
     font-family: Arial, sans-serif;
   }

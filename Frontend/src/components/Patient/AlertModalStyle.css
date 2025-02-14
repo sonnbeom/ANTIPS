@@ -60,10 +60,8 @@
 
 /* 모달 본문 */
 .alert-modal-body {
-  display: flex;
   padding: 15px;
   gap: 10px;
-  justify-content: space-between;
 }
 
 /* 환자 정보 */
@@ -91,7 +89,7 @@
   font-size: 14px;
 }
 .alert-modal-left{
-  width: 50%;
+  width: 100%;
 }
 
 .urgent-care-box p {
