@@ -64,7 +64,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        credentials: 'omit',
+        credentials: 'include',
         body: JSON.stringify(loginData)
       });
   

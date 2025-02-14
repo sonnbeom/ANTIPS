@@ -1,12 +1,13 @@
 import React, { useEffect, useState, useCallback } from "react";
 import * as ROSLIB from "@breq/roslib";
-import './RobotControllerStyle.css'
+import "./RobotControllerStyle.css";
 
 const RobotController: React.FC = () => {
   const [connected, setConnected] = useState(false);
   const [ros, setRos] = useState<ROSLIB.Ros | null>(null);
   const [cmdKeyTopic, setCmdKeyTopic] = useState<ROSLIB.Topic | null>(null);
-  const [motorStatus, setMotorStatus] = useState<string>("No data");
+  const [speed, setSpeed] = useState<number | null>(null);
+  const [servoAngle, setServoAngle] = useState<number | null>(null);
 
   const connectToROS = () => {
     if (connected) {
@@ -15,29 +16,32 @@ const RobotController: React.FC = () => {
     }
 
     const rosInstance = new ROSLIB.Ros({ url: "ws://70.12.247.222:9090" });
-    
+
     rosInstance.on("connection", () => {
       console.log("Connected to ROS");
       setConnected(true);
-      
-      // Command topic setup
+
       const cmdTopic = new ROSLIB.Topic({
         ros: rosInstance,
         name: "/cmd_key",
-        messageType: "std_msgs/String"
+        messageType: "std_msgs/String",
       });
       setCmdKeyTopic(cmdTopic);
 
-      // Motor status topic setup
       const motorStatusTopic = new ROSLIB.Topic({
         ros: rosInstance,
         name: "/motor_status",
-        messageType: "std_msgs/String"
+        messageType: "std_msgs/String",
       });
 
-      // Subscribe to motor status
       motorStatusTopic.subscribe((message: ROSLIB.Message) => {
-        setMotorStatus((message as any).data);
+        try {
+          const data = JSON.parse((message as any).data);
+          setSpeed(data.speed || 0);
+          setServoAngle(data.servo_angle || null);
+        } catch (error) {
+          console.error("Invalid motor status data", error);
+        }
       });
     });
 
@@ -49,7 +53,8 @@ const RobotController: React.FC = () => {
     rosInstance.on("close", () => {
       console.log("ROS Connection Closed");
       setConnected(false);
-      setMotorStatus("No data");
+      setSpeed(null);
+      setServoAngle(null);
     });
 
     setRos(rosInstance);
@@ -62,7 +67,8 @@ const RobotController: React.FC = () => {
       setConnected(false);
       setRos(null);
       setCmdKeyTopic(null);
-      setMotorStatus("No data");
+      setSpeed(null);
+      setServoAngle(null);
     }
   };
 
@@ -94,7 +100,7 @@ const RobotController: React.FC = () => {
   return (
     <section className="robot-controller">
       <h3 className="controller-title">
-        Robot Controller 
+        Robot Controller
         <span className={connected ? "connected" : "disconnected"}>
           {connected ? "(Connected)" : "(Disconnected)"}
         </span>
@@ -102,10 +108,11 @@ const RobotController: React.FC = () => {
       <button className="connect-button" onClick={connectToROS}>
         {connected ? "🔴 Disconnect from ROS" : "🔗 Connect to ROS"}
       </button>
-      
+
       <div className="motor-status">
         <h4>Motor Status:</h4>
-        <p>{motorStatus}</p>
+        <p>Speed: {speed !== null ? speed : "No data"}</p>
+        <p>Servo Angle: {servoAngle !== null ? servoAngle : "N/A"}</p>
       </div>
 
       <div className="control-buttons">
