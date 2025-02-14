@@ -3,7 +3,7 @@ import robot from "../../assets/robotst.png";
 import './LiveRobotStyle.css'
 
 const LiveRobotFeed: React.FC = () => {
-  const [imageSrc, setImageSrc] = useState("http://70.12.247.213:8081/video_feed");
+  const [imageSrc, setImageSrc] = useState("https://70.12.247.213:8081/video_feed");
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     console.error('스트림 로딩 오류:', e);
