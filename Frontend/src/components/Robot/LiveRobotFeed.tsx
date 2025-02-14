@@ -20,7 +20,6 @@ const LiveRobotFeed: React.FC = () => {
             onError={handleImageError}
           />
         </div>
-        <audio src="tcp://70.12.246.25:8090"></audio>
       </div>
     </section>
   );

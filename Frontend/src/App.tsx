@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; // Navigate import
 import Login from './pages/Login';
 import PatientList from './pages/PatientList';
 import PatientDetail from './pages/PatientDetail';
@@ -77,14 +77,16 @@ const App: React.FC = () => {
         }}
       >
         <Routes>
-          <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
-          <Route path="/robot" element={<Robot />} />
-          <Route path="/patientlist" element={<PatientList />} />
-          <Route path="/patient/:id" element={<PatientDetail />} />
-          <Route path="/patientregistration" element={<PatientRegistration />} />
-          <Route path="/patient/edit/:id" element={<PatientEdit />} />
+          {/* 로그인 여부에 따라 페이지 접근 제한 */}
+          <Route path="/" element={isAuthenticated ? <Navigate to="/patientlist" /> : <Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/robot" element={isAuthenticated ? <Robot /> : <Navigate to="/" />} />
+          <Route path="/patientlist" element={isAuthenticated ? <PatientList /> : <Navigate to="/" />} />
+          <Route path="/patient/:id" element={isAuthenticated ? <PatientDetail /> : <Navigate to="/" />} />
+          <Route path="/patientregistration" element={isAuthenticated ? <PatientRegistration /> : <Navigate to="/" />} />
+          <Route path="/patient/edit/:id" element={isAuthenticated ? <PatientEdit /> : <Navigate to="/" />} />
         </Routes>
       </div>
+
       {isAuthenticated && isMobile && <MobileNavigation setIsAuthenticated={setIsAuthenticated} />}
     </Router>
   );

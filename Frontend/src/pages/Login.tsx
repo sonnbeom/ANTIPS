@@ -17,6 +17,14 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
   const [loginSuccess, setLoginSuccess] = useState<boolean>(false);
   const navigate = useNavigate();
 
+  // 로그인 상태에서 이미 토큰이 존재하는 경우 /robot 페이지로 이동
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      navigate('/robot');
+    }
+  }, [navigate]);
+
   const checkNotificationPermission = async () => {
     if ('Notification' in window && 'serviceWorker' in navigator) {
       const permission = Notification.permission;
@@ -45,8 +53,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       }
     }
   };
-  
-  // handleSubmit 함수 수정
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setIsLoggingIn(true);
@@ -83,7 +90,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
         localStorage.setItem('name', name);
         localStorage.setItem('refreshToken', data.data.refreshToken);
         setIsAuthenticated(true);
-        // 로그인 성공 후 즉시 알림 상태 확인
+
         const permission = Notification.permission;
         const registration = await navigator.serviceWorker.ready;
         const subscription = await registration.pushManager.getSubscription();
@@ -103,8 +110,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       setIsLoggingIn(false);
     }
   };
-  
-  
+
   return (
     <div className="login-container">
       <div className="login-box">

@@ -15,7 +15,7 @@ const RobotController: React.FC = () => {
       return;
     }
 
-    const rosInstance = new ROSLIB.Ros({ url: "ws://70.12.247.222:9090" });
+    const rosInstance = new ROSLIB.Ros({ url: "wss://70.12.247.222:9090" });
 
     rosInstance.on("connection", () => {
       console.log("Connected to ROS");
