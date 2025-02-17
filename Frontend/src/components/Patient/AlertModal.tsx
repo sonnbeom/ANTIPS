@@ -78,7 +78,6 @@ const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onC
     
         setAlertData(result.data); // API 응답 구조에 맞게 저장
       } catch (error) {
-        console.error('Error fetching case history:', error);
       } finally {
         setIsLoading(false);
       }
@@ -124,7 +123,6 @@ const AlertModal: React.FC<AlertModalProps> = ({ alertId, patientId, isOpen, onC
       setDetailedAction("");
       onClose();
     } catch (error) {
-      console.error('Error saving case history:', error);
       window.alert('조치 사항 저장에 실패했습니다.');
     }
   };

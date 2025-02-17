@@ -26,15 +26,14 @@ const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
       const token = localStorage.getItem('token');
       
       if (!token) {
-        console.error('No token found');
         return;
       }
       localStorage.clear();
       setIsAuthenticated(false);
       navigate('/');
       
+      
     } catch (error) {
-      console.error('Logout error:', error);
       // 에러 처리 (예: 토스트 메시지 표시)
     }
   };

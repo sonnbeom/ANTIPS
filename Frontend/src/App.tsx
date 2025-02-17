@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'; // Navigate import
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
 import PatientList from './pages/PatientList';
 import PatientDetail from './pages/PatientDetail';
@@ -16,7 +16,22 @@ declare global {
   }
 }
 
-// window 객체 타입 지정
+const getItemWithExpiry = (key: string) => {
+  const itemStr = localStorage.getItem(key);
+  if (!itemStr) {
+    return null;
+  }
+
+  const item = JSON.parse(itemStr);
+  const now = new Date().getTime();
+  
+  if (now > item.expiry) {
+    localStorage.removeItem(key);
+    return null;
+  }
+  return item.value;
+};
+
 const win = window as Window & typeof globalThis;
 
 const App: React.FC = () => {
@@ -27,20 +42,47 @@ const App: React.FC = () => {
     localStorage.getItem('token') !== null
   );
 
+  // 로그인 상태 체크 useEffect 추가
+  useEffect(() => {
+    const checkLoginStatus = () => {
+        try {
+            const loginStatus = getItemWithExpiry('loginStatus');
+            const token = localStorage.getItem('token');
+            
+            // loginStatus가 만료되었거나 없는 경우 로그아웃 처리
+            if (!loginStatus && token) {
+                localStorage.clear();
+                setIsAuthenticated(false);
+            }
+        } catch (error) {
+            console.error('Login status check failed:', error);
+            localStorage.clear();
+            setIsAuthenticated(false);
+        }
+    };
+
+    // 페이지 로드 시 즉시 체크
+    checkLoginStatus();
+
+    // 5분마다 체크 (300000 밀리초 = 5분)
+    const intervalId = setInterval(checkLoginStatus, 300000);
+
+    // beforeunload 이벤트 리스너 추가
+    const handleBeforeUnload = () => {
+        checkLoginStatus();
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+        clearInterval(intervalId);
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+}, []);
+
   const updateAuthStatus = () => {
     setIsAuthenticated(localStorage.getItem('token') !== null);
   };
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      updateAuthStatus();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
-  }, []);
 
   useEffect(() => {
     const handleResize = () => {
@@ -77,7 +119,6 @@ const App: React.FC = () => {
         }}
       >
         <Routes>
-          {/* 로그인 여부에 따라 페이지 접근 제한 */}
           <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/robot" element={isAuthenticated ? <Robot /> : <Navigate to="/" />} />
           <Route path="/patientlist" element={isAuthenticated ? <PatientList /> : <Navigate to="/" />} />

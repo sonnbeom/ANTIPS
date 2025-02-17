@@ -17,11 +17,10 @@ try {
   const messaging = firebase.messaging();
 
   messaging.onBackgroundMessage((payload) => {
-    console.log('Received background message:', payload);
+
 
     // payload의 타입을 확실히 하기 위해 조건을 추가
     if (!payload || !payload.notification) {
-      console.error('Invalid notification payload');
       return;
     }
 
@@ -69,5 +68,5 @@ try {
   });
 
 } catch (error) {
-  console.error('Service Worker initialization failed:', error);
+
 }
