@@ -88,7 +88,6 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       if (data.status === 200) {
         localStorage.setItem('token', data.data.accessToken);
         localStorage.setItem('name', name);
-        localStorage.setItem('refreshToken', data.data.refreshToken);
         setIsAuthenticated(true);
 
         const permission = Notification.permission;
