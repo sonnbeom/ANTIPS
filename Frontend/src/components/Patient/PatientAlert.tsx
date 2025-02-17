@@ -82,32 +82,40 @@ const PatientAlertSection: React.FC = () => {
   
     eventSource.onopen = () => {
       console.log("✅ SSE 연결됨");
-      setIsConnected(true);
+      console.log("현재 ReadyState:", eventSource?.readyState);
+      // 0: CONNECTING, 1: OPEN, 2: CLOSED
     };
   
     eventSource.onmessage = (event) => {
+      console.log("📨 새 메시지 수신:", event.data);
       try {
         const data: AlertResponse = JSON.parse(event.data);
         if (data.emergencyDtoList) {
           setAlerts(data.emergencyDtoList);
-          console.log("새로운 알림 수신:", data);
         }
       } catch (error) {
-        console.error("❌ SSE 데이터 파싱 오류:", error);
+        console.error("❌ 데이터 파싱 오류:", error);
       }
     };
   
-    eventSource.onerror = () => {
-      console.error("⚠ SSE 연결 오류 발생");
-      setIsConnected(false);
-      eventSource?.close();
-    };
+    const checkConnection = setInterval(() => {
+      if (eventSource) {
+        console.log("SSE 상태:", {
+          readyState: eventSource.readyState,
+          isConnected: eventSource.readyState === 1
+        });
+      }
+    }, 50000);
   
     return () => {
-      eventSource?.close();
-      console.log("📴 SSE 연결 종료");
+      clearInterval(checkConnection);
+      if (eventSource) {
+        console.log("📴 SSE 연결 종료");
+        eventSource.close();
+      }
     };
-  }, []); // 빈 배열을 넣어 최초 1회만 실행
+  }, []);
+  
   
 
   // 새로운 알림이 올 때만 소리 재생
@@ -159,7 +167,6 @@ const PatientAlertSection: React.FC = () => {
     // "비정상적인 고열을 보이고 있습니다.38.0" 형식의 문자열을 분리
     const message = content.split(/(\d+\.?\d*)/)[0];
     const temperature = content.match(/\d+\.?\d*/)?.[0];
-  
     return (
       <>
         {message}
@@ -219,5 +226,4 @@ const PatientAlertSection: React.FC = () => {
     </div>
   );
 };
-
 export default PatientAlertSection;
