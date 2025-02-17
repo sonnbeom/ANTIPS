@@ -7,6 +7,7 @@ import backend.emergency.exception.EmergencyNotFoundException;
 import backend.emergency.mapper.EmergencyMapper;
 import backend.emergency.repository.CustomEmergencyRepository;
 import backend.emergency.repository.EmergencyRepository;
+import backend.fcm.domain.Fcm;
 import backend.fcm.service.FcmTokenService;
 import backend.patient.domain.Patient;
 import backend.patient.service.PatientService;
@@ -40,14 +41,18 @@ public class EmergencyService {
         if (isNotValidTemperature(requestEmergencyDto.getTemperature())) {
             alertByTemperature(requestEmergencyDto);
             return getEmergencyList();
-//            httpSenderService.sendEmergencyList(emergencyList);
 
         } else if (isNotValidSapWeight(requestEmergencyDto.getSapWeight())) {
-            System.out.println("여기 수정해야함~");
+            alertBySapWeight(requestEmergencyDto);
             return getEmergencyList();
         }
         return null;
     }
+    private void alertBySapWeight(RequestEmergencyDto requestEmergencyDto){
+        createMessageBysapWeight(requestEmergencyDto);
+        saveEmergency(requestEmergencyDto, SAP_WEIGHT_TITLE, SAP_WEIGHT_BODY);
+    }
+
     public ResponseEmergencyDtoList getEmergencyList(){
         List<Emergency> emergencyList = customEmergencyRepository.findActiveEmergency();
         return emergencyMapper.dtoToEntity(emergencyList);
@@ -66,12 +71,12 @@ public class EmergencyService {
         }
     }
 
-    private Message createTemperatureMessage(String token, String bedNumber, String fcmContent, float temperature) {
+    private Message createTemperatureMessage(String token, String bedNumber, String content, float temperature) {
         return Message.builder()
                 .setToken(token)
                 .setNotification(Notification.builder()
                         .setTitle(TEMPERATURE_TITLE + bedNumber)
-                        .setBody(fcmContent + temperature)
+                        .setBody(content + temperature)
                         .build())
                 .build();
     }
@@ -91,9 +96,27 @@ public class EmergencyService {
         emergencyRepository.save(emergency);
     }
     private void createMessage(RequestEmergencyDto requestEmergencyDto, String title ,String bodyContent){
-        String responseFcmToken = fcmTokenService.getFcmToken(requestEmergencyDto.getToken());
-        Optional<Message> message = Optional.of(createTemperatureMessage(responseFcmToken, requestEmergencyDto.getBedNumber(), bodyContent, requestEmergencyDto.getTemperature()));
-        message.ifPresent(this::sendMessage);
+        List<String> fcmTokens = fcmTokenService.getFcmTokens();
+        for(String fcm: fcmTokens){
+            Optional<Message> message = Optional.of(createTemperatureMessage(fcm, requestEmergencyDto.getBedNumber(), bodyContent, requestEmergencyDto.getTemperature()));
+            message.ifPresent(this::sendMessage);
+        }
+    }
+    private void createMessageBysapWeight(RequestEmergencyDto requestEmergencyDto) {
+        List<String> fcmTokens = fcmTokenService.getFcmTokens();
+        for(String fcm: fcmTokens){
+            Optional<Message> message = Optional.of(createSapWeightMessage(fcm, requestEmergencyDto.getBedNumber(),SAP_WEIGHT_BODY));
+            message.ifPresent(this::sendMessage);
+        }
+    }
+    private Message createSapWeightMessage(String token, String bedNumber, String content) {
+        return Message.builder()
+                .setToken(token)
+                .setNotification(Notification.builder()
+                        .setTitle(SAP_WEIGHT_TITLE + bedNumber)
+                        .setBody(content)
+                        .build())
+                .build();
     }
 
     private boolean isNotValidTemperature(float temperature) {
@@ -101,7 +124,7 @@ public class EmergencyService {
     }
 
     private boolean isNotValidSapWeight(float sapWeight) {
-        return sapWeight == 1.0;
+        return sapWeight == 2;
     }
 
     public void deactivateEmergency(Long emergencyId) {

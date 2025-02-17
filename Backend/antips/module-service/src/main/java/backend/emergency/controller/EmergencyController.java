@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Duration;
 import java.util.concurrent.CopyOnWriteArrayList;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
@@ -30,12 +31,13 @@ public class EmergencyController {
 
     @GetMapping(value = "/public/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamData() {
-//        log.info("현재 구독자 수: {}", sink.currentSubscriberCount());
-//        return sink.asFlux();
         log.info("📡 [SSE 연결 시작] 현재 구독자 수: {}", sink.currentSubscriberCount());
 
         return sink.asFlux()
+                .timeout(Duration.ofHours(24))
                 .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount()))
+                .mergeWith(Flux.interval(Duration.ofSeconds(45))
+                        .map(i -> "연결을 위한 메시지입니다."))
                 .doOnCancel(() -> log.info("❌ [SSE 연결 종료] 구독자 수: {}", sink.currentSubscriberCount()));
     }
 

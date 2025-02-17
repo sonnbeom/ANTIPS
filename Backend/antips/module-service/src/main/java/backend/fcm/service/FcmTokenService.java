@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Log4j2
 @RequiredArgsConstructor
@@ -27,5 +30,14 @@ public class FcmTokenService {
         Fcm fcm = fcmMapper.dtoToEntity(requestFcmDto);
         fcmTokenRepository.save(fcm);
         return fcm.entityToDto(fcm);
+    }
+    public List<String> getFcmTokens(){
+        List<Fcm> fcmList = fcmTokenRepository.findAll();
+        List<String> list = new ArrayList<>();
+        for (Fcm fcm: fcmList){
+            ResponseFcmDto responseFcmDto = fcm.entityToDto(fcm);
+            list.add(responseFcmDto.getToken());
+        }
+        return list;
     }
 }
