@@ -78,7 +78,7 @@ const App: React.FC = () => {
       >
         <Routes>
           {/* 로그인 여부에 따라 페이지 접근 제한 */}
-          <Route path="/" element={isAuthenticated ? <Navigate to="/patientlist" /> : <Login setIsAuthenticated={setIsAuthenticated} />} />
+          <Route path="/" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
           <Route path="/robot" element={isAuthenticated ? <Robot /> : <Navigate to="/" />} />
           <Route path="/patientlist" element={isAuthenticated ? <PatientList /> : <Navigate to="/" />} />
           <Route path="/patient/:id" element={isAuthenticated ? <PatientDetail /> : <Navigate to="/" />} />

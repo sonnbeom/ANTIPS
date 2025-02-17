@@ -29,22 +29,6 @@ const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
         console.error('No token found');
         return;
       }
-
-      // 로그아웃 API 호출
-      const response = await fetch('/api/v1/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include' // 쿠키를 포함하여 요청
-      });
-
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
-
-      // 로그아웃 성공 시 로컬 스토리지 클리어
       localStorage.clear();
       setIsAuthenticated(false);
       navigate('/');
@@ -61,7 +45,7 @@ const Header: React.FC<HeaderProps> = ({ setIsAuthenticated }) => {
     <div className="header-container">
       <div className="header-left">
         <img src={logo} alt="Logo" className="header-logo" />
-        <span className="header-title">Anti-protective suit</span>
+        <span className="header-title">Anti-PS</span>
       </div>
 
       <div className="header-nav">
