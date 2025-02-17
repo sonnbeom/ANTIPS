@@ -31,13 +31,24 @@ public class EmergencyController {
 
     @GetMapping(value = "/public/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamData() {
+//        log.info("📡 [SSE 연결 시작] 현재 구독자 수: {}", sink.currentSubscriberCount());
+//
+//        return sink.asFlux()
+//                .timeout(Duration.ofHours(24))
+//                .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount()))
+//                .mergeWith(Flux.interval(Duration.ofSeconds(45))
+//                        .map(i -> "연결을 위한 메시지입니다."))
+//                .doOnCancel(() -> log.info("❌ [SSE 연결 종료] 구독자 수: {}", sink.currentSubscriberCount()));
         log.info("📡 [SSE 연결 시작] 현재 구독자 수: {}", sink.currentSubscriberCount());
 
-        return sink.asFlux()
-                .timeout(Duration.ofHours(24))
-                .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount()))
-                .mergeWith(Flux.interval(Duration.ofSeconds(45))
-                        .map(i -> "연결을 위한 메시지입니다."))
+        return Flux.merge(
+                        Flux.just("✅ SSE 연결 성공! 데이터를 수신할 준비가 되었습니다."), // 첫 메시지 즉시 전송
+                        sink.asFlux()
+                                .timeout(Duration.ofHours(24))
+                                .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount())),
+                        Flux.interval(Duration.ofSeconds(45))
+                                .map(i -> "🔄 연결 유지 메시지")
+                )
                 .doOnCancel(() -> log.info("❌ [SSE 연결 종료] 구독자 수: {}", sink.currentSubscriberCount()));
     }
 
