@@ -68,7 +68,6 @@ const PatientDetailCard: React.FC<PatientDetailProps> = ({
       // 삭제 성공 시 환자 목록 페이지로 이동
       navigate('/patientlist');
     } catch (error) {
-      console.error('Error deleting patient:', error);
       alert('환자 정보 삭제 중 오류가 발생했습니다.');
     }
   };

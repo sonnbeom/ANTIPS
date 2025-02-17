@@ -18,7 +18,6 @@ const PushNotificationButton: React.FC = () => {
         alert('알림을 허용해주세요.');
       }
     } catch (error) {
-      console.error('Push notification setup failed:', error);
       alert('알림 설정에 실패했습니다. 다시 시도해주세요.');
     } finally {
       setIsLoading(false);

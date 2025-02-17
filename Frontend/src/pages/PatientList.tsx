@@ -89,7 +89,6 @@ const PatientList: React.FC = () => {
         setPatients([]);
       }
     } catch (error) {
-      console.error('Error fetching patients:', error);
       setPatients([]);
     } finally {
       setLoading(false);

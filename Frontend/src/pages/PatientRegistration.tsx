@@ -48,7 +48,6 @@ const PatientRegistration: React.FC = () => {
       // 로컬 스토리지에서 토큰 가져오기
       const token = localStorage.getItem('token');
       if (!token) {
-        console.error('No token found');
         return;
       }
       // API 요청 데이터 형식에 맞게 변환
@@ -80,7 +79,6 @@ const PatientRegistration: React.FC = () => {
       // 성공 시 환자 목록 페이지로 이동
       navigate('/patientlist');
     } catch (error) {
-      console.error('Error registering patient:', error);
       // 에러 처리 (예: 에러 메시지 표시)
     }
   };

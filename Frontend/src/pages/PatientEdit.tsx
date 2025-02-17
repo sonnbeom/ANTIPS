@@ -90,7 +90,6 @@ const PatientEdit: React.FC = () => {
 
         setIsLoading(false);
       } catch (error) {
-        console.error('Error fetching patient data:', error);
       }
     };
 
@@ -150,7 +149,7 @@ const PatientEdit: React.FC = () => {
   
       navigate('/patientlist');
     } catch (error) {
-      console.error('Error updating patient:', error);
+
     }
   };
   

@@ -15,7 +15,7 @@ export const pushNotificationService = {
       }
       return permission;
     } catch (error) {
-      console.error('알림 권한 요청 실패:', error);
+
       throw new Error('알림 권한 요청에 실패했습니다.');
     }
   },
@@ -27,7 +27,6 @@ export const pushNotificationService = {
       });
       
       if (currentToken) {
-        console.log('FCM Token:', currentToken);
         // 토큰을 서버로 전송
         await this.sendTokenToServer(currentToken);
         return currentToken;
@@ -35,7 +34,6 @@ export const pushNotificationService = {
       
       throw new Error('FCM 토큰을 받을 수 없습니다.');
     } catch (error) {
-      console.error('FCM 토큰 발급 실패:', error);
       throw error;
     }
   },
@@ -60,9 +58,8 @@ export const pushNotificationService = {
       if (!response.ok) {
         throw new Error('FCM 토큰 서버 전송 실패');
       }
-      console.log('FCM 토큰이 서버에 성공적으로 전송되었습니다.');
+
     } catch (error) {
-      console.error('FCM 토큰 서버 전송 중 오류:', error);
       throw error;
     }
   },
@@ -70,7 +67,6 @@ export const pushNotificationService = {
   // FCM 메시지 리스너 설정
   setupMessageListener() {
     onMessage(messaging, (payload) => {
-      console.log('Foreground message received:', payload);
       
       // 브라우저 알림 생성
       if (payload.notification) {

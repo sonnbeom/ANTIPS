@@ -21,14 +21,14 @@ export const getFCMToken = async () => {
         });
         
         if (currentToken) {
-            console.log('FCM 토큰:', currentToken);
+
             return currentToken;
         } else {
-            console.log('토큰을 가져올 수 없습니다. 알림 권한을 확인하세요.');
+
             return null;
         }
     } catch (error) {
-        console.error('FCM 토큰 발급 실패:', error);
+
         throw error;
     }
 };
@@ -39,19 +39,18 @@ export const requestPermission = async () => {
         const permission = await Notification.requestPermission();
         if (permission === 'granted') {
             const token = await getFCMToken();
-            console.log('FCM Token:', token);
+
         } else {
-            console.log('알림 권한이 거부되었습니다.');
+
         }
     } catch (error) {
-        console.error('알림 권한 요청 실패:', error);
+
     }
 };
 
 // 포그라운드 메시지 리스너 설정
 onMessage(messaging, (payload) => {
-    console.log('Foreground message received:', payload);
-    
+
     // 메시지 알림 표시
     if (payload.notification) {
         const { title, body } = payload.notification;

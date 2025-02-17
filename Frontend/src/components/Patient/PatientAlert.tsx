@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect,useRef } from "react";
 import { FaExclamationTriangle } from "react-icons/fa";
 import AlertModal from "./AlertModal";
 import "./PatientAlertStyle.css";
@@ -32,6 +32,8 @@ const PatientAlertSection: React.FC = () => {
   const [isConnected, setIsConnected] = useState(false);
   const [retryCount, setRetryCount] = useState(0);
   const [alertId, setAlertId] = useState<number | null>(null);
+  const eventSourceRef = useRef<EventSource | null>(null);
+  const hasRetriedRef = useRef(false);
   const API_URL = import.meta.env.VITE_SERVER_URL;
   
   const audioRef = React.useRef(new Audio('/notification-sound.mp3'));
@@ -60,7 +62,6 @@ const PatientAlertSection: React.FC = () => {
         setPrevAlerts(data.data.emergencyDtoList); // 초기 로딩 시 prevAlerts도 업데이트
       }
     } catch (error) {
-      console.error('초기 알림 데이터 로딩 실패:', error);
     }
   };
 
@@ -70,51 +71,58 @@ const PatientAlertSection: React.FC = () => {
 
   const playNotificationSound = () => {
     audioRef.current.play().catch(error => {
-      console.error('알림음 재생 실패:', error);
     });
   };
 
   useEffect(() => {
-    let eventSource: EventSource | null = null;
-  
-    console.log("🟢 SSE 연결 시도...");
-    eventSource = new EventSource(`${API_URL}/public/stream`);
-  
-    eventSource.onopen = () => {
-      console.log("✅ SSE 연결됨");
-      console.log("현재 ReadyState:", eventSource?.readyState);
-      // 0: CONNECTING, 1: OPEN, 2: CLOSED
-    };
-  
-    eventSource.onmessage = (event) => {
-      console.log("📨 새 메시지 수신:", event.data);
-      try {
-        const data: AlertResponse = JSON.parse(event.data);
-        if (data.emergencyDtoList) {
-          setAlerts(data.emergencyDtoList);
+    const connect = () => {
+      eventSourceRef.current = new EventSource(`${API_URL}/public/stream`,{
+        withCredentials: true
+      });
+
+      eventSourceRef.current.onopen = () => {
+        setIsConnected(true);
+        hasRetriedRef.current = false; // 재연결 성공 시 초기화
+      };
+
+      eventSourceRef.current.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          if (data.emergencyDtoList) {
+            setAlerts(data.emergencyDtoList);
+          }
+        } catch (error) {
         }
-      } catch (error) {
-        console.error("❌ 데이터 파싱 오류:", error);
-      }
+      };
+
+      eventSourceRef.current.onerror = (error) => {
+        setIsConnected(false);
+        eventSourceRef.current?.close();
+
+        // 아직 재연결을 시도하지 않았다면 한 번만 재연결 시도
+        if (!hasRetriedRef.current) {
+          hasRetriedRef.current = true;
+          setTimeout(connect, 5000); // 5초 후 재연결
+        } else {
+        }
+      };
     };
-  
+
+    connect(); // 초기 연결 시도
+
     const checkConnection = setInterval(() => {
-      if (eventSource) {
-        console.log("SSE 상태:", {
-          readyState: eventSource.readyState,
-          isConnected: eventSource.readyState === 1
-        });
+      if (eventSourceRef.current) {
       }
     }, 50000);
-  
+
     return () => {
       clearInterval(checkConnection);
-      if (eventSource) {
-        console.log("📴 SSE 연결 종료");
-        eventSource.close();
+      if (eventSourceRef.current) {
+        eventSourceRef.current.close();
       }
     };
   }, []);
+  
   
   
 
@@ -163,22 +171,21 @@ const PatientAlertSection: React.FC = () => {
     return "red";
   };
 
-  const formatAlertContent = (content: string) => {
-    // "비정상적인 고열을 보이고 있습니다.38.0" 형식의 문자열을 분리
+  const formatAlertContent = (content: string, title: string) => {
     const message = content.split(/(\d+\.?\d*)/)[0];
-    const temperature = content.match(/\d+\.?\d*/)?.[0];
+    const value = content.match(/\d+\.?\d*/)?.[0];
+    
     return (
       <>
         {message}
-        {temperature && (
+        {value && (
           <span style={{ color: 'red', fontWeight: 'bold' }}>
-            {`  (${temperature}°C)`}
+            {`  (${value}${title.includes("체온 문제") ? '°C' : '%'})`}
           </span>
         )}
       </>
     );
   };
-
   const getAlertClass = (title:string) => {
     return title.includes("체온 문제") ? "patient-alert-item urgent" : "patient-alert-item warning";
   };
@@ -195,21 +202,21 @@ const PatientAlertSection: React.FC = () => {
       </div>
       <ul className="patient-alert-list">
         {alerts.length > 0 ? (
-          alerts.map((alert) => (
-      <li
-        key={alert.id}
-        className={getAlertClass(alert.title)}
-        onClick={() => handleAlertClick(alert)}
-      >
-        <span>
-          <span style={{ color: getRoomColor(alert.patientDto.roomNumber) }}>
-            {alert.patientDto.roomNumber}호
-          </span>
-          : {alert.patientDto.name} - {formatAlertContent(alert.content)}
-        </span>
-        <span className="patient-time">{formatTimeAgo(alert.createdAt)}</span>
-      </li>
-          ))
+alerts.map((alert) => (
+  <li
+    key={alert.id}
+    className={getAlertClass(alert.title)}
+    onClick={() => handleAlertClick(alert)}
+  >
+    <span>
+      <span style={{ color: getRoomColor(alert.patientDto.roomNumber) }}>
+        {alert.patientDto.roomNumber}호
+      </span>
+      : {alert.patientDto.name} - {formatAlertContent(alert.content, alert.title)}
+    </span>
+    <span className="patient-time">{formatTimeAgo(alert.createdAt)}</span>
+  </li>
+))
         ) : (
           <li className="no-alert">📭 현재 알림이 없습니다.</li>
         )}

@@ -87,7 +87,6 @@ const PatientDetail: React.FC = () => {
     
       } catch (err) {
         const errorMessage = err instanceof Error ? err.message : '데이터 조회 중 오류가 발생했습니다';
-        console.error('Error:', errorMessage);
         setError(errorMessage);
       } finally {
         setLoading(false);
