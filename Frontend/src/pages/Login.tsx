@@ -113,7 +113,7 @@ const Login: React.FC<LoginProps> = ({ setIsAuthenticated }) => {
       <div className="login-box">
         <div className="login-form-section">
           <div className='login-section-title'>
-            <h2>NurseCertify</h2>
+            <h2>Anti-PS</h2>
             {!loginSuccess ? (
               <p>Welcome back! Please login to your account.</p>
             ) : (
