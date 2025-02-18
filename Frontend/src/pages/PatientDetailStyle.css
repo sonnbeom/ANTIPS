@@ -1,6 +1,7 @@
   /* 알림 섹션 */
   .patient-detail-container{
     padding: 15px 90px;
+    height: 100%;
     background-color: #f8fafc; /* 연한 배경색 */
   }
   .patient-alert-sections {
