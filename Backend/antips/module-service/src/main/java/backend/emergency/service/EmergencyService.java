@@ -34,7 +34,6 @@ public class EmergencyService {
     private final EmergencyRepository emergencyRepository;
     private final EmergencyMapper emergencyMapper;
     private final CustomEmergencyRepository customEmergencyRepository;
-    private final HttpSenderService httpSenderService;
     private final PatientService patientService;
 
     public ResponseEmergencyDtoList isEmergency(RequestEmergencyDto requestEmergencyDto) {
