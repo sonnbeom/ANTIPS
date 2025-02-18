@@ -103,4 +103,7 @@ public class Patient extends BaseEntity {
     public void completeDeliverMedicine(Patient patient) {
         patient.status = DONE;
     }
+    public void resetStatus(){
+        this.status = TODO;
+    }
 }
