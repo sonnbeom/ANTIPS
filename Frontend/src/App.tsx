@@ -45,40 +45,30 @@ const App: React.FC = () => {
   // 로그인 상태 체크 useEffect 추가
   useEffect(() => {
     const checkLoginStatus = () => {
-        try {
-            const loginStatus = getItemWithExpiry('loginStatus');
-            const token = localStorage.getItem('token');
-            
-            // loginStatus가 만료되었거나 없는 경우 로그아웃 처리
-            if (!loginStatus && token) {
-                localStorage.clear();
-                setIsAuthenticated(false);
-            }
-        } catch (error) {
-            console.error('Login status check failed:', error);
-            localStorage.clear();
-            setIsAuthenticated(false);
+      try {
+        const loginStatus = getItemWithExpiry('loginstatus');
+        const token = localStorage.getItem('token');
+        
+        if (token && loginStatus === null) {
+          setIsAuthenticated(false);
+          localStorage.clear();
+          
         }
+      } catch (error) {
+        console.error('Login status check failed:', error);
+        setIsAuthenticated(false);
+        localStorage.clear();
+      }
     };
-
-    // 페이지 로드 시 즉시 체크
+  
     checkLoginStatus();
-
-    // 5분마다 체크 (300000 밀리초 = 5분)
     const intervalId = setInterval(checkLoginStatus, 300000);
-
-    // beforeunload 이벤트 리스너 추가
-    const handleBeforeUnload = () => {
-        checkLoginStatus();
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
+  
     return () => {
-        clearInterval(intervalId);
-        window.removeEventListener('beforeunload', handleBeforeUnload);
+      clearInterval(intervalId);
     };
-}, []);
+  }, []);
+  
 
   const updateAuthStatus = () => {
     setIsAuthenticated(localStorage.getItem('token') !== null);
