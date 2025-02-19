@@ -29,6 +29,5 @@ public class PatientStatusUpdateTasklet implements Tasklet {
         for (Patient patient : patients) {
             patient.resetStatus(); // 더티체킹
         }
-
     }
 }
