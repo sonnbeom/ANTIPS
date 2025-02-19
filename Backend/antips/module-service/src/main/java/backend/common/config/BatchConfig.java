@@ -36,5 +36,4 @@ public class BatchConfig {
                 .tasklet(patientStatusUpdateTasklet, transactionManager) // Tasklet 실행
                 .build();
     }
-
 }
