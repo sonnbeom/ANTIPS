@@ -3,12 +3,12 @@ package backend.exception;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-public class AuthUserNotFoundException extends RuntimeException{
+public class RefreshTokenReissueException extends RuntimeException{
     @Getter
     HttpStatus httpStatus;
 
-    public AuthUserNotFoundException(String message, HttpStatus httpStatus) {
-        super(message);
+    public RefreshTokenReissueException(String message, HttpStatus httpStatus) {
+        super();
         this.httpStatus = httpStatus;
     }
 }
