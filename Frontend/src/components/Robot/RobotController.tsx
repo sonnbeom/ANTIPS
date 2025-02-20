@@ -129,6 +129,9 @@ const RobotController: React.FC = () => {
         <button className="control-button stop" onClick={() => sendCommand("x")}>
           🛑 Stop
         </button>
+        <button className="control-button send-101" onClick={() => sendCommand("auto")}>
+          📡 Auto Send
+        </button>
       </div>
     </section>
   );
