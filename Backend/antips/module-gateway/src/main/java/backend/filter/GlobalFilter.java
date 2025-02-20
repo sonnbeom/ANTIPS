@@ -29,7 +29,7 @@ public class GlobalFilter implements org.springframework.cloud.gateway.filter.Gl
         log.info("gateway filter 작동");
         String path = exchange.getRequest().getPath().toString();
         if (AUTH_REQUIRED_PATHS.stream().anyMatch(path::startsWith)){
-            log.info("if문 들어오냐 설마");
+            log.info("gateway filter if문 진입");
             String authHeader  = exchange.getRequest().getHeaders().getFirst(AUTHORIZATION);
             // Authorization 헤더가 존재하고 "Bearer "로 시작하는지 확인
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
