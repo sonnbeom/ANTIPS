@@ -1,0 +1,22 @@
+version: '3.1'
+
+services:
+  api:
+    image: sonny0514/antihub_service:1.0.0
+    container_name: service-server-8082
+    networks:
+      - backend-network
+    environment:
+      - TZ=Asia/Seoul
+      - LANG=ko_KR.UTF-8
+      - HTTP_PORT=8082
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql-container:3306/antips?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=4245
+      - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
+    ports:
+      - "8082:8082"
+
+networks:
+  backend-network:
+    external: true
