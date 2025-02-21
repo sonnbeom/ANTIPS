@@ -24,19 +24,19 @@ public class BatchScheduler {
 //
 //        jobLauncher.run(updatePatientStatusJob, jobParameters);  // ✅ 등록된 Job 실행
 //    }
-    @Scheduled(cron = "0 * * * * ?", zone = "Asia/Seoul")
-    public void runBatchJob() throws JobExecutionException {
-        try {
-            JobParameters jobParameters = new JobParametersBuilder()
-                    .addLong("time", System.currentTimeMillis()) // 중복 실행 방지
-                    .toJobParameters();
-
-            log.info("환자 상태 업데이트 배치 작업 시작");
-            JobExecution execution = jobLauncher.run(updatePatientStatusJob, jobParameters);
-            log.info("환자 상태 업데이트 배치 작업 완료: {}", execution.getStatus());
-        } catch (Exception e) {
-            log.error("배치 작업 실행 중 오류 발생", e);
-            throw e;
-        }
-    }
+//    @Scheduled(cron = "0 * * * * ?", zone = "Asia/Seoul")
+//    public void runBatchJob() throws JobExecutionException {
+//        try {
+//            JobParameters jobParameters = new JobParametersBuilder()
+//                    .addLong("time", System.currentTimeMillis()) // 중복 실행 방지
+//                    .toJobParameters();
+//
+//            log.info("환자 상태 업데이트 배치 작업 시작");
+//            JobExecution execution = jobLauncher.run(updatePatientStatusJob, jobParameters);
+//            log.info("환자 상태 업데이트 배치 작업 완료: {}", execution.getStatus());
+//        } catch (Exception e) {
+//            log.error("배치 작업 실행 중 오류 발생", e);
+//            throw e;
+//        }
+//    }
 }
