@@ -53,7 +53,6 @@ public class JwtService {
     public String createToken(String employeeNumber, Role role){
         Claims claims = Jwts.claims();
         claims.put("EMPLOYEE_NUMBER", employeeNumber);
-//        claims.put("ROLE_TYPE", role.name());
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))

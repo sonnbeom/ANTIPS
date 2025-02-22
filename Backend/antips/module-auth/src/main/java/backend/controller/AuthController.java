@@ -76,5 +76,4 @@ public class AuthController {
                 .data(authResponse)
                 .build();
     }
-
 }
