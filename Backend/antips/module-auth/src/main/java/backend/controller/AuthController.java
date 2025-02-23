@@ -76,9 +76,5 @@ public class AuthController {
                 .data(authResponse)
                 .build();
     }
-    @GetMapping("/private")
-    public int welcome(){
-        return 200;
-    }
 
 }
