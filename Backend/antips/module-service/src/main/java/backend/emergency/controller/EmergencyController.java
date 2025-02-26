@@ -31,14 +31,7 @@ public class EmergencyController {
 
     @GetMapping(value = "/public/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> streamData() {
-//        log.info("📡 [SSE 연결 시작] 현재 구독자 수: {}", sink.currentSubscriberCount());
-//
-//        return sink.asFlux()
-//                .timeout(Duration.ofHours(24))
-//                .doOnSubscribe(subscription -> log.info("✅ [SSE 구독 완료] 구독자 수: {}", sink.currentSubscriberCount()))
-//                .mergeWith(Flux.interval(Duration.ofSeconds(45))
-//                        .map(i -> "연결을 위한 메시지입니다."))
-//                .doOnCancel(() -> log.info("❌ [SSE 연결 종료] 구독자 수: {}", sink.currentSubscriberCount()));
+
         log.info("📡 [SSE 연결 시작] 현재 구독자 수: {}", sink.currentSubscriberCount());
 
         return Flux.merge(
@@ -73,6 +66,7 @@ public class EmergencyController {
         }
         log.info("컨트롤러 호출 메시지 전송 완료");
     }
+
     @GetMapping("non-public/emergency")
     public CommonResponse<ResponseEmergencyDtoList> getEmergencyList() {
         ResponseEmergencyDtoList responseEmergencyDtoList = emergencyService.getEmergencyList();
