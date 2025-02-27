@@ -20,12 +20,15 @@ public class RedisService {
     public void setValues(String key, String value){
         redisTemplate.opsForValue().set(key, value);
     }
+
     public void setValuesWithTimeOut(String key, String value){
         redisTemplate.opsForValue().set(key, value, timeOut, TimeUnit.MILLISECONDS);
     }
+
     public String getValues(String key){
         return redisTemplate.opsForValue().get(key);
     }
+
     public void deleteValues(String key){
         redisTemplate.delete(key);
     }

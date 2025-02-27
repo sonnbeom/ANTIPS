@@ -34,7 +34,7 @@ public class AuthService {
 
     public Optional<AuthResponse> regenerateToken(String refreshToken) {
         AuthResponse authResponse = null;
-        // cookie에서 가져온 refreshToken 체크
+
         if (ObjectUtils.isEmpty(refreshToken)){
             throw new RefreshTokenReissueException("Refresh Token is empty", HttpStatus.BAD_REQUEST);
         }
